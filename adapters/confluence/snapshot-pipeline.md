@@ -158,19 +158,21 @@ python knowledge_graph_snapshot.py \
 
 Open `knowledge_graph_graph.ipynb` and run all cells.
 
-### Node colors
+### Node shapes and colors
 
-| Type | Color |
-|---|---|
-| Subject | `#4C9AFF` |
-| Table | `#36B37E` |
-| Filter | `#FFAB00` |
-| Measure | `#6554C0` |
-| Attribute | `#B3D4FF` |
-| Rule | `#FF5630` |
-| Disambiguation | `#00B8D9` |
-| Relationship | `#8777D9` |
-| VerifiedQuery | `#97A0AF` |
+| Type | Shape | Color |
+|---|---|---|
+| Subject | Rounded rectangle | `#4C9AFF` |
+| Table | Rounded rectangle | `#36B37E` |
+| Filter | Rounded rectangle | `#FFAB00` |
+| Measure | Rounded rectangle | `#6554C0` |
+| Attribute | Rounded rectangle | `#B3D4FF` |
+| Rule | Rounded rectangle | `#FF5630` |
+| Disambiguation | Rounded rectangle | `#00B8D9` |
+| Relationship | **Hexagon** | `#8777D9` |
+| VerifiedQuery | Rounded rectangle | `#97A0AF` |
+
+Relationship nodes use a hexagon to signal that they are reified edges — pages that exist to carry a Reason and Consequence — not first-class semantic entities like the other node types.
 
 ### Edge styles
 

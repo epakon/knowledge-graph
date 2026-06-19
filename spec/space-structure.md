@@ -85,6 +85,30 @@ The following container pages must exist under each domain:
 
 ---
 
+## The `concepts/` layer — design notes
+
+The `concepts/` container is intentionally kept separate from domain containers. It is the **conceptual layer** of the knowledge graph — domain-agnostic, stable, and shared.
+
+### Subject, Term, and Concept — current and future node types
+
+Currently only one node type lives in the conceptual layer: **Subject**. A Subject represents a business concept tied to data — something that has SQL implementations in one or more domains (a Measure, Filter, or Rule that embodies it).
+
+Two additional node types are reserved for future use at the conceptual layer:
+
+| Node type | Status | Intended purpose |
+|---|---|---|
+| `Subject` | Active | Business concept with direct data implementation. Has `implement ->` edges to Measures, Filters, Rules. |
+| `Term` | Reserved | Pure business vocabulary — a term that appears in business communication but may not have a direct SQL implementation yet. Useful for onboarding and disambiguation without a data anchor. |
+| `Concept` | Reserved | Abstract or composite idea that groups multiple Subjects. Useful for cross-domain thematic grouping (e.g. "Liquidity" grouping DSO, Cash Received, Open Balance). |
+
+Do not create `Term` or `Concept` pages until the node type is formally added to the schema. Use `Subject` for all conceptual nodes today.
+
+### Linking external knowledge to the conceptual layer
+
+The `concepts/` layer is also the natural attachment point for **external references** — links to glossaries, regulatory definitions, data dictionaries, or ontologies that inform a business concept. Rather than duplicating external definitions inside Subject pages, a Subject can carry a `## Citations` section with links to authoritative external sources. This avoids maintaining duplicate copies of definitions that are owned externally.
+
+---
+
 ## Multi-domain setup
 
 Each domain has its own container tree under a shared root. The `concepts/subjects/` path is **global and shared** — Subject pages are not duplicated per domain.

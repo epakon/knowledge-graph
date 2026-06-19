@@ -8,6 +8,25 @@
 
 Each node type maps to a **node label** in a target graph database. The identity key is the unique constraint enforced at migration time.
 
+### Node type descriptions
+
+| Node type | Description |
+|---|---|
+| `Subject` | Global business concept. The only node type where prose lives. Shared across all domains. |
+| `Domain` | Domain index page. Entry point and navigational container for a domain. |
+| `Table` | One page per logical table. Has `TableKind`: fact, dimension, or bridge. |
+| `Measure` | Computed KPI expression — always an aggregate (SUM, COUNT, AVG, etc.). |
+| `Attribute` | Promoted column with semantic payload: derived expression, rule-linked, or cross-domain column. |
+| `Filter` | Named SQL predicate; mandatory or contextual. |
+| `VerifiedQuery` | Human-approved SQL with verifier name, verification date, and onboarding flag. |
+| `BusinessRule` | Named rule governing query construction or interpretation. |
+| `Disambiguation` | Ambiguous term requiring clarification before any query is issued. |
+| `Relationship` | Reified semantic edge with Reason + Consequence if Ignored. Has its own page; is not a node in the graph DB. |
+
+> Visualization shapes (rectangles vs. diamonds in diagrams) are a rendering convention, not a schema property. See [adapters/confluence/snapshot-pipeline.md](../adapters/confluence/snapshot-pipeline.md) for node colors and shapes used in the graph diagram.
+
+### Full schema
+
 | Node type | Node label | Identity key | Core properties | Scope |
 |---|---|---|---|---|
 | `Subject` | `Subject` | `name` | `business_definition`, `scope` | global (`concepts/subjects/`) |
@@ -185,14 +204,32 @@ These rules should be validated after every snapshot regeneration:
 
 ## 6. Graph Database Migration Notes
 
-When migrating from the wiki to a target graph database:
+The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are the **intermediate representation** between the wiki and a target graph database. They serve two purposes simultaneously:
 
-1. **Import nodes** from the node index — upsert by `(label, name)` and set properties.
+- **Duplicate tracking** — before creating a new node, check the node index to confirm no node with the same `(label, name)` already exists. This is the primary guard against duplicate pages and split-brain definitions.
+- **Graph DB import input** — the indexes are designed to be loaded directly into a graph database. Each entry maps 1:1 to a `MERGE` upsert on a node or relationship. The JSON schema is intentionally close to what Cypher (`MERGE`), Gremlin (`addV`/`addE`), or any property graph API expects.
+
+**Target graph database:** not yet decided. The schema uses generic terms (node label, relationship type, identity key). Neo4j maps cleanly: node labels → Neo4j labels, relationship types → Neo4j relationship types, identity keys → uniqueness constraints. The same mapping applies to Amazon Neptune, ArangoDB, or any property graph store.
+
+### Migration steps
+
+1. **Import nodes** from the node index — upsert by `(label, name)` and set all properties.
 2. **Import edges** from the edge index — hyperlinks first, then reified edges (they may reference the same pairs).
 3. **Skip back-references** — they are navigation artifacts, not graph edges.
 4. **Relationship pages** have already been flattened into the edge index; their wiki pages can be archived post-migration.
 5. **`Domain` nodes** can be migrated as nodes or treated as a property (`domain: "Sales"`) on other nodes — decision deferred.
 6. **`page_id`** should be retained as a node property for traceability during the transition period.
+
+### Future direction
+
+Once a graph database backend is in place, the wiki becomes a **human authoring layer** rather than the source of truth. The migration path is:
+
+1. Wiki pages → snapshot script → JSON indexes (current state)
+2. JSON indexes → graph database import (migration)
+3. Graph database → read API for agents (post-migration)
+4. Wiki pages → write API (create/update triggers a graph DB write, not just a wiki page update)
+
+The bulk update scripts in `adapters/confluence/bulk-update-scripts.md` are designed with this transition in mind — their REST helper patterns map directly to the operations a graph DB client would expose.
 
 ---
 

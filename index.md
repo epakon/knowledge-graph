@@ -38,3 +38,4 @@
 * [examples/domain-layout-example.md](examples/domain-layout-example.md) - Multi-domain space hierarchy with cross-domain Subject linking
 * [examples/node-pages-example.md](examples/node-pages-example.md) - Sample pages for all node types (Sales domain scenario)
 * [examples/graph-snapshot-example.json](examples/graph-snapshot-example.json) - Minimal JSON snapshot with nodes and edges
+* [examples/agent-query-walkthrough.md](examples/agent-query-walkthrough.md) - End-to-end agent workflow: Glean search → mandatory filters → business rule → verified SQL

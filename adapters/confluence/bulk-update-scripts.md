@@ -3,6 +3,14 @@
 > Python patterns for bulk updates to Knowledge Graph pages via the Confluence REST API.
 > Use these instead of MCP tool calls when a change affects 6+ pages or requires regex-based HTML surgery.
 
+## Why scripts instead of MCP
+
+Two reasons to prefer REST API scripts over MCP tool calls for bulk work:
+
+1. **Token cost.** Each MCP tool call (`confluence_get_page`, `confluence_update_page`) consumes LLM context tokens — for the page body, the response, and the conversation turn. Updating 50 pages via MCP means 100+ tool calls inside a single agent session, which is expensive and slow. A Python script makes the same 100 HTTP calls outside the LLM entirely — zero token cost per page.
+
+2. **Future graph database API.** These scripts are a stepping stone toward a native graph database backend. The REST helper patterns (`get_page`, `update_page`, `collect_kg_pages`, `search_pages`) map directly to the read/write operations a graph DB client would expose. When Confluence is eventually replaced or supplemented by a dedicated graph database, these scripts become the basis for the migration and the ongoing write API — the calling convention stays the same, only the transport layer changes.
+
 ---
 
 ## Setup

@@ -3,6 +3,8 @@
 > Operational guide for agents working with the Knowledge Graph on Confluence.
 > Read the [Confluence Adapter](confluence-adapter.md) and [SPEC.md](../../SPEC.md) before starting.
 
+> **Prerequisites:** The Atlassian MCP server must be configured and authenticated before any workflow in this skill can execute. All read and write operations go through MCP tools (`confluence_search`, `confluence_get_page`, `confluence_create_page`, `confluence_update_page`, `confluence_get_version_history`, `confluence_get_child_pages`). Without an active Atlassian MCP connection, no workflow is possible.
+
 ---
 
 ## Supported intents

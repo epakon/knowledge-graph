@@ -11,6 +11,16 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.3.2] — 2026-06-19
+
+### Added
+- **`spec/data-model.md`**: §6 expanded with "Future direction" — explains the JSON indexes as intermediate representation for graph DB import, duplicate tracking purpose, and the planned migration path from wiki-as-source-of-truth to graph DB backend with wiki as authoring layer.
+- **`adapters/confluence/bulk-update-scripts.md`**: "Why scripts instead of MCP" section — two reasons: token cost of bulk MCP calls, and scripts as a foundation for a future graph DB write API.
+- **`spec/space-structure.md`**: "The `concepts/` layer — design notes" section — distinguishes Subject (active), Term (reserved), and Concept (reserved) node types; explains the intention to link external references (glossaries, ontologies) to the conceptual layer rather than duplicating definitions.
+- **`examples/agent-query-walkthrough.md`**: New example — end-to-end agent query walkthrough showing Glean search → mandatory filter discovery → business rule application → verified SQL retrieval → SQL adaptation. Covers both Cursor and Snowflake Cortex agent variants. Derived from real testing sessions; all domain-specific values replaced with generic placeholders.
+
+---
+
 ## [1.3.1] — 2026-06-19
 
 > **Structural note:** this release marks the conversion of the original flat design documents
