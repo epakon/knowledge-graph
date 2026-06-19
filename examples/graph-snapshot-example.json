@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "parent_page_id": "<root_page_id>",
+    "generated_at": "2026-06-17T10:00:00Z",
+    "node_count": 9,
+    "edge_count": 8
+  },
+  "nodes": [
+    {
+      "id": "subject-revenue",
+      "title": "Subject: Revenue",
+      "label": "Revenue",
+      "type": "Subject",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#4C9AFF"
+    },
+    {
+      "id": "table-orders",
+      "title": "Table: ORDERS",
+      "label": "ORDERS",
+      "type": "Table",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#36B37E"
+    },
+    {
+      "id": "measure-gross-revenue",
+      "title": "Measure: GROSS_REVENUE",
+      "label": "GROSS_REVENUE",
+      "type": "Measure",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#6554C0"
+    },
+    {
+      "id": "attribute-order-status",
+      "title": "Attribute: ORDER_STATUS",
+      "label": "ORDER_STATUS",
+      "type": "Attribute",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#B3D4FF"
+    },
+    {
+      "id": "filter-active-orders",
+      "title": "Filter: ACTIVE_ORDERS",
+      "label": "ACTIVE_ORDERS",
+      "type": "Filter",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#FFAB00"
+    },
+    {
+      "id": "rule-exclude-cancelled",
+      "title": "Rule: exclude-cancelled-orders",
+      "label": "exclude-cancelled-orders",
+      "type": "Rule",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#FF5630"
+    },
+    {
+      "id": "verifiedquery-revenue-by-region",
+      "title": "VerifiedQuery: REVENUE_BY_REGION_MONTHLY",
+      "label": "REVENUE_BY_REGION_MONTHLY",
+      "type": "VerifiedQuery",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#97A0AF"
+    },
+    {
+      "id": "disambiguation-order-status",
+      "title": "Disambiguation: order-status",
+      "label": "order-status",
+      "type": "Disambiguation",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#00B8D9"
+    },
+    {
+      "id": "relationship-gross-revenue-requires-active-orders",
+      "title": "Relationship: GROSS_REVENUE requires ACTIVE_ORDERS",
+      "label": "GROSS_REVENUE requires ACTIVE_ORDERS",
+      "type": "Relationship",
+      "page_id": "<page_id>",
+      "url": "https://<instance>.atlassian.net/wiki/...",
+      "color": "#8777D9"
+    }
+  ],
+  "edges": [
+    {
+      "source": "Subject: Revenue",
+      "target": "Measure: GROSS_REVENUE",
+      "kind": "implement",
+      "style": "hyperlink",
+      "via": null
+    },
+    {
+      "source": "Subject: Revenue",
+      "target": "Filter: ACTIVE_ORDERS",
+      "kind": "implement",
+      "style": "hyperlink",
+      "via": null
+    },
+    {
+      "source": "Subject: Revenue",
+      "target": "Disambiguation: order-status",
+      "kind": "disambiguate",
+      "style": "hyperlink",
+      "via": null
+    },
+    {
+      "source": "Table: ORDERS",
+      "target": "Attribute: ORDER_STATUS",
+      "kind": "attribute",
+      "style": "hyperlink",
+      "via": null
+    },
+    {
+      "source": "Measure: GROSS_REVENUE",
+      "target": "Filter: ACTIVE_ORDERS",
+      "kind": "requires",
+      "style": "reified",
+      "via": "Relationship: GROSS_REVENUE requires ACTIVE_ORDERS",
+      "properties": {
+        "reason": "GROSS_REVENUE is defined as revenue from valid, non-cancelled orders only.",
+        "consequence": "Including cancelled and returned orders inflates reported revenue by up to 12% in high-return months."
+      }
+    },
+    {
+      "source": "Filter: ACTIVE_ORDERS",
+      "target": "Table: ORDERS",
+      "kind": "mandatory",
+      "style": "reified",
+      "via": "Relationship: ACTIVE_ORDERS mandatory ORDERS",
+      "properties": {
+        "reason": "All revenue queries must exclude inactive orders.",
+        "consequence": "Queries that omit this filter return inflated totals."
+      }
+    },
+    {
+      "source": "Rule: exclude-cancelled-orders",
+      "target": "Measure: GROSS_REVENUE",
+      "kind": "apply",
+      "style": "hyperlink",
+      "via": null
+    },
+    {
+      "source": "Measure: GROSS_REVENUE",
+      "target": "VerifiedQuery: REVENUE_BY_REGION_MONTHLY",
+      "kind": "implement",
+      "style": "hyperlink",
+      "via": null
+    }
+  ]
+}

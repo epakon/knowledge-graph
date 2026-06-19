@@ -1,0 +1,350 @@
+# Knowledge Graph Schema
+# Machine-readable specification of node types, edge kinds, and their valid combinations.
+# Version: 1.3.0
+# License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
+
+spec_version: "1.3.0"
+
+# ---------------------------------------------------------------------------
+# Node Types
+# ---------------------------------------------------------------------------
+node_types:
+  - name: Subject
+    label: Subject
+    scope: global
+    identity_key: name
+    properties:
+      - name: business_definition
+        type: string
+        required: true
+        description: Business-level definition of the concept. No SQL.
+      - name: scope
+        type: string
+        required: false
+        description: Optional scope qualifier (e.g. domain name if the subject has domain context).
+    page_title_prefix: "Subject:"
+    container_path: "concepts/subjects/"
+
+  - name: Domain
+    label: Domain
+    scope: global
+    identity_key: name
+    properties:
+      - name: owner
+        type: string
+        required: false
+        description: Team or person responsible for this domain.
+    page_title_prefix: "Domain:"
+    container_path: "<root>/"
+
+  - name: Table
+    label: Table
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: table_kind
+        type: enum
+        values: [fact, dimension, bridge]
+        required: true
+      - name: source
+        type: string
+        required: false
+        description: Data source path or project reference (e.g. dbt model name, schema.table).
+      - name: description
+        type: string
+        required: false
+    page_title_prefix: "Table:"
+    container_path: "<domain>/tables/"
+
+  - name: Measure
+    label: Measure
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: kind
+        type: enum
+        values: [aggregate expression, derived formula]
+        required: true
+      - name: synonyms
+        type: list[string]
+        required: false
+      - name: status
+        type: enum
+        values: [Active, Deprecated]
+        required: true
+      - name: definition_sql
+        type: string
+        required: true
+        description: SQL aggregate expression or formula.
+    page_title_prefix: "Measure:"
+    container_path: "<domain>/measures/"
+
+  - name: Attribute
+    label: Attribute
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: kind
+        type: enum
+        values: [dimension, fact, time_dimension]
+        required: true
+      - name: synonyms
+        type: list[string]
+        required: false
+      - name: access_modifier
+        type: enum
+        values: [public_access, private_access]
+        required: true
+      - name: expression_sql
+        type: string
+        required: false
+        description: Derived SQL expression. Required if the column has a non-trivial expression.
+    page_title_prefix: "Attribute:"
+    container_path: "<domain>/attributes/"
+
+  - name: Filter
+    label: Filter
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: mandatory
+        type: boolean
+        required: true
+        description: If true, this filter must be applied to any query that uses the associated table or measure.
+      - name: synonyms
+        type: list[string]
+        required: false
+      - name: predicate_sql
+        type: string
+        required: true
+        description: SQL WHERE clause expression.
+    page_title_prefix: "Filter:"
+    container_path: "<domain>/filters/"
+
+  - name: VerifiedQuery
+    label: VerifiedQuery
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: onboarding_question
+        type: boolean
+        required: true
+        description: If true, this query is recommended for domain onboarding.
+      - name: verified_by
+        type: string
+        required: true
+      - name: verified_at
+        type: date
+        required: true
+      - name: status
+        type: enum
+        values: [Active, Superseded]
+        required: true
+      - name: question
+        type: string
+        required: true
+        description: Exact natural-language question this SQL answers.
+      - name: sql
+        type: string
+        required: true
+    page_title_prefix: "VerifiedQuery:"
+    container_path: "<domain>/verified-queries/"
+
+  - name: BusinessRule
+    label: BusinessRule
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: definition
+        type: string
+        required: true
+        description: Exact column names, values, and filter expressions. No prose.
+      - name: consequence_if_violated
+        type: string
+        required: true
+        description: One sentence — quantify if possible.
+    page_title_prefix: "Rule:"
+    container_path: "<domain>/rules/"
+
+  - name: Disambiguation
+    label: Disambiguation
+    scope: per-domain
+    identity_key: name
+    properties:
+      - name: always_ask
+        type: string
+        required: true
+        description: Exact clarifying question to present to the user before any query is issued.
+    page_title_prefix: "Disambiguation:"
+    container_path: "<domain>/disambiguations/"
+
+  - name: Relationship
+    label: Relationship
+    scope: per-domain
+    identity_key: name
+    is_reified_edge: true
+    description: >
+      A Relationship page is a reified edge with Reason and Consequence.
+      It is NOT a node in the graph — it is flattened into a typed relationship on export.
+    properties:
+      - name: kind
+        type: enum
+        values: [mandatory, requires, guards, overrides, demonstrates]
+        required: true
+      - name: from
+        type: string
+        required: true
+        description: Full page title of the source node.
+      - name: to
+        type: string
+        required: true
+        description: Full page title of the target node.
+      - name: reason
+        type: string
+        required: true
+        description: One sentence explaining why this dependency exists.
+      - name: consequence
+        type: string
+        required: true
+        description: One sentence describing what breaks if the dependency is ignored.
+    page_title_prefix: "Relationship:"
+    container_path: "<domain>/relationships/"
+
+# ---------------------------------------------------------------------------
+# Hyperlink Edge Kinds (no properties, encoded as clickable link labels)
+# ---------------------------------------------------------------------------
+hyperlink_edge_kinds:
+  - kind: implement
+    relationship_type: IMPLEMENTS
+    valid_sources: [Subject, Measure, BusinessRule, Filter]
+    valid_targets: [Filter, Measure, BusinessRule, VerifiedQuery]
+    notes: >
+      Subject may implement any target type.
+      Measure, BusinessRule, Filter may only implement VerifiedQuery.
+      implement is NOT valid between two Subjects — use relatedTo.
+
+  - kind: relatedTo
+    relationship_type: RELATED_TO
+    valid_sources: [any]
+    valid_targets: [any]
+    symmetric: true
+    notes: Generic cross-link. Use when no more specific edge kind applies.
+
+  - kind: attribute
+    relationship_type: HAS_ATTRIBUTE
+    valid_sources: [Table]
+    valid_targets: [Attribute]
+
+  - kind: joinedTo
+    relationship_type: JOINED_TO
+    valid_sources: [Table]
+    valid_targets: [Table]
+    symmetric: true
+    properties:
+      - name: on
+        type: string
+        description: Join condition (e.g. "LEFT.col = RIGHT.col")
+
+  - kind: disambiguate
+    relationship_type: DISAMBIGUATES
+    valid_sources: [Subject]
+    valid_targets: [Disambiguation]
+
+  - kind: apply
+    relationship_type: APPLIES_TO
+    valid_sources: [BusinessRule]
+    valid_targets: [Table, Measure]
+
+  - kind: contain
+    relationship_type: CONTAINS
+    valid_sources: [Domain]
+    valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule]
+
+# ---------------------------------------------------------------------------
+# Reified Edge Kinds (require a Relationship page; carry reason + consequence)
+# ---------------------------------------------------------------------------
+reified_edge_kinds:
+  - kind: mandatory
+    relationship_type: MANDATORY_FOR
+    valid_source: Filter
+    valid_target: Table
+    properties:
+      - name: reason
+        type: string
+        required: true
+      - name: consequence
+        type: string
+        required: true
+
+  - kind: requires
+    relationship_type: REQUIRES
+    valid_source: Measure
+    valid_target: Filter
+    properties:
+      - name: reason
+        type: string
+        required: true
+      - name: consequence
+        type: string
+        required: true
+
+  - kind: guards
+    relationship_type: GUARDS
+    valid_source: Filter
+    valid_target: Measure
+    properties:
+      - name: reason
+        type: string
+        required: true
+      - name: consequence
+        type: string
+        required: true
+
+  - kind: overrides
+    relationship_type: OVERRIDES
+    valid_source: BusinessRule
+    valid_target: Attribute
+    properties:
+      - name: reason
+        type: string
+        required: true
+      - name: consequence
+        type: string
+        required: true
+
+  - kind: demonstrates
+    relationship_type: DEMONSTRATES
+    valid_source: VerifiedQuery
+    valid_target: BusinessRule
+    properties:
+      - name: reason
+        type: string
+        required: true
+      - name: consequence
+        type: string
+        required: true
+
+# ---------------------------------------------------------------------------
+# Audit Rules
+# ---------------------------------------------------------------------------
+audit_rules:
+  - id: no_duplicate_nodes
+    description: name + label must be unique in the node index.
+
+  - id: no_duplicate_edges
+    description: (source, target, relationship_type) must be unique in the edge index.
+
+  - id: reified_beats_hyperlink
+    description: >
+      If (source, target) has both a RELATED_TO hyperlink and a reified edge
+      covering the same pair, the RELATED_TO is redundant and should be removed.
+
+  - id: back_refs_excluded
+    description: >
+      Edges where the link label contains "<-" are back-references (navigation only).
+      They must not be imported into the graph or edge index.
+
+  - id: relationship_pages_flattened
+    description: >
+      Every Relationship page must have a corresponding entry in the edge index
+      with style: reified.
