@@ -39,18 +39,18 @@ Before starting any workflow:
 
 ---
 
-## Choosing: MCP tool calls vs. Python script
+## Choosing: MCP tool calls vs. Knowledge Graph API
 
 | Situation | Use |
 |---|---|
 | Single page — read, create, or update | MCP tool calls directly |
 | 2–5 pages — targeted updates | MCP tool calls directly |
-| 6+ pages — same structural change across many pages | Python script via REST API |
-| Regex-based HTML surgery (changing link format, moving metadata) | Python script |
-| Bulk rename / edge renaming across the graph | Python script |
-| Debugging Confluence storage-format HTML | Python script |
+| 6+ pages — same structural change across many pages | Knowledge Graph API |
+| Regex-based HTML surgery (changing link format, moving metadata) | Knowledge Graph API |
+| Bulk rename / edge renaming across the graph | Knowledge Graph API |
+| Debugging Confluence storage-format HTML | Knowledge Graph API |
 
-See [bulk-update-scripts.md](bulk-update-scripts.md) for Python script patterns.
+See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 ---
 
@@ -121,7 +121,7 @@ See [bulk-update-scripts.md](bulk-update-scripts.md) for Python script patterns.
 
 **Trigger:** user asks to change a definition, formula, predicate, rule, or any other field.
 
-**Decision point:** if this is a structural change affecting 6+ pages (e.g. link format migration, header field removal, edge renaming), use a Python script instead (see `bulk-update-scripts.md`).
+**Decision point:** if this is a structural change affecting 6+ pages (e.g. link format migration, header field removal, edge renaming), use the Knowledge Graph API instead (see [graph-api.md](graph-api.md)).
 
 ### Steps for targeted updates (≤ 5 pages)
 
@@ -153,7 +153,7 @@ See [bulk-update-scripts.md](bulk-update-scripts.md) for Python script patterns.
 ### Steps for bulk updates (6+ pages)
 
 1. Describe the structural change, enumerate affected pages, ask for confirmation.
-2. Write a Python script modelled on examples in [bulk-update-scripts.md](bulk-update-scripts.md).
+2. Use the Knowledge Graph API — see [graph-api.md](graph-api.md) for patterns.
 3. Run on one page first. Show before/after diff. Confirm before running on all.
 4. Execute the full batch only after confirmation.
 

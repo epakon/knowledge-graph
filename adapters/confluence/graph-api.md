@@ -1,15 +1,18 @@
-# Bulk Update Scripts
+# Knowledge Graph API
 
-> Python patterns for bulk updates to Knowledge Graph pages via the Confluence REST API.
-> Use these instead of MCP tool calls when a change affects 6+ pages or requires regex-based HTML surgery.
+> Programmatic interface for graph operations on the knowledge base — bulk updates, structural migrations, snapshot generation, and graph DB import preparation.
+> The Knowledge Graph API sits between the agent (MCP tool calls) and the backend (Confluence REST API today, graph database in the future).
+> Use it instead of MCP tool calls when a change affects 6+ pages or requires programmatic operations outside the LLM context.
 
-## Why scripts instead of MCP
+> **Naming note:** "Knowledge Graph API" refers to our interface for graph operations. It is distinct from the Confluence REST API (Atlassian's vendor HTTP API, which the Knowledge Graph API uses internally as its current transport layer) and from Confluence MCP (the agent-facing tool interface).
 
-Two reasons to prefer REST API scripts over MCP tool calls for bulk work:
+## Why the Knowledge Graph API instead of MCP
 
-1. **Token cost.** Each MCP tool call (`confluence_get_page`, `confluence_update_page`) consumes LLM context tokens — for the page body, the response, and the conversation turn. Updating 50 pages via MCP means 100+ tool calls inside a single agent session, which is expensive and slow. A Python script makes the same 100 HTTP calls outside the LLM entirely — zero token cost per page.
+Two reasons to prefer the Knowledge Graph API over MCP tool calls for bulk work:
 
-2. **Future graph database API.** These scripts are a stepping stone toward a native graph database backend. The REST helper patterns (`get_page`, `update_page`, `collect_kg_pages`, `search_pages`) map directly to the read/write operations a graph DB client would expose. When Confluence is eventually replaced or supplemented by a dedicated graph database, these scripts become the basis for the migration and the ongoing write API — the calling convention stays the same, only the transport layer changes.
+1. **Token cost.** Each MCP tool call (`confluence_get_page`, `confluence_update_page`) consumes LLM context tokens — for the page body, the response, and the conversation turn. Updating 50 pages via MCP means 100+ tool calls inside a single agent session, which is expensive and slow. The Knowledge Graph API makes the same 100 HTTP calls outside the LLM entirely — zero token cost per page.
+
+2. **Backend independence.** The Knowledge Graph API defines graph operations (`get_page`, `update_page`, `collect_kg_pages`, `search_pages`) as an interface. Today the transport layer is the Confluence REST API. When Confluence is eventually replaced or supplemented by a dedicated graph database, only the transport layer changes — the calling convention and the operations themselves stay the same. This is the migration path described in [spec/data-model.md §6](../../spec/data-model.md#6-graph-database-migration-notes).
 
 ---
 
@@ -29,9 +32,9 @@ AUTH     = HTTPBasicAuth(EMAIL, TOKEN)
 
 ---
 
-## Shared REST helpers
+## Core operations
 
-All scripts share the same helper structure. Copy these from any existing script as the base for a new one.
+These are the fundamental Knowledge Graph API operations. All higher-level operations (download, fix, migrate) are built on top of these. Copy these as the base for any new operation.
 
 ### `get_page(page_id)`
 
@@ -154,7 +157,7 @@ Only set `DRY_RUN = False` and restore the full page list after confirming the o
 
 ---
 
-## Script: download pages
+## Operation: download pages
 
 **Purpose:** Download all knowledge graph pages as Markdown files with YAML frontmatter.
 
@@ -182,7 +185,7 @@ python kg_download_pages.py --output /tmp/kg         # custom output directory
 
 ---
 
-## Script: fix link labels
+## Operation: fix link labels
 
 **Purpose:** Migrate `## Related` links from a bare-link + trailing-text format to `<ac:link-body>` clickable-label format.
 
@@ -219,7 +222,7 @@ python kg_fix_link_labels.py --page <page_id>        # single page
 
 ---
 
-## Script: fix headers
+## Operation: fix headers
 
 **Purpose:** Remove metadata header fields made redundant when their relationships were moved to `## Related` as typed edge links.
 
@@ -239,7 +242,7 @@ def remove_header_field(body, field_name):
 
 ---
 
-## Script: inject back-references into Relationship pages
+## Operation: inject back-references into Relationship pages
 
 **Purpose:** Ensure every node page that participates in a Relationship has a link to that Relationship page in its `## Relationships` section.
 
@@ -267,7 +270,7 @@ def ensure_relationships_section(body, new_items_html):
 
 ## Back-reference injection rules
 
-The three constraints from [spec/link-format.md](../../spec/link-format.md#back-reference-constraints) apply equally to MCP writes and Python scripts. Watch for these symptoms in raw HTML:
+The three constraints from [spec/link-format.md](../../spec/link-format.md#back-reference-constraints) apply equally to MCP writes and Knowledge Graph API calls. Watch for these symptoms in raw HTML:
 
 | Constraint | Symptom in raw HTML | Fix |
 |---|---|---|

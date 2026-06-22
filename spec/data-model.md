@@ -229,7 +229,7 @@ Once a graph database backend is in place, the wiki becomes a **human authoring 
 3. Graph database → read API for agents (post-migration)
 4. Wiki pages → write API (create/update triggers a graph DB write, not just a wiki page update)
 
-The bulk update scripts in `adapters/confluence/bulk-update-scripts.md` are designed with this transition in mind — their REST helper patterns map directly to the operations a graph DB client would expose.
+The Knowledge Graph API in `adapters/confluence/graph-api.md` is designed with this transition in mind — its core operations (`get_page`, `update_page`, `collect_kg_pages`, `search_pages`) map directly to the read/write operations a graph DB client would expose. When the backend changes, only the transport layer is replaced; the calling convention remains the same.
 
 ---
 

@@ -11,6 +11,14 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.3.3] — 2026-06-22
+
+### Changed
+- **Terminology:** "Python scripts" → **"Knowledge Graph API"** throughout all documents. The programmatic interface for graph operations is now named explicitly to distinguish it from the Confluence REST API (Atlassian's vendor HTTP API, used internally as the current transport layer) and from Confluence MCP (the agent-facing tool interface). Affected files: `adapters/confluence/graph-api.md` (renamed from `bulk-update-scripts.md`), `adapters/confluence/agent-skill.md`, `adapters/confluence/confluence-adapter.md`, `SPEC.md`, `README.md`, `index.md`, `spec/data-model.md`.
+- **File rename:** `adapters/confluence/bulk-update-scripts.md` → `adapters/confluence/graph-api.md`. Title changed to "Knowledge Graph API". Includes an explicit naming-disambiguation note and the "backend independence" rationale for the API design.
+
+---
+
 ## [1.3.2] — 2026-06-19
 
 ### Added

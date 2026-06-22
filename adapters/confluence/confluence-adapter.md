@@ -15,7 +15,7 @@ This document describes how the backend-agnostic spec maps to Confluence-specifi
 | Page link | Confluence `<ac:link>` with `<ac:link-body>` for the edge statement label |
 | Version comment | Confluence page version comment (set on `confluence_update_page`) |
 | Semantic search | Glean MCP connector, indexing Confluence continuously |
-| Graph snapshot | Python script crawling pages via Confluence REST API |
+| Graph snapshot | Knowledge Graph API crawling pages via Confluence REST API (see [graph-api.md](graph-api.md)) |
 
 ---
 

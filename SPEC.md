@@ -327,7 +327,7 @@ Reference implementations and tooling design are documented in `adapters/`:
 | Document | Purpose |
 |---|---|
 | [adapters/confluence/snapshot-pipeline.md](adapters/confluence/snapshot-pipeline.md) | Crawl pages → JSON snapshot → interactive graph visualization |
-| [adapters/confluence/bulk-update-scripts.md](adapters/confluence/bulk-update-scripts.md) | Python patterns for structural bulk updates via REST API |
+| [adapters/confluence/graph-api.md](adapters/confluence/graph-api.md) | Knowledge Graph API for programmatic graph operations (bulk updates, migration, graph DB import) |
 | [adapters/confluence/agent-skill.md](adapters/confluence/agent-skill.md) | Agent operational spec: five workflows with step-by-step instructions |
 
 ---

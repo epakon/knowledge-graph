@@ -28,7 +28,7 @@
 
 * [adapters/confluence/confluence-adapter.md](adapters/confluence/confluence-adapter.md) - Storage format, MCP tools, link encoding, Glean/Cortex integration
 * [adapters/confluence/agent-skill.md](adapters/confluence/agent-skill.md) - Agent workflows: Read, Write, Update, Navigate, Version history
-* [adapters/confluence/bulk-update-scripts.md](adapters/confluence/bulk-update-scripts.md) - Python REST patterns for bulk page updates
+* [adapters/confluence/graph-api.md](adapters/confluence/graph-api.md) - Knowledge Graph API for programmatic graph operations
 * [adapters/confluence/snapshot-pipeline.md](adapters/confluence/snapshot-pipeline.md) - Confluence → JSON snapshot → graph visualization pipeline
 
 ---

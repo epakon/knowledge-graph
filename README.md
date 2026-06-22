@@ -55,7 +55,7 @@ adapters/
   confluence/
     confluence-adapter.md      Confluence-specific implementation (ac:link-body, MCP tools)
     agent-skill.md             Agent workflows: Read, Write, Update, Navigate, History
-    bulk-update-scripts.md     Python patterns for bulk page updates via REST API
+    graph-api.md               Knowledge Graph API for programmatic graph operations
     snapshot-pipeline.md       Snapshot + graph visualization pipeline
 
 examples/
