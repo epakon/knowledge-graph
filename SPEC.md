@@ -334,17 +334,26 @@ Reference implementations and tooling design are documented in `adapters/`:
 
 ## 10. Backend Adapters
 
-The spec is backend-agnostic. Any wiki or document store that supports:
-- Hierarchical page organization (parent/child containers)
-- Cross-page hyperlinks with custom link labels
-- Page version history
-- Full-text or semantic search
+The spec is backend-agnostic. Adapters fall into two categories:
 
-...can implement this specification. Current adapters:
+**Content storage** — human-facing systems where nodes and edges are created and maintained as pages or documents (wikis, shared drives, Markdown files). The full knowledge lives here: business definitions, SQL expressions, reason/consequence prose, synonyms, version history. This is the source of truth and the only authoring surface. Any content storage that supports hierarchical organization, cross-page links with custom labels, version history, and full-text or semantic search can implement this specification.
 
-| Backend | Adapter doc |
+**Graph DB** — a structural projection of the content storage, not a copy. The graph DB holds the skeleton of the graph — node labels, key properties (`name`, `domain`, `status`), and typed relationships with edge properties — but not the full page bodies. It is derived from the content storage via the Knowledge Graph API export pipeline (JSON indexes → graph import) and serves three purposes:
+- **Duplicate prevention** — uniqueness constraints on `(label, name)` guard against duplicate nodes that Confluence search alone can miss
+- **Fast graph traversal** — Cypher/Gremlin queries for path finding, neighbor lookup, and impact analysis that are expensive or impossible via MCP
+- **Lineage and traceability** — every node retains its `page_id`, linking any graph query result back to the exact source page in the content storage
+
+### Content storage adapters
+
+| Storage | Adapter doc |
 |---|---|
 | Confluence | [adapters/confluence/confluence-adapter.md](adapters/confluence/confluence-adapter.md) |
+
+### Graph DB adapters
+
+| Database | Adapter doc |
+|---|---|
+| *(planned)* | [adapters/graph-db/README.md](adapters/graph-db/README.md) |
 
 ---
 

@@ -204,32 +204,12 @@ These rules should be validated after every snapshot regeneration:
 
 ## 6. Graph Database Migration Notes
 
-The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are the **intermediate representation** between the wiki and a target graph database. They serve two purposes simultaneously:
+The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) serve two purposes simultaneously:
 
 - **Duplicate tracking** — before creating a new node, check the node index to confirm no node with the same `(label, name)` already exists. This is the primary guard against duplicate pages and split-brain definitions.
-- **Graph DB import input** — the indexes are designed to be loaded directly into a graph database. Each entry maps 1:1 to a `MERGE` upsert on a node or relationship. The JSON schema is intentionally close to what Cypher (`MERGE`), Gremlin (`addV`/`addE`), or any property graph API expects.
+- **Graph DB import input** — each entry maps 1:1 to a `MERGE` upsert on a node or relationship, ready for import into any property graph store.
 
-**Target graph database:** not yet decided. The schema uses generic terms (node label, relationship type, identity key). Neo4j maps cleanly: node labels → Neo4j labels, relationship types → Neo4j relationship types, identity keys → uniqueness constraints. The same mapping applies to Amazon Neptune, ArangoDB, or any property graph store.
-
-### Migration steps
-
-1. **Import nodes** from the node index — upsert by `(label, name)` and set all properties.
-2. **Import edges** from the edge index — hyperlinks first, then reified edges (they may reference the same pairs).
-3. **Skip back-references** — they are navigation artifacts, not graph edges.
-4. **Relationship pages** have already been flattened into the edge index; their wiki pages can be archived post-migration.
-5. **`Domain` nodes** can be migrated as nodes or treated as a property (`domain: "Sales"`) on other nodes — decision deferred.
-6. **`page_id`** should be retained as a node property for traceability during the transition period.
-
-### Future direction
-
-Once a graph database backend is in place, the wiki becomes a **human authoring layer** rather than the source of truth. The migration path is:
-
-1. Wiki pages → snapshot script → JSON indexes (current state)
-2. JSON indexes → graph database import (migration)
-3. Graph database → read API for agents (post-migration)
-4. Wiki pages → write API (create/update triggers a graph DB write, not just a wiki page update)
-
-The Knowledge Graph API in `adapters/confluence/graph-api.md` is designed with this transition in mind — its core operations (`get_page`, `update_page`, `collect_kg_pages`, `search_pages`) map directly to the read/write operations a graph DB client would expose. When the backend changes, only the transport layer is replaced; the calling convention remains the same.
+For the full migration procedure, node/edge mapping tables, import examples, sync strategy, and candidate databases, see [adapters/graph-db/README.md](../adapters/graph-db/README.md).
 
 ---
 

@@ -52,11 +52,13 @@ spec/
   schema.yaml                  Machine-readable schema
 
 adapters/
-  confluence/
+  confluence/                  Content storage adapter (complete)
     confluence-adapter.md      Confluence-specific implementation (ac:link-body, MCP tools)
     agent-skill.md             Agent workflows: Read, Write, Update, Navigate, History
     graph-api.md               Knowledge Graph API for programmatic graph operations
     snapshot-pipeline.md       Snapshot + graph visualization pipeline
+  graph-db/                    Graph DB adapter (planned)
+    README.md                  Node/edge mapping, import procedure, sync strategy
 
 examples/
   domain-layout-example.md     Illustrative domain structure

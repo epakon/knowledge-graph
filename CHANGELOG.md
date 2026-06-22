@@ -11,6 +11,18 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.3.4] — 2026-06-22
+
+### Added
+- **`adapters/graph-db/README.md`**: New Graph DB adapter — structural projection concept, role in architecture (diagram), what/is-not comparison table, three purposes (duplicate prevention, fast traversal, lineage/traceability), hyperlink and reified edge kind → relationship type mapping tables, edge conflict rule, JSON index field descriptions (node + edge), import steps with Cypher examples for both hyperlink and reified edges, sync strategy candidates, candidate databases. Status: planned.
+
+### Changed
+- **`SPEC.md` §10**: Adapter section restructured into two categories — **Content storage** (source of truth, full knowledge, authoring surface) and **Graph DB** (structural projection, three purposes spelled out). Each category has a brief description before the adapter table.
+- **`spec/data-model.md` §6**: Graph Database Migration Notes condensed to a two-bullet summary (duplicate tracking + import input) with a link to `adapters/graph-db/README.md`.
+- **`index.md`**, **`README.md`**: Updated to reflect the new `adapters/graph-db/` folder and two-category adapter structure.
+
+---
+
 ## [1.3.3] — 2026-06-22
 
 ### Changed
