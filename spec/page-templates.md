@@ -13,6 +13,14 @@
 - **Do not add non-template sections** unless the node type explicitly allows it.
 - For link syntax, see [link-format.md](link-format.md).
 
+### Header fields vs ## Links — one-to-many rule
+
+When a node has a relationship to exactly one other node of a given type, the link may appear as a **header field** (e.g. `**Disambiguation:** [Disambiguation: X]` on a Filter page). This keeps the most important structural metadata visible at the top without requiring a section.
+
+When a node may have **multiple** links of the same type — or when the relationship is a traversal edge rather than classification metadata — the link belongs in `## Links` as a typed edge statement.
+
+If a header field relationship grows to multiple targets, move all instances to `## Links`.
+
 ---
 
 ## Subject
@@ -28,7 +36,7 @@ The only page type where substantive prose lives. Kept stable — business conce
 ## Business Definition
 <What this concept means in the business. One paragraph. No SQL.>
 
-## Related
+## Links
 - [Filter: <Name>](path) — Subject: <Name> implement -> Filter: <Name>
 - [Measure: <Name>](path) — Subject: <Name> implement -> Measure: <Name>
 - [Rule: <Name>](path) — Subject: <Name> implement -> Rule: <Name>
@@ -114,11 +122,12 @@ The domain page is also the parent container for all type sub-folders. It is the
 ## Caveats
 - <sign conventions, date format, point-in-time vs current-state, etc.>
 
-## Related
-- [Attribute: <Name>](path) — Table: <TableName> attribute -> Attribute: <Name>
+## Links
+- [Attribute: <Name>](path) — Table: <TableName> calculate -> Attribute: <Name>
+- [Measure: <Name>](path) — Table: <TableName> calculate -> Measure: <Name>
 ```
 
-> **Note on `## Related` on Table pages:** Only list Attributes and Measures that are **not** already in the `Calculated` column above. Listing them in both places is a duplicate.
+> **Note on `## Links` on Table pages:** Only list Attributes and Measures that are **not** already in the `Calculated` column of `## Semantic annotations`. Listing them in both places is a duplicate.
 
 ---
 
@@ -136,13 +145,11 @@ The domain page is also the parent container for all type sub-folders. It is the
 ## Definition
 <SQL expression or formula>
 
-## Tables Used
-- [Table: <Name>](../tables/<Name>)
-
 ## Relationships
 - [Relationship: <Name>](../../relationships/<Name>)
 
-## Related
+## Links
+- [Table: <Name>](path) — Table: <Name> calculate <- Measure: <Name>
 - [Rule: <Name>](path) — Measure: <Name> relatedTo -> Rule: <Name>
 - [Filter: <Name>](path) — Measure: <Name> relatedTo -> Filter: <Name>
 - [VerifiedQuery: <Name>](path) — Measure: <Name> implement -> VerifiedQuery: <Name>
@@ -157,7 +164,7 @@ Promoted column with semantic payload. Create a page when the column has a deriv
 
 Simple columns with only a description stay inline in the parent Table's `## Fields` section.
 
-In the Table's `## Semantic annotations`, list this Attribute in the `Calculated` column — do not also add it to Table's `## Related` (that would be a duplicate link).
+In the Table's `## Semantic annotations`, list this Attribute in the `Calculated` column — do not also add it to Table's `## Links` (that would be a duplicate link).
 
 ```markdown
 # Attribute: <Name>
@@ -176,8 +183,8 @@ In the Table's `## Semantic annotations`, list this Attribute in the `Calculated
 ## Business Definition
 <What this attribute means semantically. One paragraph.>
 
-## Related
-- [Table: <Name>](path) — Table: <Name> attribute <- Attribute: <Name>
+## Links
+- [Table: <Name>](path) — Table: <Name> calculate <- Attribute: <Name>
 - [Rule: <Name>](path) — Attribute: <Name> relatedTo -> Rule: <Name>
 - [Filter: <Name>](path) — Attribute: <Name> relatedTo -> Filter: <Name>
 - [Subject: <Name>](path) — Attribute: <Name> relatedTo -> Subject: <Name>
@@ -204,7 +211,7 @@ In the Table's `## Semantic annotations`, list this Attribute in the `Calculated
 ## Relationships
 - [Relationship: <Name>](../../relationships/<Name>)
 
-## Related
+## Links
 - [Subject: <Name>](path) — Subject: <Name> implement <- Filter: <Name>
 - [VerifiedQuery: <Name>](path) — Filter: <Name> implement -> VerifiedQuery: <Name>
 ```
@@ -229,7 +236,7 @@ In the Table's `## Semantic annotations`, list this Attribute in the `Calculated
 ## Relationships
 - [Relationship: <Name>](../../relationships/<Name>)
 
-## Related
+## Links
 - [Measure: <Name>](path) — VerifiedQuery: <Name> implement -> Measure: <Name>
 - [Filter: <Name>](path) — VerifiedQuery: <Name> relatedTo -> Filter: <Name>
 - [Rule: <Name>](path) — VerifiedQuery: <Name> relatedTo -> Rule: <Name>
@@ -256,7 +263,7 @@ In the Table's `## Semantic annotations`, list this Attribute in the `Calculated
 ## Consequence if Violated
 <One sentence — quantify if possible.>
 
-## Related
+## Links
 - [Table: <Name>](path) — Rule: <Name> apply -> Table: <Name>
 - [Measure: <Name>](path) — Rule: <Name> apply -> Measure: <Name>
 - [Subject: <Name>](path) — Subject: <Name> implement <- Rule: <Name>

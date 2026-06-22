@@ -178,7 +178,7 @@ Relationship page link (same label on both From and To pages):
 
 Rules:
 - Use ASCII `->` and `<-` — not unicode arrows.
-- All hyperlink edges live in a `## Related` section.
+- All hyperlink edges live in a `## Links` section.
 - Relationship page links live in a separate `## Relationships` section.
 - Back-references are navigation shortcuts only — not separate semantic edges.
 
@@ -247,7 +247,7 @@ Each node type has a canonical template defining required header fields, section
 
 - **Prose belongs only on Subject and Disambiguation pages.** All other pages use structured header fields and a predicate/definition block — no explanatory paragraphs.
 - **Keep all fields even if empty** — empty fields are valid; missing fields are not.
-- **Semantic annotations on Table pages** use a `Calculated` column to link to Attribute or Measure pages. A node in the `Calculated` column must not also appear in `## Related` (duplicate).
+- **Semantic annotations on Table pages** use a `Calculated` column to link to Attribute or Measure pages. A node in the `Calculated` column must not also appear in `## Links` (duplicate).
 
 ---
 

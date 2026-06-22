@@ -100,7 +100,7 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 |---|---|---|
 | `implement` | `IMPLEMENTS` | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
 | `relatedTo` | `RELATED_TO` | Symmetric generic cross-link |
-| `attribute` | `HAS_ATTRIBUTE` | Table → Attribute |
+| `calculate` | `CALCULATES` | Table → Attribute, Measure | Table is the source exposing the derived column (Attribute) or computing the KPI (Measure) |
 | `joinedTo` | `JOINED_TO` | Symmetric; join key stored as property `on` |
 | `disambiguate` | `DISAMBIGUATES` | Subject → Disambiguation |
 | `apply` | `APPLIES_TO` | BusinessRule → Table, Measure |

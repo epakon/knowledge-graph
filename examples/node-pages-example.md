@@ -17,7 +17,7 @@
 Revenue is the total monetary value received from customers for goods or services delivered,
 before any deductions for returns, write-offs, or discounts.
 
-## Related
+## Links
 - [Measure: GROSS_REVENUE](../Domain: Sales/measures/Measure: GROSS_REVENUE) — Subject: Revenue implement -> Measure: GROSS_REVENUE
 - [Measure: NET_REVENUE](../Domain: Finance/measures/Measure: NET_REVENUE) — Subject: Revenue implement -> Measure: NET_REVENUE
 - [Filter: EXCLUDE_RETURNS](path) — Subject: Revenue implement -> Filter: EXCLUDE_RETURNS
@@ -122,13 +122,13 @@ Line items are in TABLE: ORDER_LINES.
 SUM(ORDERS.TOTAL_AMOUNT)
 ```
 
-## Tables Used
+## Links
 - [Table: ORDERS](../tables/Table: ORDERS)
 
 ## Relationships
 - [Relationship: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../relationships/Relationship: GROSS_REVENUE requires ACTIVE_ORDERS)
 
-## Related
+## Links
 - [Rule: exclude-cancelled-orders](../rules/Rule: exclude-cancelled-orders) — Measure: GROSS_REVENUE relatedTo -> Rule: exclude-cancelled-orders
 - [VerifiedQuery: REVENUE_BY_REGION_MONTHLY](../verified-queries/VerifiedQuery: REVENUE_BY_REGION_MONTHLY) — Measure: GROSS_REVENUE implement -> VerifiedQuery: REVENUE_BY_REGION_MONTHLY
 - [Subject: Revenue](path) — Subject: Revenue implement <- Measure: GROSS_REVENUE
@@ -160,8 +160,8 @@ END
 Normalized order lifecycle status. Maps raw system status codes to three business-level
 categories: active, inactive, and pending.
 
-## Related
-- [Table: ORDERS](../tables/Table: ORDERS) — Table: ORDERS attribute <- Attribute: ORDER_STATUS
+## Links
+- [Table: ORDERS](../tables/Table: ORDERS) — Table: ORDERS calculate <- Attribute: ORDER_STATUS
 - [Filter: ACTIVE_ORDERS](../filters/Filter: ACTIVE_ORDERS) — Attribute: ORDER_STATUS relatedTo -> Filter: ACTIVE_ORDERS
 - [Disambiguation: order-status](../disambiguations/Disambiguation: order-status) — Attribute: ORDER_STATUS relatedTo -> Disambiguation: order-status
 ```
@@ -188,7 +188,7 @@ ORDER_STATUS IN ('confirmed', 'shipped', 'delivered')
 - [Relationship: ACTIVE_ORDERS mandatory -> ORDERS](../../relationships/Relationship: ACTIVE_ORDERS mandatory ORDERS)
 - [Relationship: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../relationships/Relationship: GROSS_REVENUE requires ACTIVE_ORDERS)
 
-## Related
+## Links
 - [Subject: Revenue](path) — Subject: Revenue implement <- Filter: ACTIVE_ORDERS
 - [VerifiedQuery: REVENUE_BY_REGION_MONTHLY](path) — Filter: ACTIVE_ORDERS implement -> VerifiedQuery: REVENUE_BY_REGION_MONTHLY
 ```
@@ -213,7 +213,7 @@ What is the gross revenue by region for each month?
 ## Relationships
 - [Relationship: GROSS_REVENUE demonstrates -> exclude-cancelled-orders](../../relationships/Relationship: ...)
 
-## Related
+## Links
 - [Measure: GROSS_REVENUE](path) — VerifiedQuery: REVENUE_BY_REGION_MONTHLY implement -> Measure: GROSS_REVENUE
 - [Filter: ACTIVE_ORDERS](path) — VerifiedQuery: REVENUE_BY_REGION_MONTHLY relatedTo -> Filter: ACTIVE_ORDERS
 - [Rule: exclude-cancelled-orders](path) — VerifiedQuery: REVENUE_BY_REGION_MONTHLY relatedTo -> Rule: exclude-cancelled-orders
@@ -248,7 +248,7 @@ ORDER_STATUS NOT IN ('cancelled', 'returned')
 ## Consequence if Violated
 Cancelled and returned orders inflate revenue by up to 12% in months with high return rates.
 
-## Related
+## Links
 - [Measure: GROSS_REVENUE](path) — Rule: exclude-cancelled-orders apply -> Measure: GROSS_REVENUE
 - [Table: ORDERS](path) — Rule: exclude-cancelled-orders apply -> Table: ORDERS
 - [Subject: Revenue](path) — Subject: Revenue implement <- Rule: exclude-cancelled-orders
@@ -275,7 +275,7 @@ Cancelled and returned orders inflate revenue by up to 12% in months with high r
 ## Option B: All orders including inactive
 → [Rule: exclude-cancelled-orders](../rules/Rule: exclude-cancelled-orders) (do not apply)
 
-## Related
+## Links
 - [Subject: Revenue](path) — Subject: Revenue disambiguate <- Disambiguation: order-status
 ```
 

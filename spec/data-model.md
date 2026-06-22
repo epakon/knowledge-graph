@@ -72,7 +72,7 @@ Back-references on pages are navigation shortcuts and are **not** imported into 
 |---|---|---|---|---|
 | `implement` | `IMPLEMENTS` | Subject, Measure, BusinessRule, Filter | Filter, Measure, BusinessRule, VerifiedQuery | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
 | `relatedTo` | `RELATED_TO` | any | any | Symmetric generic cross-link |
-| `attribute` | `HAS_ATTRIBUTE` | Table | Attribute | |
+| `calculate` | `CALCULATES` | Table | Attribute, Measure | Table is the source that exposes (Attribute) or computes (Measure) the value |
 | `joinedTo` | `JOINED_TO` | Table | Table | Symmetric; join key stored as property `on` |
 | `disambiguate` | `DISAMBIGUATES` | Subject | Disambiguation | |
 | `apply` | `APPLIES_TO` | BusinessRule | Table, Measure | |
@@ -222,10 +222,10 @@ The Table `## Semantic annotations` table is the entry point for column-level se
 | Situation | Where the payload lives |
 |---|---|
 | Simple column — description only | Inline in `## Fields / Physical columns`. No Attribute page. |
-| Column with derived expression, rule link, filter label, access modifier, or non-trivial synonyms | **Attribute page.** List in `Calculated` column. Do **not** also link in `## Related` — that is a duplicate. |
+| Column with derived expression, rule link, filter label, access modifier, or non-trivial synonyms | **Attribute page.** List in `Calculated` column. Do **not** also link in `## Links` — that is a duplicate. |
 | Column that feeds a domain KPI directly | **Measure page.** List in `Calculated` column. Same deduplication rule. |
 
-The `## Related` section on a Table page should only contain Attribute or Measure links that are **not** already in the Semantic annotations table.
+The `## Links` section on a Table page should only contain Attribute or Measure links that are **not** already in the Semantic annotations table.
 
 ### Cross-domain linking via Subject
 

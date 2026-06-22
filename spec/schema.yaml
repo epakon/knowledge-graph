@@ -230,10 +230,14 @@ hyperlink_edge_kinds:
     symmetric: true
     notes: Generic cross-link. Use when no more specific edge kind applies.
 
-  - kind: attribute
-    relationship_type: HAS_ATTRIBUTE
+  - kind: calculate
+    relationship_type: CALCULATES
     valid_sources: [Table]
-    valid_targets: [Attribute]
+    valid_targets: [Attribute, Measure]
+    notes: >
+      Table → Attribute: the table is the source that exposes this derived/classified column.
+      Table → Measure: the table is the source used to compute this measure.
+      Back-reference on Attribute/Measure page: Table: X calculate <- Attribute/Measure: Y.
 
   - kind: joinedTo
     relationship_type: JOINED_TO

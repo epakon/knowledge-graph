@@ -64,7 +64,7 @@ Knowledge Graph (root)
 
 ```
 Subject: Revenue
-  ## Related
+  ## Links
   - [Subject: Revenue implement <- Measure: GROSS_REVENUE]   (back-ref from Sales domain)
   - [Subject: Revenue implement <- Measure: NET_REVENUE]     (back-ref from Finance domain)
 ```
@@ -73,13 +73,13 @@ Each Measure page links back to the Subject:
 
 ```
 Measure: GROSS_REVENUE
-  ## Related
+  ## Links
   - [Subject: Revenue implement <- Measure: GROSS_REVENUE]
 ```
 
 ```
 Measure: NET_REVENUE
-  ## Related
+  ## Links
   - [Subject: Revenue implement <- Measure: NET_REVENUE]
 ```
 

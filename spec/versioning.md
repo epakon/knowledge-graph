@@ -58,7 +58,7 @@ A change is **breaking** if it could cause an agent or SQL query that was correc
 | Mandatory filter added or removed | Yes |
 | BusinessRule definition changed | Yes |
 | Description / synonym updated | No |
-| New `## Related` edge added | No |
+| New `## Links` edge added | No |
 | Verified by / date updated | No |
 | Status changed to Deprecated | Treat as breaking — agents should stop using the node |
 

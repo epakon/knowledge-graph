@@ -74,7 +74,7 @@ The edge kind is taken from the link label context:
 
 | Link location | Kind |
 |---|---|
-| `## Related` section | Edge kind extracted from the `<ac:link-body>` label |
+| `## Links` section | Edge kind extracted from the `<ac:link-body>` label |
 | `## Relationships` section | `relationships` (link to a Relationship page) |
 | `## Joins` section | `joins` |
 | Other header fields | Field name as-is |

@@ -136,7 +136,7 @@ Node properties are encoded as a header paragraph at the top of each page body, 
 </p>
 ```
 
-Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` in the header — no `<ac:link-body>` needed for header fields, only for edge statement links in `## Related` and `## Relationships`.
+Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` in the header — no `<ac:link-body>` needed for header fields, only for edge statement links in `## Links` and `## Relationships`.
 
 ---
 

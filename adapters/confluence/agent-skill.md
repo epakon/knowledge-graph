@@ -14,7 +14,7 @@ This table maps natural-language user requests to the workflow that handles them
 | What the user says | What the agent does | Workflow |
 |---|---|---|
 | "What does `<term>` mean?" | Search → Subject or Disambiguation page → answer from Business Definition | A — Read |
-| "What is the `<measure>` formula?" | Search → Measure page → return Definition + Tables Used | A — Read |
+| "What is the `<measure>` formula?" | Search → Measure page → return Definition + `## Links` (Table sources) | A — Read |
 | "Which filters are mandatory for table T?" | Search → Relationship pages where kind=`mandatory` and To=T | A — Read |
 | "Show lineage for measure X" | Fetch Measure page → follow Relationship + Related links to Filters, Rules, Tables | D — Navigate |
 | "What depends on filter F?" | Search for pages referencing `Filter: F` → traverse downstream | D — Navigate |
@@ -172,7 +172,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
      ```
      text ~ "<NodeType>: <Name>" AND space = "<SPACE_KEY>"
      ```
-   - **Upstream** (what X depends on): follow `## Related` and `## Relationships` links inside the page.
+   - **Upstream** (what X depends on): follow `## Links` and `## Relationships` links inside the page.
 
 3. **Fetch linked pages** for each relevant hop. Do not traverse the full graph — stop at the depth that answers the question.
 

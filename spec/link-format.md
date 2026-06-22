@@ -31,7 +31,7 @@ Relationship page link (same label on both From and To pages):
 - The link navigates to the **other** page — never the current page.
 - `->` = owning side (I point to the target). `<-` = back-reference (someone points to me).
 - Relationship page links always show `->` regardless of which side they appear on.
-- All hyperlink edges live in a `## Related` section.
+- All hyperlink edges live in a `## Links` section.
 - Relationship page links live in a separate `## Relationships` section.
 
 ---
@@ -39,7 +39,7 @@ Relationship page link (same label on both From and To pages):
 ## Page section layout
 
 ```
-## Related
+## Links
   ← all hyperlink edges for this page (both owning and back-reference)
 
 ## Relationships
@@ -56,7 +56,7 @@ Every edge starts as a hyperlink. Promote it to a Relationship page when it gain
 
 | Situation | Use |
 |---|---|
-| "A depends on B" — the dependency is self-evident from the node types | Hyperlink edge in `## Related` |
+| "A depends on B" — the dependency is self-evident from the node types | Hyperlink edge in `## Links` |
 | "A depends on B, and here is **why**, and here is **what breaks** if ignored" | Relationship page under `relationships/` |
 
 **Promotion rule:** if you find yourself wanting to annotate a hyperlink edge with a reason or a consequence, stop — create a Relationship page instead. A hyperlink that says "why" is a Relationship page waiting to happen.
@@ -71,7 +71,7 @@ The same promotion logic applies to columns and computed fields inside a Table:
 | Column with a derived expression (CASE WHEN, COALESCE, sign convention), or linked to a Rule/Subject, or carrying non-trivial synonyms or cross-domain relevance | **Attribute page** under `<domain>/attributes/`. Link from Table's `## Semantic annotations` → `Calculated` column. |
 | Column that is the direct source of a domain KPI | **Measure page** under `<domain>/measures/`. Link from Table's `## Semantic annotations` → `Calculated` column. |
 
-The `Calculated` column in the Semantic annotations table is the decision point: once a column has its own Attribute or Measure page, it is listed there and **not** repeated in `## Related` — that would be a duplicate link.
+The `Calculated` column in the Semantic annotations table is the decision point: once a column has its own Attribute or Measure page, it is listed there and **not** repeated in `## Links` — that would be a duplicate link.
 
 ---
 
@@ -102,7 +102,7 @@ These two concepts share the word "relationship" in common usage and in many dat
 |---|---|---|
 | `implement` | Subject → Filter, Measure, BusinessRule, VerifiedQuery · Measure, BusinessRule, Filter → VerifiedQuery | Not valid between two Subjects |
 | `relatedTo` | any → any | Generic symmetric cross-link |
-| `attribute` | Table → Attribute | |
+| `calculate` | Table → Attribute, Measure | |
 | `joinedTo` | Table → Table | Symmetric |
 | `disambiguate` | Subject → Disambiguation | |
 | `apply` | BusinessRule → Table, Measure | |
@@ -117,10 +117,10 @@ These two concepts share the word "relationship" in common usage and in many dat
 Subject: Write-Off owns an edge to Filter: WRITE_OFF_INVOICES:
 
 ```
-## Related                              ← on Subject: Write-Off
+## Links                              ← on Subject: Write-Off
 [Subject: Write-Off implement -> Filter: WRITE_OFF_INVOICES]
 
-## Related                              ← on Filter: WRITE_OFF_INVOICES
+## Links                              ← on Filter: WRITE_OFF_INVOICES
 [Subject: Write-Off implement <- Filter: WRITE_OFF_INVOICES]
 ```
 
@@ -129,10 +129,10 @@ Subject: Write-Off owns an edge to Filter: WRITE_OFF_INVOICES:
 Measure: REVENUE owns a cross-link to Rule: exclude-reversals:
 
 ```
-## Related                              ← on Measure: REVENUE
+## Links                              ← on Measure: REVENUE
 [Measure: REVENUE relatedTo -> Rule: exclude-reversals]
 
-## Related                              ← on Rule: exclude-reversals
+## Links                              ← on Rule: exclude-reversals
 [Measure: REVENUE relatedTo <- Rule: exclude-reversals]
 ```
 
@@ -223,13 +223,13 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 
 ## Node/edge kind quick reference
 
-| Node type | Header fields | Typical `## Related` edges | `## Relationships`? |
+| Node type | Header fields | Typical `## Links` edges | `## Relationships`? |
 |---|---|---|---|
 | `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
 | `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule | No |
-| `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table · `attribute ->` Attribute | Yes |
-| `Measure` | Type, Domain, Kind, Synonyms, Status | `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
-| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `attribute <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
+| `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table · `calculate ->` Attribute · `calculate ->` Measure | Yes |
+| `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
+| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
 | `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
 | `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement ->` Measure · `relatedTo ->/<-` Filter, Rule | Yes (demonstrates) |
 | `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject | No |

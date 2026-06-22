@@ -11,6 +11,19 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.3.5] — 2026-06-22
+
+### Changed (breaking)
+- **`## Related` → `## Links`** across all pages and spec documents. The section name "Related" was ambiguous — it could be confused with the `relatedTo` edge kind. `## Links` makes explicit that this section holds typed edge statements. Affects: `spec/link-format.md`, `spec/page-templates.md`, `spec/data-model.md`, `SPEC.md`, `spec/versioning.md`, `adapters/confluence/confluence-adapter.md`, `adapters/confluence/agent-skill.md`, `adapters/confluence/snapshot-pipeline.md`, `adapters/graph-db/README.md`, `examples/node-pages-example.md`, `examples/domain-layout-example.md`. **Live pages must be migrated.**
+- **Edge kind `attribute` → `calculate` / `HAS_ATTRIBUTE` → `CALCULATES`**: renamed to reflect the semantic role (the table is the source that calculates/exposes the value) rather than structural ownership. Extended to cover both `Table → Attribute` and `Table → Measure` — replaces the separate `## Tables Used` section on Measure pages. Affects: `spec/schema.yaml`, `spec/data-model.md`, `spec/link-format.md`, `spec/page-templates.md`, `adapters/graph-db/README.md`. **Live pages must be migrated.**
+- **Measure template**: `## Tables Used` section removed. Table sources now listed in `## Links` as `Table: X calculate <- Measure: Y` back-references, consistent with how Attribute pages link to their tables.
+- **Attribute template**: `**Table:**` header field removed (it was already absent from the spec; noted here as migration target for live pages). Table link belongs in `## Links` as `Table: X calculate <- Attribute: Y`.
+
+### Added
+- **Header field vs `## Links` — one-to-many rule** in `spec/page-templates.md`: when a node has exactly one link of a given type, it may appear as a header field (e.g. `**Disambiguation:**` on a Filter page). When multiple links of the same type are possible, they belong in `## Links`. If a header field grows to multiple targets, move all instances to `## Links`.
+
+---
+
 ## [1.3.4] — 2026-06-22
 
 ### Added
