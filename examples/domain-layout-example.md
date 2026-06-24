@@ -16,7 +16,7 @@ A company has two domains: **Sales** and **Finance**. Both domains share the bus
 ```
 Knowledge Graph (root)
 │
-├── concepts/
+├── vocabulary/
 │   └── subjects/
 │       ├── Subject: Revenue          ← shared business definition
 │       ├── Subject: Write-Off        ← shared business definition

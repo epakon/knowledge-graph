@@ -36,6 +36,9 @@ The only page type where substantive prose lives. Kept stable — business conce
 ## Business Definition
 <What this concept means in the business. One paragraph. No SQL.>
 
+## Citations
+- [<Source name>](<URL>) — <one-line description of what this source contributes>
+
 ## Links
 - [Filter: <Name>](path) — Subject: <Name> implement -> Filter: <Name>
 - [Measure: <Name>](path) — Subject: <Name> implement -> Measure: <Name>
@@ -43,6 +46,8 @@ The only page type where substantive prose lives. Kept stable — business conce
 - [Subject: <Name>](path) — Subject: <Name> relatedTo -> Subject: <Name>
 - [Disambiguation: <Term>](path) — Subject: <Name> disambiguate -> Disambiguation: <Term>
 ```
+
+> `## Citations` is optional. Use it to link authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies) that inform the business definition. Do not duplicate the external definition — link to it.
 
 ---
 

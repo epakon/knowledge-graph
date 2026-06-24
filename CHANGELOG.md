@@ -9,6 +9,37 @@ Versioning follows [Semantic Versioning](https://semver.org):
 - `MINOR` — additive change: new node type, new edge kind, new folder, new template, new skill workflow
 - `PATCH` — clarification, wording fix, non-breaking convention update
 
+## Versions
+
+| Version | Date | Summary |
+|---|---|---|
+| [1.3.6](#1.3.6) | 2026-06-24 | `concepts/` → `vocabulary/`; cross-domain ownership model; two-layer architecture; Citations template |
+| [1.3.5](#1.3.5) | 2026-06-22 | `## Related` → `## Links`; edge kind `attribute` → `calculate` |
+| [1.3.4](#1.3.4) | 2026-06-22 | Graph DB adapter doc; adapter section split into content storage vs. graph DB |
+| [1.3.3](#1.3.3) | 2026-06-22 | "Python scripts" → "Knowledge Graph API" terminology |
+| [1.3.2](#1.3.2) | 2026-06-19 | Vocabulary layer design notes; agent query walkthrough example |
+| [1.3.1](#1.3.1) | 2026-06-19 | Converted flat design docs to structured spec format |
+| [1.3.0](#1.3.0) | 2026-06-17 | Schema index, node/edge JSON registries, audit rules |
+| [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
+| [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
+| [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.6] — 2026-06-24
+
+### Changed
+- **`concepts/` renamed to `vocabulary/`** across all spec documents, templates, and adapter docs. The folder that holds global, domain-agnostic node types is now `vocabulary/` (was `concepts/`). Reflects the architectural intent: this layer holds the language the business uses — ontologies, business terms, methodologies — not just abstract concepts.
+  - Path change: `concepts/subjects/` → `vocabulary/subjects/`
+  - Affected files: `SPEC.md`, `spec/space-structure.md`, `spec/data-model.md`, `spec/schema.yaml`, `adapters/confluence/confluence-adapter.md`, `adapters/confluence/snapshot-pipeline.md`, `examples/domain-layout-example.md`
+  - Three-layer model renamed: Conceptual → Vocabulary (`vocabulary/`), Implementation (`<domain>/`), Relationship (`relationships/`)
+- **Cross-domain ownership model** clarified. `contain ->` implies exactly one owning domain per node. Cross-domain usage is expressed through existing edges between nodes — non-owning domains do not add `contain` edges. Decision tree for ownership assignment added to `spec/space-structure.md`.
+- **`spec/data-model.md`**: two-layer architecture section added (`§1`); `contain` edge definition updated to state ownership semantics.
+- **`spec/page-templates.md`**: `## Citations` optional section added to Subject template for linking authoritative external sources.
+- **`spec/data-model.md` §7**: cross-domain linking section broadened from "via Subject" to "via Vocabulary" — any Vocabulary node can serve as a cross-domain anchor.
+
+> **Note:** Treated as patch-level changes bundled into a single release. Version bumped to 1.3.6 — prototype stage; major version reserved for larger structural changes.
+
 ---
 
 ## [1.3.5] — 2026-06-22
@@ -49,7 +80,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 ### Added
 - **`spec/data-model.md`**: §6 expanded with "Future direction" — explains the JSON indexes as intermediate representation for graph DB import, duplicate tracking purpose, and the planned migration path from wiki-as-source-of-truth to graph DB backend with wiki as authoring layer.
 - **`adapters/confluence/bulk-update-scripts.md`**: "Why scripts instead of MCP" section — two reasons: token cost of bulk MCP calls, and scripts as a foundation for a future graph DB write API.
-- **`spec/space-structure.md`**: "The `concepts/` layer — design notes" section — distinguishes Subject (active), Term (reserved), and Concept (reserved) node types; explains the intention to link external references (glossaries, ontologies) to the conceptual layer rather than duplicating definitions.
+- **`spec/space-structure.md`**: "The `vocabulary/` layer — design notes" section — distinguishes Subject (active), Term (reserved), and Concept (reserved) node types; explains the intention to link external references (glossaries, ontologies) to the vocabulary layer rather than duplicating definitions.
 - **`examples/agent-query-walkthrough.md`**: New example — end-to-end agent query walkthrough showing Glean search → mandatory filter discovery → business rule application → verified SQL retrieval → SQL adaptation. Covers both Cursor and Snowflake Cortex agent variants. Derived from real testing sessions; all domain-specific values replaced with generic placeholders.
 
 ---
@@ -86,7 +117,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
   3. A `RELATED_TO` hyperlink is redundant when a reified edge of the same type already covers the same pair.
   4. Mixed-kind hyperlinks on the same `(source, target)` pair — detects stale `relatedTo` back-refs left alongside correctly-typed edges.
 - `NODE_PREFIXES`: added `Measure:` and `Attribute:` (were missing; `Metric:` removed).
-- `INDEX_PAGE_TITLES`: added `measures`, `attributes`, `concepts` to the structural-page exclusion list.
+- `INDEX_PAGE_TITLES`: added `measures`, `attributes`, `vocabulary` to the structural-page exclusion list.
 - Node colors: `Measure` (`#6554C0`), `Attribute` (`#B3D4FF`) added; `Metric` removed.
 
 ### Fixed
@@ -127,14 +158,14 @@ Versioning follows [Semantic Versioning](https://semver.org):
 ## [1.1.0] — 2026-06-16
 
 ### Added
-- `concepts/` folder: global parent container for domain-agnostic node types.
+- `vocabulary/` folder: global parent container for domain-agnostic node types.
 
 ### Changed
-- Folder structure: `subjects/` relocated from space root to `concepts/subjects/`.
+- Folder structure: `subjects/` relocated from space root to `vocabulary/subjects/`.
 - All path references in architecture doc and agent skill updated.
 
 ### Breaking
-- Path `subjects/` is now `concepts/subjects/` — any agent or script using the old path must be updated.
+- Path `subjects/` is now `vocabulary/subjects/` — any agent or script using the old path must be updated.
 
 ---
 
@@ -145,7 +176,7 @@ Initial release of the Knowledge Graph system.
 ### Added
 
 **Architecture**
-- Three-layer model: Conceptual (`concepts/`), Implementation (`<domain>/`), Relationship (`relationships/`)
+- Three-layer model: Vocabulary (`vocabulary/`), Implementation (`<domain>/`), Relationship (`relationships/`)
 - Graph stored as wiki parent-page hierarchy
 - Semantic search (Glean) indexes the wiki continuously — no export pipeline needed
 - LLM semantic layer translates natural-language intent into wiki operations

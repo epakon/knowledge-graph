@@ -4,7 +4,24 @@
 
 ---
 
-## 1. Node Type Schema
+## 1. Two-layer architecture
+
+The knowledge graph is organized into two distinct layers:
+
+| Layer | Path | Scope | Owned by | Changes when |
+|---|---|---|---|---|
+| **Vocabulary** | `vocabulary/` | Global — shared across all domains | Business / domain experts | Business terminology evolves |
+| **Domain** | `<domain>/` | Per-domain — tied to specific tables and SQL. Each node is owned by exactly one domain. | Data engineering | Data model changes |
+
+**Vocabulary layer** holds knowledge that exists independently of any table or SQL implementation: business terms, KPI definitions at a conceptual level, methodologies, and links to authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies). It is stable and does not break when data models change.
+
+**Domain layer** holds the technical implementation: table structures, SQL expressions, filter predicates, business rules scoped to a specific data domain, and verified queries. It is coupled to the data model and changes with it.
+
+The bridge between the two layers is the `implement ->` edge: a Vocabulary node (e.g. `Subject: DSO`) points to the Domain nodes that embody it (e.g. `Measure: DSO`, `Rule: dso-annualization`). This lets agents retrieve the business definition first, then follow edges to the SQL implementation.
+
+---
+
+## 2. Node Type Schema
 
 Each node type maps to a **node label** in a target graph database. The identity key is the unique constraint enforced at migration time.
 
@@ -29,7 +46,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 
 | Node type | Node label | Identity key | Core properties | Scope |
 |---|---|---|---|---|
-| `Subject` | `Subject` | `name` | `business_definition`, `scope` | global (`concepts/subjects/`) |
+| `Subject` | `Subject` | `name` | `business_definition`, `scope` | global (`vocabulary/subjects/`) |
 | `Domain` | `Domain` | `name` | `owner` | per-domain |
 | `Table` | `Table` | `name` | `table_kind`, `source`, `description` | per-domain |
 | `Measure` | `Measure` | `name` | `kind`, `synonyms`, `status`, `definition_sql` | per-domain |
@@ -59,7 +76,7 @@ CREATE CONSTRAINT FOR (n:Disambiguation) REQUIRE n.name IS UNIQUE;
 
 ---
 
-## 2. Edge Type Schema
+## 3. Edge Type Schema
 
 Two classes of edges in the knowledge base map to two classes of graph relationships.
 
@@ -76,7 +93,7 @@ Back-references on pages are navigation shortcuts and are **not** imported into 
 | `joinedTo` | `JOINED_TO` | Table | Table | Symmetric; join key stored as property `on` |
 | `disambiguate` | `DISAMBIGUATES` | Subject | Disambiguation | |
 | `apply` | `APPLIES_TO` | BusinessRule | Table, Measure | |
-| `contain` | `CONTAINS` | Domain | Table, Measure, Filter, VerifiedQuery, BusinessRule | |
+| `contain` | `CONTAINS` | Domain | Table, Measure, Filter, VerifiedQuery, BusinessRule | Exactly one Domain per node — see `spec/space-structure.md` for ownership rules |
 
 ### 2.2 Reified edge kinds (Relationship pages → typed relationships with properties)
 
@@ -96,7 +113,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 
 ---
 
-## 3. Node Index
+## 4. Node Index
 
 **Purpose:** uniqueness registry and graph database import input. Before creating a new page, check this index to prevent duplicate nodes.
 
@@ -136,7 +153,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 
 ---
 
-## 4. Edge Index
+## 5. Edge Index
 
 **Purpose:** edge audit log and graph database relationship import input.
 
@@ -188,7 +205,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 
 ---
 
-## 5. Audit Rules
+## 6. Audit Rules
 
 These rules should be validated after every snapshot regeneration:
 
@@ -202,7 +219,7 @@ These rules should be validated after every snapshot regeneration:
 
 ---
 
-## 6. Graph Database Migration Notes
+## 7. Graph Database Migration Notes
 
 The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) serve two purposes simultaneously:
 
@@ -213,7 +230,7 @@ For the full migration procedure, node/edge mapping tables, import examples, syn
 
 ---
 
-## 7. Semantic Annotations and Cross-Domain Linking
+## 8. Semantic Annotations and Cross-Domain Linking
 
 ### Column-level semantics: inline vs Attribute page
 
@@ -227,6 +244,6 @@ The Table `## Semantic annotations` table is the entry point for column-level se
 
 The `## Links` section on a Table page should only contain Attribute or Measure links that are **not** already in the Semantic annotations table.
 
-### Cross-domain linking via Subject
+### Cross-domain linking via Vocabulary
 
-When the same column concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on a **Subject** page in `concepts/subjects/`. Each domain's Attribute page links to the Subject via `Attribute: X relatedTo -> Subject: Y`, and the Subject links back. The business definition is written once on the Subject; Attribute pages carry the domain-specific expression and access rules.
+When the same concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on a node in `vocabulary/` — today always a **Subject** page in `vocabulary/subjects/`. Each domain's Attribute or Measure page links to the Vocabulary node via `relatedTo ->`, and the Vocabulary node links back. The business definition is written once on the Vocabulary node; domain pages carry the domain-specific expression and access rules.

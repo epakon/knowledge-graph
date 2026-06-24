@@ -59,7 +59,7 @@ A page becomes a **node** when its title matches a known node-type prefix:
 - `Relationship:`, `Disambiguation:`, `VerifiedQuery:`
 
 **Excluded** (not nodes, treated as structural containers):
-- Index/container pages: `subjects`, `tables`, `measures`, `attributes`, `filters`, `rules`, `relationships`, `verified-queries`, `disambiguations`, `concepts`
+- Index/container pages: `subjects`, `tables`, `measures`, `attributes`, `filters`, `rules`, `relationships`, `verified-queries`, `disambiguations`, `vocabulary`
 - Domain pages (`Domain: <Name>`) — excluded by default: Domain pages are navigational containers. Their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning.
 
 ### Edges

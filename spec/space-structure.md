@@ -17,7 +17,7 @@ This structure is **backend-agnostic**: it maps to Confluence parent pages, dire
 ```
 Knowledge Graph: <Domain>         (root container — one per domain)
 │
-├── concepts/                     global, shared across all domains
+├── vocabulary/                   global, shared across all domains
 │   └── subjects/
 │       └── Subject: <Name>       one page per subject
 │
@@ -71,8 +71,8 @@ The following container pages must exist under each domain:
 
 | Container | Path |
 |---|---|
-| concepts root | `concepts/` |
-| subjects root | `concepts/subjects/` |
+| vocabulary root | `vocabulary/` |
+| subjects root | `vocabulary/subjects/` |
 | domain index | `Domain: <Name>` |
 | tables | `<domain>/tables/` |
 | measures | `<domain>/measures/` |
@@ -85,9 +85,11 @@ The following container pages must exist under each domain:
 
 ---
 
-## The `concepts/` layer — design notes
+## The `vocabulary/` layer — design notes
 
-The `concepts/` container is intentionally kept separate from domain containers. It is the **conceptual layer** of the knowledge graph — domain-agnostic, stable, and shared.
+The `vocabulary/` container is intentionally kept separate from domain containers. It is the **vocabulary layer** of the knowledge graph — domain-agnostic, stable, and shared.
+
+The vocabulary layer holds knowledge that exists independently of any specific table or SQL implementation: business terms, methodologies, KPI definitions at a conceptual level, and links to external authoritative sources such as glossaries, regulatory definitions, data dictionaries, and ontologies. This is the layer business users author and trust; it changes slowly and does not break when data models change.
 
 ### Subject, Term, and Concept — current and future node types
 
@@ -105,17 +107,17 @@ Do not create `Term` or `Concept` pages until the node type is formally added to
 
 ### Linking external knowledge to the conceptual layer
 
-The `concepts/` layer is also the natural attachment point for **external references** — links to glossaries, regulatory definitions, data dictionaries, or ontologies that inform a business concept. Rather than duplicating external definitions inside Subject pages, a Subject can carry a `## Citations` section with links to authoritative external sources. This avoids maintaining duplicate copies of definitions that are owned externally.
+The `vocabulary/` layer is also the natural attachment point for **external references** — links to glossaries, regulatory definitions, data dictionaries, or ontologies that inform a business concept. Rather than duplicating external definitions inside Subject pages, a Subject can carry a `## Citations` section with links to authoritative external sources. This avoids maintaining duplicate copies of definitions that are owned externally.
 
 ---
 
 ## Multi-domain setup
 
-Each domain has its own container tree under a shared root. The `concepts/subjects/` path is **global and shared** — Subject pages are not duplicated per domain.
+Each domain has its own container tree under a shared root. The `vocabulary/subjects/` path is **global and shared** — Subject pages are not duplicated per domain.
 
 ```
 Knowledge Graph (root)
-├── concepts/
+├── vocabulary/
 │   └── subjects/         ← shared across all domains
 │       └── Subject: Revenue
 │
@@ -130,7 +132,28 @@ Knowledge Graph (root)
     └── ...
 ```
 
-When the same concept appears in multiple domains, a single Subject page in `concepts/subjects/` holds the shared business definition. Each domain's Attribute or Measure page links to the Subject.
+When the same concept appears in multiple domains, a single Subject page in `vocabulary/subjects/` holds the shared business definition. Each domain's Attribute or Measure page links to the Subject.
+
+---
+
+## Cross-domain nodes — ownership and linking
+
+A node is owned by exactly one domain — the domain with the `contain ->` edge to it. Ownership means that domain is responsible for the node's correctness and verification. The page is stored in the owning domain's folder.
+
+Other domains that use the node do not add a `contain ->` edge. Their connection is visible in the graph through the existing edges from their own nodes (e.g. a Measure in Finance that links via `relatedTo ->` to a Rule owned by Sales).
+
+Use this decision tree to determine which domain owns a cross-domain node:
+
+```
+Does the node's SQL reference a specific table?
+├── Yes → the domain that owns that table is the owner
+└── No (table-agnostic: pure predicate, no FROM clause)
+    └── Is one domain clearly the primary consumer or originator?
+        ├── Yes → that domain is the owner
+        └── No (equal consumers)
+            └── Assign to the domain of the team who first needed it
+                (first-mover rule — a node must have an owner; ambiguity is not an option)
+```
 
 ---
 
@@ -139,7 +162,7 @@ When the same concept appears in multiple domains, a single Subject page in `con
 1. Create the root container page: `Knowledge Graph: <Domain>`
 2. Create the domain index page: `Domain: <Name>` as a child of the root
 3. Create each type container: `tables/`, `measures/`, `attributes/`, `filters/`, `verified-queries/`, `rules/`, `relationships/`, `disambiguations/`
-4. For concepts already in `concepts/subjects/` (e.g. a shared business term), the new domain's node pages link to the existing Subject — do not duplicate the definition
+4. For concepts already in `vocabulary/subjects/` (e.g. a shared business term), the new domain's node pages link to the existing Subject — do not duplicate the definition
 5. Create Relationship pages for semantic edges specific to the new domain
 6. The new domain inherits all shared Subjects automatically via semantic search
 

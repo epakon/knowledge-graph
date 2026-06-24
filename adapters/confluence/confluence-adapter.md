@@ -103,8 +103,8 @@ Parent pages must be created before child pages can be placed under them. The fo
 | Path | Parent of |
 |---|---|
 | `Knowledge Graph: <Domain>` (root) | All domain containers |
-| `concepts/` | subjects container |
-| `concepts/subjects/` | all Subject pages |
+| `vocabulary/` | subjects container |
+| `vocabulary/subjects/` | all Subject pages |
 | `Domain: <Name>` | all type containers for this domain |
 | `<domain>/tables/` | Table pages |
 | `<domain>/measures/` | Measure pages |

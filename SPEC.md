@@ -199,7 +199,7 @@ The knowledge base is organized as a **parent-container hierarchy**:
 ```
 Knowledge Graph: <Domain>   (root container)
 │
-├── concepts/               (global, shared across all domains)
+├── vocabulary/             (global, shared across all domains)
 │   └── subjects/
 │       └── Subject: <Name>
 │
@@ -360,10 +360,3 @@ The spec is backend-agnostic. Adapters fall into two categories:
 ## 11. Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.
-
-| Version | Date | Summary |
-|---|---|---|
-| 1.3.0 | 2026-06-17 | Schema index, node/edge JSON registries, audit rules, graph-DB migration notes |
-| 1.2.0 | 2026-06-17 | PK column in Table template, semantic annotations, cross-domain linking pattern, back-reference constraints |
-| 1.1.0 | 2026-06-16 | `concepts/` folder; `subjects/` relocated to `concepts/subjects/` |
-| 1.0.0 | 2026-06-15 | Initial release |

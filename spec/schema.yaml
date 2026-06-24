@@ -23,7 +23,7 @@ node_types:
         required: false
         description: Optional scope qualifier (e.g. domain name if the subject has domain context).
     page_title_prefix: "Subject:"
-    container_path: "concepts/subjects/"
+    container_path: "vocabulary/subjects/"
 
   - name: Domain
     label: Domain
