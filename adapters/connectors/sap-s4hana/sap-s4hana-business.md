@@ -1,5 +1,7 @@
 # SAP S/4HANA — Business Layer
 
+> **Draft** — this document is work in progress and has not been formally reviewed.
+
 SAP S/4HANA is a suite of integrated business processes — finance, procurement, manufacturing, sales, and more. Each process produces and consumes business knowledge: what a company code is, how revenue is recognized, which filters must be applied before an amount is meaningful, what distinguishes an open item from a cleared one.
 
 This document covers the **Vocabulary layer**: business process concepts that are stable, domain-agnostic, and independent of the data model. These are the *what* and *why* — what a concept means, why a term is ambiguous. Each concept is bridged to its technical implementation in the Domain layer via `implement ->` edges; for the field-level mappings, extraction protocol, and import procedure see [`sap-s4hana-technical.md`](sap-s4hana-technical.md).

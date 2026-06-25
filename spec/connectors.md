@@ -1,5 +1,7 @@
 # Source-System Connector
 
+> **Draft** — this document is work in progress and has not been formally reviewed.
+
 A source-system connector answers one question: **what does a large business system know, and how does that knowledge map to the Knowledge Graph?**
 
 Large systems like SAP S/4HANA, Salesforce, or Workday encode enormous amounts of business knowledge — process definitions, data models, calculation rules, mandatory conditions, organizational hierarchies. Most of that knowledge is implicit: locked inside table structures, ABAP logic, CDS annotations, or configuration. The connector makes it explicit by translating the system's business concepts, data semantics, and rules into the typed nodes and edges of the Knowledge Graph.

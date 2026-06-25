@@ -1,5 +1,7 @@
 # SAP S/4HANA — Technical Layer
 
+> **Draft** — this document is work in progress and has not been formally reviewed.
+
 This document covers the **Domain layer**: technical elements that implement S/4HANA business concepts in a specific version of the system — which CDS view holds the data, which field encodes the amount, which parameter is mandatory, which SQL expression computes the measure. The business meaning of each node lives in the Vocabulary layer; follow `implement <-` edges or see [`sap-s4hana-business.md`](sap-s4hana-business.md).
 
 Technical objects — CDS views, DDIC tables, Fiori applications, transactions — are **concrete anchors**: they are where the business knowledge can be verified and tested.

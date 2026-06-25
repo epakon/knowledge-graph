@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.7](#1.3.7) | 2026-06-25 | Source-system connector spec; SAP S/4HANA connector (business + technical); `adapters/` split into `engine/` and `connectors/`; `Process` reserved node type |
 | [1.3.6](#1.3.6) | 2026-06-24 | `concepts/` → `vocabulary/`; cross-domain ownership model; two-layer architecture; Citations template |
 | [1.3.5](#1.3.5) | 2026-06-22 | `## Related` → `## Links`; edge kind `attribute` → `calculate` |
 | [1.3.4](#1.3.4) | 2026-06-22 | Graph DB adapter doc; adapter section split into content storage vs. graph DB |
@@ -23,6 +24,21 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.7] — 2026-06-25
+
+### Added
+- **`spec/connectors.md`** *(draft)* — normative contract for source-system connectors. Two-layer model (business → Vocabulary, technical → Domain), six-section structure, two extraction channels (system metadata + project documentation).
+- **`adapters/connectors/sap-s4hana/sap-s4hana-business.md`** *(draft)* — Vocabulary-layer document for SAP S/4HANA: Subject nodes for SAP concepts and project decisions (BRD-sourced) across FI, FI-CA, FI-AR, MM, SD, CO.
+- **`adapters/connectors/sap-s4hana/sap-s4hana-technical.md`** *(draft)* — Domain-layer document: node type mapping to CDS views/DDIC tables, field mapping, extraction protocol, import procedure.
+- **`examples/s4hana-nodes-example.md`** *(draft)* — worked FI-AR example with all node types and real SAP field names.
+- **`Process` reserved node type** in `spec/space-structure.md` — named business activity sequence; reserved for future use.
+
+### Changed
+- **`adapters/` restructured** into `adapters/engine/` (graph engine) and `adapters/connectors/` (source systems).
+- **`spec/connectors.md`** renamed from `spec/interface.md`; "interface" → "connector" throughout.
 
 ---
 
