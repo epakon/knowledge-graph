@@ -49,6 +49,7 @@ spec/
   page-templates.md            Canonical page structure for each node type
   space-structure.md           Logical hierarchy (folders / parent containers)
   versioning.md                Version comment format and policy
+  connectors.md                Source-system connector contract (all connectors must implement)
   schema.yaml                  Machine-readable schema
 
 adapters/
