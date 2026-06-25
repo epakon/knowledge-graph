@@ -326,9 +326,9 @@ Reference implementations and tooling design are documented in `adapters/`:
 
 | Document | Purpose |
 |---|---|
-| [adapters/confluence/snapshot-pipeline.md](adapters/confluence/snapshot-pipeline.md) | Crawl pages → JSON snapshot → interactive graph visualization |
-| [adapters/confluence/graph-api.md](adapters/confluence/graph-api.md) | Knowledge Graph API for programmatic graph operations (bulk updates, migration, graph DB import) |
-| [adapters/confluence/agent-skill.md](adapters/confluence/agent-skill.md) | Agent operational spec: five workflows with step-by-step instructions |
+| [adapters/engine/confluence/snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) | Crawl pages → JSON snapshot → interactive graph visualization |
+| [adapters/engine/confluence/graph-api.md](adapters/engine/confluence/graph-api.md) | Knowledge Graph API for programmatic graph operations (bulk updates, migration, graph DB import) |
+| [adapters/engine/confluence/agent-skill.md](adapters/engine/confluence/agent-skill.md) | Agent operational spec: five workflows with step-by-step instructions |
 
 ---
 
@@ -347,13 +347,13 @@ The spec is backend-agnostic. Adapters fall into two categories:
 
 | Storage | Adapter doc |
 |---|---|
-| Confluence | [adapters/confluence/confluence-adapter.md](adapters/confluence/confluence-adapter.md) |
+| Confluence | [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) |
 
 ### Graph DB adapters
 
 | Database | Adapter doc |
 |---|---|
-| *(planned)* | [adapters/graph-db/README.md](adapters/graph-db/README.md) |
+| *(planned)* | [adapters/engine/graph-db/README.md](adapters/engine/graph-db/README.md) |
 
 ---
 

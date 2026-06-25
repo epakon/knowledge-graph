@@ -204,7 +204,7 @@ Not yet defined. Candidates:
 - **Event-driven** — trigger export on every Confluence page update via webhook.
 - **On-demand** — agent or operator triggers a sync manually before a query session.
 
-The Knowledge Graph API in [`adapters/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what a graph DB client would expose. When the backend changes, only the transport layer is replaced.
+The Knowledge Graph API in [`adapters/engine/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what a graph DB client would expose. When the backend changes, only the transport layer is replaced.
 
 ---
 

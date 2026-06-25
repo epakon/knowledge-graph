@@ -16,7 +16,7 @@ This example demonstrates the full agent workflow:
 **Agent:** Cursor (or any LLM with Glean MCP configured)
 **Prerequisites:** Glean MCP — not Atlassian MCP. The agent reads knowledge pages via Glean semantic search; it does not need direct Confluence access for read-only queries.
 
-> **Note on Snowflake:** the same workflow runs inside a Snowflake Cortex Agent via the Glean MCP Connector (see [adapters/confluence/confluence-adapter.md](../adapters/confluence/confluence-adapter.md#snowflake-cortex-integration)). No separate setup is needed — the Glean MCP server is reused.
+> **Note on Snowflake:** the same workflow runs inside a Snowflake Cortex Agent via the Glean MCP Connector (see [adapters/engine/confluence/confluence-adapter.md](../adapters/engine/confluence/confluence-adapter.md#snowflake-cortex-integration)). No separate setup is needed — the Glean MCP server is reused.
 
 ---
 

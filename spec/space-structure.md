@@ -91,19 +91,20 @@ The `vocabulary/` container is intentionally kept separate from domain container
 
 The vocabulary layer holds knowledge that exists independently of any specific table or SQL implementation: business terms, methodologies, KPI definitions at a conceptual level, and links to external authoritative sources such as glossaries, regulatory definitions, data dictionaries, and ontologies. This is the layer business users author and trust; it changes slowly and does not break when data models change.
 
-### Subject, Term, and Concept — current and future node types
+### Subject, Term, Concept, and Process — current and future node types
 
 Currently only one node type lives in the conceptual layer: **Subject**. A Subject represents a business concept tied to data — something that has SQL implementations in one or more domains (a Measure, Filter, or Rule that embodies it).
 
-Two additional node types are reserved for future use at the conceptual layer:
+Three additional node types are reserved for future use at the conceptual layer:
 
 | Node type | Status | Intended purpose |
 |---|---|---|
 | `Subject` | Active | Business concept with direct data implementation. Has `implement ->` edges to Measures, Filters, Rules. |
 | `Term` | Reserved | Pure business vocabulary — a term that appears in business communication but may not have a direct SQL implementation yet. Useful for onboarding and disambiguation without a data anchor. |
 | `Concept` | Reserved | Abstract or composite idea that groups multiple Subjects. Useful for cross-domain thematic grouping (e.g. "Liquidity" grouping DSO, Cash Received, Open Balance). |
+| `Process` | Reserved | A named sequence of business activities with defined triggers, participants, and outcomes (e.g. "Procure-to-Pay", "Period Close", "Order-to-Cash"). Provides the business context that explains *why* certain rules, filters, and measures exist — a Process node can link to the Subjects, Rules, and Measures it governs, making the causal chain from business activity to data implementation explicit. |
 
-Do not create `Term` or `Concept` pages until the node type is formally added to the schema. Use `Subject` for all conceptual nodes today.
+Do not create `Term`, `Concept`, or `Process` pages until the node type is formally added to the schema. Use `Subject` for all conceptual nodes today.
 
 ### Linking external knowledge to the conceptual layer
 

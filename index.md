@@ -21,21 +21,24 @@
 * [spec/space-structure.md](spec/space-structure.md) - Logical hierarchy, container pages, naming conventions
 * [spec/versioning.md](spec/versioning.md) - Version comment format, breaking change policy, rollback procedure
 * [spec/schema.yaml](spec/schema.yaml) - Machine-readable schema: node types, edge kinds, properties, audit rules
+* [spec/connectors.md](spec/connectors.md) - Source-system connection contract (all connectors must implement)
 
 ---
 
-## adapters/ — Backend adapters
+## adapters/ — Engines and connectors
 
-### Content storage adapters
+### engines/ — Graph engine and content storage adapters
 
-* [adapters/confluence/confluence-adapter.md](adapters/confluence/confluence-adapter.md) - Storage format, MCP tools, link encoding, Glean/Cortex integration
-* [adapters/confluence/agent-skill.md](adapters/confluence/agent-skill.md) - Agent workflows: Read, Write, Update, Navigate, Version history
-* [adapters/confluence/graph-api.md](adapters/confluence/graph-api.md) - Knowledge Graph API for programmatic graph operations
-* [adapters/confluence/snapshot-pipeline.md](adapters/confluence/snapshot-pipeline.md) - Confluence → JSON snapshot → graph visualization pipeline
+* [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) - Storage format, MCP tools, link encoding, Glean/Cortex integration
+* [adapters/engine/confluence/agent-skill.md](adapters/engine/confluence/agent-skill.md) - Agent workflows: Read, Write, Update, Navigate, Version history
+* [adapters/engine/confluence/graph-api.md](adapters/engine/confluence/graph-api.md) - Knowledge Graph API for programmatic graph operations
+* [adapters/engine/confluence/snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) - Confluence → JSON snapshot → graph visualization pipeline
+* [adapters/engine/graph-db/README.md](adapters/engine/graph-db/README.md) - Graph DB adapter: node/edge mapping, import procedure, sync strategy *(planned)*
 
-### Graph DB adapters
+### connectors/ — Source-system connectors
 
-* [adapters/graph-db/README.md](adapters/graph-db/README.md) - Graph DB adapter: node/edge mapping, import procedure, sync strategy *(planned)*
+* [adapters/connectors/sap-s4hana/sap-s4hana-business.md](adapters/connectors/sap-s4hana/sap-s4hana-business.md) - SAP S/4HANA business layer: Vocabulary-layer concepts — SAP standard and company-specific project decisions *(draft)*
+* [adapters/connectors/sap-s4hana/sap-s4hana-technical.md](adapters/connectors/sap-s4hana/sap-s4hana-technical.md) - SAP S/4HANA technical layer: Domain-layer mapping, field tables, extraction, import *(draft)*
 
 ---
 
@@ -45,3 +48,4 @@
 * [examples/node-pages-example.md](examples/node-pages-example.md) - Sample pages for all node types (Sales domain scenario)
 * [examples/graph-snapshot-example.json](examples/graph-snapshot-example.json) - Minimal JSON snapshot with nodes and edges
 * [examples/agent-query-walkthrough.md](examples/agent-query-walkthrough.md) - End-to-end agent workflow: Glean search → mandatory filters → business rule → verified SQL
+* [examples/s4hana-nodes-example.md](examples/s4hana-nodes-example.md) - Annotated node examples for SAP S/4HANA FI-AR domain

@@ -40,7 +40,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 | `Disambiguation` | Ambiguous term requiring clarification before any query is issued. |
 | `Relationship` | Reified semantic edge with Reason + Consequence if Ignored. Has its own page; is not a node in the graph DB. |
 
-> Visualization shapes (rectangles vs. diamonds in diagrams) are a rendering convention, not a schema property. See [adapters/confluence/snapshot-pipeline.md](../adapters/confluence/snapshot-pipeline.md) for node colors and shapes used in the graph diagram.
+> Visualization shapes (rectangles vs. diamonds in diagrams) are a rendering convention, not a schema property. See [adapters/engine/confluence/snapshot-pipeline.md](../adapters/engine/confluence/snapshot-pipeline.md) for node colors and shapes used in the graph diagram.
 
 ### Full schema
 
@@ -226,7 +226,7 @@ The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) serv
 - **Duplicate tracking** — before creating a new node, check the node index to confirm no node with the same `(label, name)` already exists. This is the primary guard against duplicate pages and split-brain definitions.
 - **Graph DB import input** — each entry maps 1:1 to a `MERGE` upsert on a node or relationship, ready for import into any property graph store.
 
-For the full migration procedure, node/edge mapping tables, import examples, sync strategy, and candidate databases, see [adapters/graph-db/README.md](../adapters/graph-db/README.md).
+For the full migration procedure, node/edge mapping tables, import examples, sync strategy, and candidate databases, see [adapters/engine/graph-db/README.md](../adapters/engine/graph-db/README.md).
 
 ---
 

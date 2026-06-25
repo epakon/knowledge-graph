@@ -52,13 +52,18 @@ spec/
   schema.yaml                  Machine-readable schema
 
 adapters/
-  confluence/                  Content storage adapter (complete)
-    confluence-adapter.md      Confluence-specific implementation (ac:link-body, MCP tools)
-    agent-skill.md             Agent workflows: Read, Write, Update, Navigate, History
-    graph-api.md               Knowledge Graph API for programmatic graph operations
-    snapshot-pipeline.md       Snapshot + graph visualization pipeline
-  graph-db/                    Graph DB adapter (planned)
-    README.md                  Node/edge mapping, import procedure, sync strategy
+  engine/
+    confluence/                Content storage adapter (complete)
+      confluence-adapter.md    Confluence-specific implementation (ac:link-body, MCP tools)
+      agent-skill.md           Agent workflows: Read, Write, Update, Navigate, History
+      graph-api.md             Knowledge Graph API for programmatic graph operations
+      snapshot-pipeline.md     Snapshot + graph visualization pipeline
+    graph-db/                  Graph DB adapter (planned)
+      README.md                Node/edge mapping, import procedure, sync strategy
+  connectors/
+    sap-s4hana/                SAP S/4HANA source-system connector
+      sap-s4hana-business.md   Vocabulary-layer: process concepts and project decisions
+      sap-s4hana-technical.md  Domain-layer: tables, measures, filters, extraction protocol
 
 examples/
   domain-layout-example.md     Illustrative domain structure
@@ -75,7 +80,7 @@ index.md                       Full directory listing
 1. Read [SPEC.md](SPEC.md) for the complete normative specification.
 2. Read [spec/data-model.md](spec/data-model.md) for the node and edge schema.
 3. Read [spec/page-templates.md](spec/page-templates.md) to understand what each page looks like.
-4. Choose a backend and read the matching adapter doc (e.g. [adapters/confluence/confluence-adapter.md](adapters/confluence/confluence-adapter.md)).
+4. Choose a backend and read the matching adapter doc (e.g. [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md)).
 5. See [examples/](examples/) for concrete illustrations.
 
 ---
