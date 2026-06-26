@@ -332,28 +332,9 @@ Reference implementations and tooling design are documented in `adapters/`:
 
 ---
 
-## 10. Backend Adapters
+## 10. Adapters
 
-The spec is backend-agnostic. Adapters fall into two categories:
-
-**Content storage** — human-facing systems where nodes and edges are created and maintained as pages or documents (wikis, shared drives, Markdown files). The full knowledge lives here: business definitions, SQL expressions, reason/consequence prose, synonyms, version history. This is the source of truth and the only authoring surface. Any content storage that supports hierarchical organization, cross-page links with custom labels, version history, and full-text or semantic search can implement this specification.
-
-**Graph DB** — a structural projection of the content storage, not a copy. The graph DB holds the skeleton of the graph — node labels, key properties (`name`, `domain`, `status`), and typed relationships with edge properties — but not the full page bodies. It is derived from the content storage via the Knowledge Graph API export pipeline (JSON indexes → graph import) and serves three purposes:
-- **Duplicate prevention** — uniqueness constraints on `(label, name)` guard against duplicate nodes that Confluence search alone can miss
-- **Fast graph traversal** — Cypher/Gremlin queries for path finding, neighbor lookup, and impact analysis that are expensive or impossible via MCP
-- **Lineage and traceability** — every node retains its `page_id`, linking any graph query result back to the exact source page in the content storage
-
-### Content storage adapters
-
-| Storage | Adapter doc |
-|---|---|
-| Confluence | [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) |
-
-### Graph DB adapters
-
-| Database | Adapter doc |
-|---|---|
-| *(planned)* | [adapters/engine/graph-db/README.md](adapters/engine/graph-db/README.md) |
+The spec is backend-agnostic. Adapters connect the Knowledge Graph to storage systems, graph databases, and source systems. The full adapter taxonomy — engine adapters, connectors, and addons — is defined in [`adapters/adapters.md`](adapters/adapters.md).
 
 ---
 

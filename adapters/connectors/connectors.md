@@ -92,7 +92,7 @@ For each KG node type the source system can populate, provide a mapping table:
 
 Node types with no meaningful mapping in the source system must be listed as `not applicable` with a one-line rationale.
 
-Required properties per node type are defined in [`spec/schema.yaml`](schema.yaml). The adapter must show how each required property is populated or — if the source cannot provide it — document the fallback (manual authoring, a default value, or derivation from related fields).
+Required properties per node type are defined in [`spec/schema.yaml`](../../spec/schema.yaml). The adapter must show how each required property is populated or — if the source cannot provide it — document the fallback (manual authoring, a default value, or derivation from related fields).
 
 ### Section 3 — Field mapping tables
 
@@ -148,9 +148,8 @@ Describe:
 Describe how extracted records flow into the Knowledge Graph:
 
 1. **Validation** — required fields present, enum values within allowed set, name uniqueness checked against node index.
-2. **Node creation** — template population, page title construction (`<NodeType>: <name>`), placement in the correct container path ([`spec/space-structure.md`](space-structure.md)).
-3. **Edge creation** — link statement construction following [`spec/link-format.md`](link-format.md).
+2. **Node creation** — template population, page title construction (`<NodeType>: <name>`), placement in the correct container path ([`spec/space-structure.md`](../../spec/space-structure.md)).
+3. **Edge creation** — link statement construction following [`spec/link-format.md`](../../spec/link-format.md).
 4. **Duplicate handling** — what happens when a node with the same `(label, name)` already exists: skip, merge, or flag for review.
-5. **Post-import audit** — run the audit rules from [`spec/schema.yaml`](schema.yaml) before committing.
-6. **Version comment** — every programmatic create or update MUST include a structured version comment following [`spec/versioning.md`](versioning.md).
-
+5. **Post-import audit** — run the audit rules from [`spec/schema.yaml`](../../spec/schema.yaml) before committing.
+6. **Version comment** — every programmatic create or update MUST include a structured version comment following [`spec/versioning.md`](../../spec/versioning.md).

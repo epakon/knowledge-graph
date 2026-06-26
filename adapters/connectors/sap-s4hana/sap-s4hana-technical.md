@@ -2,9 +2,19 @@
 
 > **Draft** — this document is work in progress and has not been formally reviewed.
 
-This document covers the **Domain layer**: technical elements that implement S/4HANA business concepts in a specific version of the system — which CDS view holds the data, which field encodes the amount, which parameter is mandatory, which SQL expression computes the measure. The business meaning of each node lives in the Vocabulary layer; follow `implement <-` edges or see [`sap-s4hana-business.md`](sap-s4hana-business.md).
+This document is the entry point for the technical layer of the SAP S/4HANA connector. It covers the **Domain layer** — technical elements that implement S/4HANA business concepts: which CDS view holds the data, which field encodes the amount, which parameter is mandatory, which SQL expression computes the measure. The business meaning of each node lives in the Vocabulary layer; follow `implement <-` edges or see [`sap-s4hana-business.md`](sap-s4hana-business.md).
 
 Technical objects — CDS views, DDIC tables, Fiori applications, transactions — are **concrete anchors**: they are where the business knowledge can be verified and tested.
+
+## Documents in this layer
+
+| Document | Purpose |
+|---|---|
+| **This file** — `sap-s4hana-technical.md` | Node type mapping, field mapping tables, edge mapping, extraction protocol. Reference for what maps to what and why. |
+| [`sap-s4hana-import.md`](sap-s4hana-import.md) | Import procedure — how S/4HANA metadata is discovered (seed + CDS dependency walk via `DDLS_RIS_INDEX`), extracted from `DDDDLSRC` and `DD*` tables, transformed into KG node types, validated, and written to the content storage and graph DB. |
+| [`addons/sap-s4hana-lineage-explorer.md`](addons/sap-s4hana-lineage-explorer.md) | *(addon)* Lineage Explorer — read-only, ephemeral map of the full S/4HANA CDS and DDIC object universe. No human enrichment; used by S/4HANA developers to navigate dependencies and by the import procedure as the discovery index. Shares the visualization format with the KG snapshot pipeline. |
+
+The import procedure and the lineage explorer share the same underlying dependency index (`DDLS_RIS_INDEX`) but serve different purposes: the explorer maps the full technical landscape; the import extracts a curated, business-enriched subset of it.
 
 ---
 
@@ -237,22 +247,3 @@ For `guards` and `demonstrates`, stub Relationship pages with `REQUIRES MANUAL A
 - Business rules held in ABAP procedural code rather than declarative CDS expressions.
 
 **Incremental detection:** use the ABAP transport system (SE09/SE10) as the change signal. A released transport containing CDS sources, DDIC changes, or Customizing entries triggers re-extraction of affected nodes.
-
----
-
-## Import procedure
-
-1. **Validation** — required fields present per [`spec/schema.yaml`](../../spec/schema.yaml); enum values within allowed set; name uniqueness checked against node index.
-2. **Node creation** — page title `<NodeType>: <name>`; container path per [`spec/space-structure.md`](../../spec/space-structure.md); template sections populated per [`spec/page-templates.md`](../../spec/page-templates.md).
-3. **Edge creation** — link statements following [`spec/link-format.md`](../../spec/link-format.md); stub Relationship pages created with `REQUIRES MANUAL AUTHORING` for edges that cannot be auto-derived.
-4. **Duplicate handling** — existing `Active` node: skip and log; existing `Deprecated` node: create new and link with `relatedTo`.
-5. **Post-import audit** — run audit rules from [`spec/schema.yaml`](../../spec/schema.yaml).
-6. **Version comment** — structured comment following [`spec/versioning.md`](../../spec/versioning.md) on every create or update:
-
-```
-v1 | <YYYY-MM-DD> | sap-s4hana-adapter
-Summary: Imported from SAP S/4HANA <release> — <source object name>
-Changed: Initial import
-Reason: Extracted from <CDS view / DDIC table / BW query>
-Breaking: no
-```

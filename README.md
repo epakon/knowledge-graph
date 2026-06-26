@@ -10,8 +10,6 @@ This specification defines a way to represent business knowledge — metric defi
 
 The graph is designed to be consumed by **AI agents** (LLMs, Snowflake Cortex, Cursor agents) at query time, replacing the need for custom RAG pipelines or export jobs. Knowledge is stored where humans already write it; agents retrieve it through semantic search.
 
-### Core idea
-
 ```
 Human writes knowledge as interlinked pages (wiki, Notion, GitHub, etc.)
         │
@@ -38,42 +36,40 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 
 ## Repository structure
 
-```
-SPEC.md                        Top-level normative specification
-CHANGELOG.md                   Version history (semantic versioning)
-LICENSE                        CC BY-NC 4.0
-
-spec/
-  data-model.md                Node types, edge kinds, validity rules, identity constraints
-  link-format.md               Edge-statement link syntax
-  page-templates.md            Canonical page structure for each node type
-  space-structure.md           Logical hierarchy (folders / parent containers)
-  versioning.md                Version comment format and policy
-  connectors.md                Source-system connector contract (all connectors must implement)
-  schema.yaml                  Machine-readable schema
-
-adapters/
-  engine/
-    confluence/                Content storage adapter (complete)
-      confluence-adapter.md    Confluence-specific implementation (ac:link-body, MCP tools)
-      agent-skill.md           Agent workflows: Read, Write, Update, Navigate, History
-      graph-api.md             Knowledge Graph API for programmatic graph operations
-      snapshot-pipeline.md     Snapshot + graph visualization pipeline
-    graph-db/                  Graph DB adapter (planned)
-      README.md                Node/edge mapping, import procedure, sync strategy
-  connectors/
-    sap-s4hana/                SAP S/4HANA source-system connector (draft)
-      sap-s4hana-business.md   Vocabulary-layer: process concepts and project decisions
-      sap-s4hana-technical.md  Domain-layer: tables, measures, filters, extraction protocol
-
-examples/
-  domain-layout-example.md     Illustrative domain structure
-  node-pages-example.md        Sample pages for all node types
-  graph-snapshot-example.json  Minimal snapshot JSON
-  s4hana-nodes-example.md      SAP S/4HANA FI-AR node examples *(draft)*
-
-index.md                       Full directory listing
-```
+- [SPEC.md](SPEC.md) — Top-level normative specification (start here)
+- [CHANGELOG.md](CHANGELOG.md) — Version history (semantic versioning)
+- [LICENSE](LICENSE) — CC BY-NC 4.0
+- **spec/** — Normative specification
+  - [data-model.md](spec/data-model.md) — Node types, edge kinds, indexes, audit rules, graph-DB migration
+  - [link-format.md](spec/link-format.md) — Edge-statement syntax, back-reference rules, visualization conventions
+  - [page-templates.md](spec/page-templates.md) — Canonical page templates for all 11 node types
+  - [space-structure.md](spec/space-structure.md) — Logical hierarchy, container pages, naming conventions
+  - [versioning.md](spec/versioning.md) — Version comment format, breaking change policy, rollback procedure
+  - [schema.yaml](spec/schema.yaml) — Machine-readable schema: node types, edge kinds, properties, audit rules
+- **adapters/** — Engine adapters, source-system connectors, addons
+  - [adapters.md](adapters/adapters.md) — Adapter taxonomy: engine adapters, connectors, addons
+  - **engine/** — Graph engine and content storage adapters
+    - **confluence/** — Confluence content storage adapter *(complete)*
+      - [confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) — Storage format, MCP tools, link encoding, Glean/Cortex integration
+      - [agent-skill.md](adapters/engine/confluence/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
+      - [graph-api.md](adapters/engine/confluence/graph-api.md) — Knowledge Graph API for programmatic graph operations
+      - [snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) — Confluence → JSON snapshot → graph visualization pipeline
+    - **graph-db/** — Graph DB adapter *(planned)*
+      - [README.md](adapters/engine/graph-db/README.md) — Node/edge mapping, import procedure, sync strategy
+  - **connectors/** — Source-system connectors
+    - [connectors.md](adapters/connectors/connectors.md) — Connector contract: six mandatory sections every connector must implement
+    - **sap-s4hana/** — SAP S/4HANA connector *(draft)*
+      - [sap-s4hana-business.md](adapters/connectors/sap-s4hana/sap-s4hana-business.md) — Business layer: Vocabulary-layer concepts — SAP standard and project decisions
+      - [sap-s4hana-technical.md](adapters/connectors/sap-s4hana/sap-s4hana-technical.md) — Technical layer: entry point; node/edge type mapping, field tables, extraction protocol
+      - [sap-s4hana-import.md](adapters/connectors/sap-s4hana/sap-s4hana-import.md) — Import procedure: seed selection, CDS dependency discovery, DDL extraction, validation
+      - **addons/**
+        - [sap-s4hana-lineage-explorer.md](adapters/connectors/sap-s4hana/addons/sap-s4hana-lineage-explorer.md) — Lineage explorer: read-only full CDS/DDIC dependency map, shared visualization
+- **examples/** — Illustrative worked examples
+  - [domain-layout-example.md](examples/domain-layout-example.md) — Multi-domain space hierarchy with cross-domain Subject linking
+  - [node-pages-example.md](examples/node-pages-example.md) — Sample pages for all node types (Sales domain scenario)
+  - [graph-snapshot-example.json](examples/graph-snapshot-example.json) — Minimal JSON snapshot with nodes and edges
+  - [agent-query-walkthrough.md](examples/agent-query-walkthrough.md) — End-to-end agent workflow: Glean search → mandatory filters → business rule → verified SQL
+  - [s4hana-nodes-example.md](examples/s4hana-nodes-example.md) — Annotated node examples for SAP S/4HANA FI-AR domain *(draft)*
 
 ---
 
@@ -84,14 +80,6 @@ index.md                       Full directory listing
 3. Read [spec/page-templates.md](spec/page-templates.md) to understand what each page looks like.
 4. Choose a backend and read the matching adapter doc (e.g. [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md)).
 5. See [examples/](examples/) for concrete illustrations.
-
----
-
-## Status
-
-**Version 1.3.0** — stable, in production use.
-
-See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
 ---
 

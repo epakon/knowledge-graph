@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.8](#1.3.8) | 2026-06-26 | SAP S/4HANA import + lineage explorer split out; `adapters/adapters.md` taxonomy; addon concept; connector contract moved to `adapters/connectors/` |
 | [1.3.7](#1.3.7) | 2026-06-25 | Source-system connector spec; SAP S/4HANA connector (business + technical); `adapters/` split into `engine/` and `connectors/`; `Process` reserved node type |
 | [1.3.6](#1.3.6) | 2026-06-24 | `concepts/` → `vocabulary/`; cross-domain ownership model; two-layer architecture; Citations template |
 | [1.3.5](#1.3.5) | 2026-06-22 | `## Related` → `## Links`; edge kind `attribute` → `calculate` |
@@ -27,10 +28,25 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.3.8] — 2026-06-26
+
+### Added
+- **`adapters/connectors/sap-s4hana/sap-s4hana-import.md`** *(draft)* — import procedure for the S/4HANA technical layer: seed selection, CDS dependency discovery, DDL source extraction from `DD*` tables, annotation-to-node-type routing, validation, incremental detection, and the list of fields that always require manual authoring.
+- **`adapters/connectors/sap-s4hana/addons/sap-s4hana-lineage-explorer.md`** *(draft, addon)* — read-only, ephemeral map of the full S/4HANA CDS and DDIC object universe. Extensible object model (new object types are additive). Shares the JSON snapshot format and visualization notebook with the KG snapshot pipeline. Demo video linked.
+- **`adapters/adapters.md`** — adapter taxonomy: engine adapters (content storage, graph DB), connectors, and addons. Defines the addon concept: optional, self-contained capability document that lives next to its adapter and does not affect KG node/edge semantics.
+- **`adapters/connectors/connectors.md`** — connector contract moved here from `spec/connectors.md`; content unchanged, internal links updated.
+
+### Changed
+- **`adapters/connectors/sap-s4hana/sap-s4hana-technical.md`** — restructured as an entry-point wrapper with a "Documents in this layer" table linking all three technical files; import procedure section removed (content moved to `sap-s4hana-import.md`).
+- **`spec/connectors.md` removed** — content moved to `adapters/connectors/connectors.md`.
+- **`SPEC.md` §10** — condensed to a pointer to `adapters/adapters.md`.
+
+---
+
 ## [1.3.7] — 2026-06-25
 
 ### Added
-- **`spec/connectors.md`** *(draft)* — normative contract for source-system connectors. Two-layer model (business → Vocabulary, technical → Domain), six-section structure, two extraction channels (system metadata + project documentation).
+- **`spec/connectors.md` — normative contract for source-system connectors. Two-layer model (business → Vocabulary, technical → Domain), six-section structure, two extraction channels (system metadata + project documentation).
 - **`adapters/connectors/sap-s4hana/sap-s4hana-business.md`** *(draft)* — Vocabulary-layer document for SAP S/4HANA: Subject nodes for SAP concepts and project decisions (BRD-sourced) across FI, FI-CA, FI-AR, MM, SD, CO.
 - **`adapters/connectors/sap-s4hana/sap-s4hana-technical.md`** *(draft)* — Domain-layer document: node type mapping to CDS views/DDIC tables, field mapping, extraction protocol, import procedure.
 - **`examples/s4hana-nodes-example.md`** *(draft)* — worked FI-AR example with all node types and real SAP field names.
