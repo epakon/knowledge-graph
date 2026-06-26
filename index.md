@@ -21,7 +21,7 @@
 * [spec/space-structure.md](spec/space-structure.md) - Logical hierarchy, container pages, naming conventions
 * [spec/versioning.md](spec/versioning.md) - Version comment format, breaking change policy, rollback procedure
 * [spec/schema.yaml](spec/schema.yaml) - Machine-readable schema: node types, edge kinds, properties, audit rules
-* [spec/connectors.md](spec/connectors.md) - Source-system connector contract (all connectors must implement) *(draft)*
+* [spec/connectors.md](spec/connectors.md) - Source-system connector contract (all connectors must implement)
 
 ---
 

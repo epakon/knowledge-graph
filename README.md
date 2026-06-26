@@ -62,7 +62,7 @@ adapters/
     graph-db/                  Graph DB adapter (planned)
       README.md                Node/edge mapping, import procedure, sync strategy
   connectors/
-    sap-s4hana/                SAP S/4HANA source-system connector
+    sap-s4hana/                SAP S/4HANA source-system connector (draft)
       sap-s4hana-business.md   Vocabulary-layer: process concepts and project decisions
       sap-s4hana-technical.md  Domain-layer: tables, measures, filters, extraction protocol
 
@@ -70,6 +70,7 @@ examples/
   domain-layout-example.md     Illustrative domain structure
   node-pages-example.md        Sample pages for all node types
   graph-snapshot-example.json  Minimal snapshot JSON
+  s4hana-nodes-example.md      SAP S/4HANA FI-AR node examples *(draft)*
 
 index.md                       Full directory listing
 ```
