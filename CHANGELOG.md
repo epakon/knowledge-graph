@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.10](#1.3.10) | 2026-06-29 | dbt connector (technical + import); no vocabulary layer — manual authoring required |
 | [1.3.9](#1.3.9) | 2026-06-29 | SAP HANA connector (technical + import + lineage explorer addon); business layer made optional in connector contract |
 | [1.3.8](#1.3.8) | 2026-06-26 | SAP S/4HANA import + lineage explorer split out; `adapters/adapters.md` taxonomy; addon concept; connector contract moved to `adapters/connectors/` |
 | [1.3.7](#1.3.7) | 2026-06-25 | Source-system connector spec; SAP S/4HANA connector (business + technical); `adapters/` split into `engine/` and `connectors/`; `Process` reserved node type |
@@ -26,6 +27,17 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.10] — 2026-06-29
+
+### Added
+- **`adapters/connectors/dbt/dbt-technical.md`** — dbt connector technical layer. Covers the Domain layer only (no Vocabulary layer — dbt has no cross-project stable concept registry). Node type mapping for models, sources, seeds, snapshots, semantic model measures and dimensions, metrics, exposures, and column tests. Field mapping tables for all mapped node types including name construction (version suffix stripping, prefix removal, title-casing), status derivation from `deprecation_date` and `access:`, `definition_sql` construction per aggregate type, and BusinessRule derivation from `data_tests`. Edge mapping for `joinedTo` (from `depends_on.nodes`), `calculate`, `contain`, `apply`, and reified `mandatory`/`requires` stubs. Extraction protocol covering `manifest.json` as primary surface, `catalog.json` as type fallback, incremental detection via node checksum comparison, and explicit list of fields requiring manual authoring.
+- **`adapters/connectors/dbt/dbt-import.md`** — Import procedure for the dbt connector. Covers manifest parsing, exclusion filters (staging by folder/prefix/tag, private access, ephemeral materialisation), table kind routing table with name prefix and folder rules plus `meta.table_kind` override, test-to-BusinessRule filtering (which test types produce rules and which do not), field mapping application, version deduplication (highest version canonical, lower versions deprecated only if still depended on), `definition_sql` templates per aggregate type, validation checks including staging leak detection and manifest freshness guard, node/edge creation with link statement examples, reified edge stub format, duplicate handling, post-import audit, version comment format, incremental state file format, and manual authoring checklist.
+
+### Changed
+- **`README.md`** — dbt connector added to the connectors section of the repository structure.
 
 ---
 

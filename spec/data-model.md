@@ -232,17 +232,34 @@ For the full migration procedure, node/edge mapping tables, import examples, syn
 
 ## 8. Semantic Annotations and Cross-Domain Linking
 
-### Column-level semantics: inline vs Attribute page
+### Column-level semantics: inline vs promoted node
 
-The Table `## Semantic annotations` table is the entry point for column-level semantics. The `Calculated` column links to the node that carries the semantic payload:
+**Default is inline.** A column that has only a description and no derived expression, rule link, access restriction, or cross-domain usage stays in the Table's `## Fields / Physical columns` section. Promotion to an Attribute or Measure page is the exception, not the rule.
 
-| Situation | Where the payload lives |
-|---|---|
-| Simple column — description only | Inline in `## Fields / Physical columns`. No Attribute page. |
-| Column with derived expression, rule link, filter label, access modifier, or non-trivial synonyms | **Attribute page.** List in `Calculated` column. Do **not** also link in `## Links` — that is a duplicate. |
-| Column that feeds a domain KPI directly | **Measure page.** List in `Calculated` column. Same deduplication rule. |
+The Table page carries a `### Semantic annotations` section with a `Calculated` column. That column is a **link slot**: when a column has been promoted to its own node, the link to that node goes here. "Calculated" means "this column's semantic payload lives on a separate page" — it is not a criterion for promotion; it is the result of the promotion decision.
 
-The `## Links` section on a Table page should only contain Attribute or Measure links that are **not** already in the Semantic annotations table.
+#### Attribute promotion criteria
+
+Create an Attribute page when the column has **at least one** of:
+- A non-trivial derived expression — CASE WHEN, COALESCE, sign convention, cast, date truncation, or any expression that is not a direct column reference
+- A link to a BusinessRule or Subject (the column embodies or implements a named concept)
+- `access_modifier: private_access` — the column must not be exposed to query agents directly
+- Non-trivial synonyms or cross-domain relevance — the same concept appears in multiple domains and needs a shared anchor
+
+A column with only a description, a plain data type, and no cross-domain usage does **not** warrant an Attribute page regardless of how important it is to the business.
+
+#### Measure promotion criteria
+
+Create a Measure page when the column has **at least one** of:
+- A non-trivial definition — a derived formula, a ratio, an expression combining multiple columns, a conditional aggregate (e.g. `SUM(CASE WHEN ... END)`), or a cross-domain KPI
+- Synonyms that need to be surfaced to query agents (e.g. the same KPI is known by multiple names)
+- A link to a BusinessRule, Filter, or Subject — the measure embodies a named business concept with its own rules
+
+A simple aggregate over a single column — `SUM(revenue)`, `COUNT(order_id)` — does **not** automatically warrant a Measure page. It stays inline in `## Semantic annotations` unless one of the criteria above applies.
+
+#### Deduplication rule
+
+Once a column has its own Attribute or Measure page, list it in the `Calculated` column of `## Semantic annotations`. Do **not** also add it to `## Links` — that is a duplicate link.
 
 ### Cross-domain linking via Vocabulary
 

@@ -63,15 +63,7 @@ Every edge starts as a hyperlink. Promote it to a Relationship page when it gain
 
 ### When individual pages are warranted
 
-The same promotion logic applies to columns and computed fields inside a Table:
-
-| Column situation | Where the definition lives |
-|---|---|
-| Simple column — description only | Inline in the Table's `## Fields / Physical columns`. No separate page. |
-| Column with a derived expression (CASE WHEN, COALESCE, sign convention), or linked to a Rule/Subject, or carrying non-trivial synonyms or cross-domain relevance | **Attribute page** under `<domain>/attributes/`. Link from Table's `## Semantic annotations` → `Calculated` column. |
-| Column that is the direct source of a domain KPI | **Measure page** under `<domain>/measures/`. Link from Table's `## Semantic annotations` → `Calculated` column. |
-
-The `Calculated` column in the Semantic annotations table is the decision point: once a column has its own Attribute or Measure page, it is listed there and **not** repeated in `## Links` — that would be a duplicate link.
+The same promotion logic applies to columns and computed fields inside a Table. For the full promotion criteria — when a column warrants an Attribute page, when it warrants a Measure page, and when it stays inline — see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
 
 ---
 

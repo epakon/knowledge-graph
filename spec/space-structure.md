@@ -27,7 +27,7 @@ Knowledge Graph: <Domain>         (root container — one per domain)
     ├── measures/
     │   └── Measure: <Name>
     ├── attributes/
-    │   └── Attribute: <Name>     promoted columns only (see data-model.md §7)
+    │   └── Attribute: <Name>     promoted columns only (see data-model.md §8)
     ├── filters/
     │   └── Filter: <Name>
     ├── verified-queries/

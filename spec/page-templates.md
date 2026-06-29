@@ -138,6 +138,8 @@ The domain page is also the parent container for all type sub-folders. It is the
 
 ## Measure
 
+Promoted computed field. For promotion criteria see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
+
 ```markdown
 # Measure: <Name>
 
@@ -165,11 +167,7 @@ The domain page is also the parent container for all type sub-folders. It is the
 
 ## Attribute
 
-Promoted column with semantic payload. Create a page when the column has a derived expression (e.g. CASE WHEN, COALESCE), is linked to a Rule/Subject, carries filter labels, has `access_modifier: private_access`, or has non-trivial synonyms / cross-domain relevance.
-
-Simple columns with only a description stay inline in the parent Table's `## Fields` section.
-
-In the Table's `## Semantic annotations`, list this Attribute in the `Calculated` column — do not also add it to Table's `## Links` (that would be a duplicate link).
+Promoted column with semantic payload. For promotion criteria see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
 
 ```markdown
 # Attribute: <Name>

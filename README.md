@@ -69,6 +69,9 @@ Agent builds correct SQL / answers / instructions without hallucinating business
       - [sap-hana-import.md](adapters/connectors/sap-hana/sap-hana-import.md) — Import procedure: seed selection, dependency walk, routing, validation
       - **addons/**
         - [sap-hana-lineage-explorer.md](adapters/connectors/sap-hana/addons/sap-hana-lineage-explorer.md) — Lineage explorer: read-only HANA object dependency map; upstream/downstream walk; shared snapshot format
+    - **dbt/** — dbt connector
+      - [dbt-technical.md](adapters/connectors/dbt/dbt-technical.md) — Technical layer: node/field/edge mapping for models, sources, seeds, snapshots, semantic models, metrics, exposures, and tests; extraction protocol based on `manifest.json`
+      - [dbt-import.md](adapters/connectors/dbt/dbt-import.md) — Import procedure: manifest parsing, staging exclusion, table kind routing, test-to-BusinessRule conversion, incremental checksum detection, validation
 - **examples/** — Illustrative worked examples
   - [domain-layout-example.md](examples/domain-layout-example.md) — Multi-domain space hierarchy with cross-domain Subject linking
   - [node-pages-example.md](examples/node-pages-example.md) — Sample pages for all node types (Sales domain scenario)
