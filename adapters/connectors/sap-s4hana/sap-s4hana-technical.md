@@ -18,7 +18,13 @@ The import procedure and the lineage explorer share the same underlying dependen
 
 ---
 
-## Node type mapping
+## Section 1 — Source system overview
+
+SAP S/4HANA is an ERP suite that encodes business processes across Finance, Procurement, Sales, and more. Business knowledge is carried in CDS VDM annotations (`@EndUserText`, `@Semantics`, `@Analytics`, `@ObjectModel`), RAP behavior definitions, and Customizing configuration. The system exposes this knowledge via the ADT REST API, OData `$metadata`, and ABAP RFC functions. Lifecycle contracts (`@VDM.lifecycle.contract.type`) signal which objects are stable for external consumption vs. internal use only.
+
+---
+
+## Section 2 — Node type mapping
 
 | KG node type | SAP S/4HANA source | Technical anchor |
 |---|---|---|
@@ -33,9 +39,7 @@ The import procedure and the lineage explorer share the same underlying dependen
 | `Disambiguation` | A term or field with context-dependent meaning | ABAP domain with overlapping values; dual-role business partner field; date field with multiple interpretations |
 | `Relationship` | A dependency between two nodes that carries a business reason and consequence | CDS association with documented business rationale; reified only when reason + consequence can be stated |
 
----
-
-## Domain layer — business processes
+### Domain layer — business processes
 
 ### Finance (FI)
 
@@ -108,7 +112,7 @@ The import procedure and the lineage explorer share the same underlying dependen
 
 ---
 
-## Field mapping tables
+## Section 3 — Field mapping tables
 
 ### Subject ← VDM Interface View
 
@@ -200,7 +204,7 @@ The import procedure and the lineage explorer share the same underlying dependen
 
 ---
 
-## Edge mapping
+## Section 4 — Edge mapping
 
 ### Hyperlink edges
 
@@ -228,7 +232,7 @@ For `guards` and `demonstrates`, stub Relationship pages with `REQUIRES MANUAL A
 
 ---
 
-## Extraction protocol
+## Section 5 — Extraction protocol
 
 | What to extract | Where it lives | How to read it |
 |---|---|---|
@@ -247,3 +251,9 @@ For `guards` and `demonstrates`, stub Relationship pages with `REQUIRES MANUAL A
 - Business rules held in ABAP procedural code rather than declarative CDS expressions.
 
 **Incremental detection:** use the ABAP transport system (SE09/SE10) as the change signal. A released transport containing CDS sources, DDIC changes, or Customizing entries triggers re-extraction of affected nodes.
+
+---
+
+## Section 6 — Import procedure
+
+See [`sap-s4hana-import.md`](sap-s4hana-import.md) for the full step-by-step import procedure: seed selection, CDS dependency discovery, DDL extraction, transformation, validation, and version comment format.

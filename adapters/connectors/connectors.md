@@ -65,6 +65,8 @@ Technical objects — CDS views, ABAP tables, OData services, Fiori applications
 
 Every connector document MUST specify all six sections below. A section may be marked `N/A` only if the source system structurally cannot provide that information; it may never be silently omitted.
 
+**Business layer (Section 1 — Vocabulary layer) is optional for database connectors.** A source system that is a pure database platform — with no built-in business process concepts, no standard annotation framework, and no lifecycle contracts — does not produce vocabulary nodes automatically. In this case the connector MUST document the omission explicitly: state that the Vocabulary layer requires manual authoring by a domain expert and is outside the connector's extraction scope. If a database functional area is later found to carry meaningful business process knowledge (e.g. a heavily annotated semantic layer that encodes stable business concepts), the business layer section can be added incrementally. The connector does not need to be restructured — the omission is an editorial decision, not a structural one.
+
 ### Section 1 — Source system overview
 
 Describe:
@@ -145,7 +147,7 @@ Describe:
 
 ### Section 6 — Import procedure
 
-Describe how extracted records flow into the Knowledge Graph:
+For non-trivial connectors the import procedure is typically split into a dedicated `*-import.md` file (e.g. `sap-hana-import.md`, `sap-s4hana-import.md`). In that case, the technical document's Section 6 contains only a short pointer to that file. The import file itself describes the full step-by-step flow; the six steps below define what it must cover.
 
 1. **Validation** — required fields present, enum values within allowed set, name uniqueness checked against node index.
 2. **Node creation** — template population, page title construction (`<NodeType>: <name>`), placement in the correct container path ([`spec/space-structure.md`](../../spec/space-structure.md)).

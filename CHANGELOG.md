@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.9](#1.3.9) | 2026-06-29 | SAP HANA connector (technical + import + lineage explorer addon); business layer made optional in connector contract |
 | [1.3.8](#1.3.8) | 2026-06-26 | SAP S/4HANA import + lineage explorer split out; `adapters/adapters.md` taxonomy; addon concept; connector contract moved to `adapters/connectors/` |
 | [1.3.7](#1.3.7) | 2026-06-25 | Source-system connector spec; SAP S/4HANA connector (business + technical); `adapters/` split into `engine/` and `connectors/`; `Process` reserved node type |
 | [1.3.6](#1.3.6) | 2026-06-24 | `concepts/` → `vocabulary/`; cross-domain ownership model; two-layer architecture; Citations template |
@@ -25,6 +26,18 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.9] — 2026-06-29
+
+### Added
+- **`adapters/connectors/sap-hana/sap-hana-technical.md`** *(draft)* — SAP HANA connector technical layer. Covers the Domain layer only (no Vocabulary layer — HANA is a database platform with no built-in business process concepts). Includes node type mapping for Calculation Views, physical tables, synonyms, measures, attributes, and filters; field mapping tables; edge mapping; data warehouse layer conventions (Landing → Staging → DWH/Core → Data Mart/Semantic → Reporting); extraction protocol.
+- **`adapters/connectors/sap-hana/sap-hana-import.md`** *(draft)* — Import procedure for the HANA connector: curated seed list, upstream dependency walk, object-type-to-KG-node routing, domain inference from package hierarchy and schema names, validation, incremental detection. Routing rules are generic — prefixes and schema layer suffixes are documented as implementation-specific and must be configured per deployment.
+- **`adapters/connectors/sap-hana/addons/sap-hana-lineage-explorer.md`** *(draft, addon)* — Read-only, ephemeral map of the HANA object dependency graph. Supports upstream (toward source data) and downstream (toward consumers) walks. Optional supplement for systems with XS Classic or XSA runtime. Reuses the KG JSON snapshot format and visualization notebook with a HANA-specific node color scheme. Promotion path to the import seed list documented.
+
+### Changed
+- **`adapters/connectors/connectors.md`** — Business layer (Vocabulary layer) is now explicitly **optional** for database connectors. A connector for a source system with no built-in business process concepts, no standard annotation framework, and no lifecycle contracts may omit the business layer section, provided it documents the omission and states that Vocabulary nodes require manual authoring. The SAP HANA connector is the first connector to use this provision.
 
 ---
 

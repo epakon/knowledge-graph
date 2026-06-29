@@ -64,6 +64,11 @@ Agent builds correct SQL / answers / instructions without hallucinating business
       - [sap-s4hana-import.md](adapters/connectors/sap-s4hana/sap-s4hana-import.md) — Import procedure: seed selection, CDS dependency discovery, DDL extraction, validation
       - **addons/**
         - [sap-s4hana-lineage-explorer.md](adapters/connectors/sap-s4hana/addons/sap-s4hana-lineage-explorer.md) — Lineage explorer: read-only full CDS/DDIC dependency map, shared visualization
+    - **sap-hana/** — SAP HANA connector *(draft)*
+      - [sap-hana-technical.md](adapters/connectors/sap-hana/sap-hana-technical.md) — Technical layer: entry point; node/edge type mapping, field tables, DWH layer conventions, extraction protocol
+      - [sap-hana-import.md](adapters/connectors/sap-hana/sap-hana-import.md) — Import procedure: seed selection, dependency walk, routing, validation
+      - **addons/**
+        - [sap-hana-lineage-explorer.md](adapters/connectors/sap-hana/addons/sap-hana-lineage-explorer.md) — Lineage explorer: read-only HANA object dependency map; upstream/downstream walk; shared snapshot format
 - **examples/** — Illustrative worked examples
   - [domain-layout-example.md](examples/domain-layout-example.md) — Multi-domain space hierarchy with cross-domain Subject linking
   - [node-pages-example.md](examples/node-pages-example.md) — Sample pages for all node types (Sales domain scenario)
