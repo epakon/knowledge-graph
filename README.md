@@ -86,6 +86,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
   - [graph-snapshot-example.json](examples/graph-snapshot-example.json) — Minimal JSON snapshot with nodes and edges
   - [agent-query-walkthrough.md](examples/agent-query-walkthrough.md) — End-to-end agent workflow: Glean search → mandatory filters → business rule → verified SQL
   - [s4hana-nodes-example.md](examples/s4hana-nodes-example.md) — Annotated node examples for SAP S/4HANA FI-AR domain *(draft)*
+  - [openwiki-kg-example.md](examples/openwiki-kg-example.md) — OpenWiki-generated KG draft Table node (generic dbt reporting view); shows filled fields vs `<!-- TODO -->` placeholders
 
 ---
 
