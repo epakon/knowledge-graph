@@ -42,18 +42,24 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 - **spec/** — Normative specification
   - [data-model.md](spec/data-model.md) — Node types, edge kinds, indexes, audit rules, graph-DB migration
   - [link-format.md](spec/link-format.md) — Edge-statement syntax, back-reference rules, visualization conventions
-  - [page-templates.md](spec/page-templates.md) — Canonical page templates for all 11 node types
+  - [page-templates.md](spec/page-templates.md) — Canonical page templates for all node types
   - [space-structure.md](spec/space-structure.md) — Logical hierarchy, container pages, naming conventions
   - [versioning.md](spec/versioning.md) — Version comment format, breaking change policy, rollback procedure
   - [schema.yaml](spec/schema.yaml) — Machine-readable schema: node types, edge kinds, properties, audit rules
 - **adapters/** — Engine adapters, source-system connectors, addons
   - [adapters.md](adapters/adapters.md) — Adapter taxonomy: engine adapters, connectors, addons
   - **engine/** — Graph engine and content storage adapters
+    - [engine.md](adapters/engine/engine.md) — Engine adapter contract: content storage capability requirements, four-document contract, graph DB category
     - **confluence/** — Confluence content storage adapter *(complete)*
       - [confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) — Storage format, MCP tools, link encoding, Glean/Cortex integration
       - [agent-skill.md](adapters/engine/confluence/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
       - [graph-api.md](adapters/engine/confluence/graph-api.md) — Knowledge Graph API for programmatic graph operations
       - [snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) — Confluence → JSON snapshot → graph visualization pipeline
+    - **markdown/** — Markdown files in git content storage adapter *(complete)*
+      - [markdown-adapter.md](adapters/engine/markdown/markdown-adapter.md) — File format, YAML frontmatter, directory structure, link encoding, git versioning, auto-generation guidance
+      - [agent-skill.md](adapters/engine/markdown/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
+      - [graph-api.md](adapters/engine/markdown/graph-api.md) — Knowledge Graph API for programmatic file operations
+      - [snapshot-pipeline.md](adapters/engine/markdown/snapshot-pipeline.md) — Markdown file tree → JSON snapshot → graph visualization pipeline; multi-backend index merge
     - **graph-db/** — Graph DB adapter *(planned)*
       - [README.md](adapters/engine/graph-db/README.md) — Node/edge mapping, import procedure, sync strategy
   - **connectors/** — Source-system connectors
@@ -86,7 +92,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 1. Read [SPEC.md](SPEC.md) for the complete normative specification.
 2. Read [spec/data-model.md](spec/data-model.md) for the node and edge schema.
 3. Read [spec/page-templates.md](spec/page-templates.md) to understand what each page looks like.
-4. Choose a backend and read the matching adapter doc (e.g. [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md)).
+4. Choose a backend and read the matching adapter doc (e.g. [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) for Confluence, [adapters/engine/markdown/markdown-adapter.md](adapters/engine/markdown/markdown-adapter.md) for Markdown files in git).
 5. See [examples/](examples/) for concrete illustrations.
 
 ---

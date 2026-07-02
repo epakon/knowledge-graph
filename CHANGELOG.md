@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.11](#1.3.11) | 2026-07-02 | Markdown engine adapter (content storage on git); `engine.md` contract doc; multi-backend co-existence |
 | [1.3.10](#1.3.10) | 2026-06-29 | dbt connector (technical + import); no vocabulary layer — manual authoring required |
 | [1.3.9](#1.3.9) | 2026-06-29 | SAP HANA connector (technical + import + lineage explorer addon); business layer made optional in connector contract |
 | [1.3.8](#1.3.8) | 2026-06-26 | SAP S/4HANA import + lineage explorer split out; `adapters/adapters.md` taxonomy; addon concept; connector contract moved to `adapters/connectors/` |
@@ -27,6 +28,18 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.11] — 2026-07-02
+
+### Added
+- **`adapters/engine/markdown/`** — Markdown content storage adapter (4 files): `markdown-adapter.md` (file format, YAML frontmatter, directory structure, link encoding, git versioning, auto-generation guidance), `agent-skill.md` (five workflows parallel to Confluence skill using direct file read/write and `git log`), `graph-api.md` (core filesystem operations: `get_page`, `write_page`, `collect_kg_pages`, `search_pages`, `name_to_path`; validate, fix-links, back-reference injection), `snapshot-pipeline.md` (Markdown file tree → same JSON snapshot format as Confluence; multi-backend index merge).
+- **`adapters/engine/engine.md`** — Engine adapter contract document. Defines both engine adapter categories (content storage and graph DB), capability requirements for content storage backends, the four-document contract every content storage adapter must provide, and the existing adapter registry. Parallel to `adapters/connectors/connectors.md`.
+
+### Changed
+- **`adapters/adapters.md`** — Engine adapters section replaced with a short summary and pointer to `engine/engine.md`; contradicting sentence ("engine adapters do not have an equivalent contract") corrected. Multi-backend co-existence note moved into `engine.md`.
+- **`adapters/engine/graph-db/README.md`** — Architecture diagram updated to show two parallel content storage inputs; comparison table and sync strategy updated for multi-backend pipelines.
 
 ---
 

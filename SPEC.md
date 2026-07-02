@@ -1,6 +1,6 @@
 # Knowledge Graph Specification
 
-**Version:** 1.3.0
+**Version:** 1.3.11
 **License:** [CC BY-NC 4.0](LICENSE)
 
 ---

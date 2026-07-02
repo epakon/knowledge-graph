@@ -6,12 +6,12 @@
 
 The graph DB is a **structural projection** of the content storage, not a content copy.
 
-| | Content storage (Confluence) | Graph DB |
+| | Content storage (Confluence, Markdown, …) | Graph DB |
 |---|---|---|
 | **What it holds** | Full knowledge — definitions, SQL, prose, reason/consequence, version history | Structural skeleton — node labels, key properties, typed relationships |
 | **Source of truth** | Yes | No — derived from content storage |
 | **Authoring surface** | Yes — humans and agents read and write here | No — never edited directly |
-| **Access pattern** | MCP tool calls (page read/write), semantic search | Cypher / Gremlin — traversal, path finding, aggregations |
+| **Access pattern** | MCP tool calls, API or direct file read-write (per adapter), semantic search | Cypher / Gremlin — traversal, path finding, aggregations |
 
 **Why the Graph DB exists — three purposes:**
 
@@ -33,15 +33,16 @@ The result is a graph you can traverse, query, and deduplicate efficiently. To r
 ## Role in the architecture
 
 ```
-Content storage (Confluence)        ← source of truth, full knowledge
-        │
-        │  Knowledge Graph API — snapshot + structural export
-        ▼
+Content storage A (e.g. Confluence)     ← business knowledge — human-authored
+Content storage B (e.g. Markdown files) ← technical knowledge — auto-generated from codebase
+        │                      │
+        │  Knowledge Graph API — snapshot + structural export (one pipeline per backend)
+        ▼                      ▼
   JSON indexes                       ← structural projection (labels, properties, relationships)
   (kg-node-index.json,                  NOT full page bodies
    kg-edge-index.json)
         │
-        │  Graph DB import (MERGE upsert)
+        │  Graph DB import (MERGE upsert — merges projections from all backends)
         ▼
    Graph DB (Neo4j, Amazon Neptune, ArangoDB, …)
         │
@@ -50,7 +51,9 @@ Content storage (Confluence)        ← source of truth, full knowledge
   Agent queries — traversal, path finding, impact analysis, duplicate checks
 ```
 
-Once a graph DB is in place, the content storage remains the **human authoring layer** and becomes the graph DB's upstream source. The Knowledge Graph API handles the sync between them.
+Multiple content storage backends are supported. Each backend has its own engine adapter and snapshot pipeline; the JSON indexes are a common intermediate format, so the graph DB import step is backend-agnostic. A `page_id` on every node links any graph query result back to the source page in whichever backend holds it.
+
+Once a graph DB is in place, the content storage layers remain the **authoring surfaces** and become the graph DB's upstream sources. The Knowledge Graph API handles the sync between them.
 
 ---
 
@@ -200,11 +203,11 @@ SET r.reason    = $reason,
 
 Not yet defined. Candidates:
 
-- **Periodic batch** — run the snapshot + import pipeline on a schedule (e.g. nightly).
-- **Event-driven** — trigger export on every Confluence page update via webhook.
+- **Periodic batch** — run the snapshot + import pipeline on a schedule (e.g. nightly). Each content storage backend runs its own snapshot; all outputs feed the same import step.
+- **Event-driven** — trigger export on page update (webhook for Confluence, file-watcher or CI pipeline for Markdown). Each backend triggers independently.
 - **On-demand** — agent or operator triggers a sync manually before a query session.
 
-The Knowledge Graph API in [`adapters/engine/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what a graph DB client would expose. When the backend changes, only the transport layer is replaced.
+The Knowledge Graph API in [`adapters/engine/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what a graph DB client would expose. When the backend changes, only the transport layer is replaced. Each content storage adapter provides its own snapshot pipeline implementation using the same JSON index format.
 
 ---
 
