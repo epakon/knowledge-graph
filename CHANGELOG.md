@@ -35,11 +35,13 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ### Added
 - **`adapters/engine/markdown/`** — Markdown content storage adapter (4 files): `markdown-adapter.md` (file format, YAML frontmatter, directory structure, link encoding, git versioning, auto-generation guidance), `agent-skill.md` (five workflows parallel to Confluence skill using direct file read/write and `git log`), `graph-api.md` (core filesystem operations: `get_page`, `write_page`, `collect_kg_pages`, `search_pages`, `name_to_path`; validate, fix-links, back-reference injection), `snapshot-pipeline.md` (Markdown file tree → same JSON snapshot format as Confluence; multi-backend index merge).
+- **`adapters/engine/markdown/addons/openwiki.md`** — OpenWiki addon: upstream codebase documentation generator, references [OpenWiki](https://github.com/langchain-ai/openwiki). Covers the KG integration only: pipeline position, node type mapping from OpenWiki sections to KG types, post-processing step (frontmatter injection, link rewriting, draft status), CI integration pattern, and what always requires manual authoring (business definitions, reified edges, verified queries).
 - **`adapters/engine/engine.md`** — Engine adapter contract document. Defines both engine adapter categories (content storage and graph DB), capability requirements for content storage backends, the four-document contract every content storage adapter must provide, and the existing adapter registry. Parallel to `adapters/connectors/connectors.md`.
 
 ### Changed
 - **`adapters/adapters.md`** — Engine adapters section replaced with a short summary and pointer to `engine/engine.md`; contradicting sentence ("engine adapters do not have an equivalent contract") corrected. Multi-backend co-existence note moved into `engine.md`.
 - **`adapters/engine/graph-db/README.md`** — Architecture diagram updated to show two parallel content storage inputs; comparison table and sync strategy updated for multi-backend pipelines.
+- **`adapters/connectors/sap-hana/sap-hana-technical.md`** and **`adapters/connectors/sap-s4hana/sap-s4hana-technical.md`** — Addon entries moved out of `## Documents in this layer` into a separate `## Addons` section, consistent with the Markdown adapter pattern.
 
 ---
 

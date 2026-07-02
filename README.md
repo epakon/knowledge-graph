@@ -60,6 +60,8 @@ Agent builds correct SQL / answers / instructions without hallucinating business
       - [agent-skill.md](adapters/engine/markdown/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
       - [graph-api.md](adapters/engine/markdown/graph-api.md) — Knowledge Graph API for programmatic file operations
       - [snapshot-pipeline.md](adapters/engine/markdown/snapshot-pipeline.md) — Markdown file tree → JSON snapshot → graph visualization pipeline; multi-backend index merge
+      - **addons/**
+        - [openwiki.md](adapters/engine/markdown/addons/openwiki.md) — Codebase documentation generator; promotes OpenWiki output into draft KG nodes
     - **graph-db/** — Graph DB adapter *(planned)*
       - [README.md](adapters/engine/graph-db/README.md) — Node/edge mapping, import procedure, sync strategy
   - **connectors/** — Source-system connectors

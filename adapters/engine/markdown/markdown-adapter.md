@@ -213,3 +213,11 @@ Generated files must conform to the same templates and frontmatter schema as man
 | Unicode arrows `→` in link text | Edge parser misses the edge | Use ASCII `->` and `<-` only |
 | Back-reference on wrong file | Symmetric duplicate edge in graph | `<-` goes on the target file only; check before adding |
 | Auto-generated file overwrites human edit | Knowledge loss | Run generation on a dedicated branch; use git diff to detect conflicts |
+
+---
+
+## Addons
+
+| Addon | Purpose |
+|---|---|
+| [openwiki.md](addons/openwiki.md) | Generates raw technical documentation from the codebase; post-processor promotes pages into draft KG nodes |

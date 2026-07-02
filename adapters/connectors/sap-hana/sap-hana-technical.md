@@ -12,7 +12,12 @@ SAP HANA is a database platform, not an ERP or business process system. It has n
 |---|---|
 | **This file** — `sap-hana-technical.md` | Source system overview, node type mapping, field mapping tables, edge mapping, extraction protocol. |
 | [`sap-hana-import.md`](sap-hana-import.md) | Import procedure — how HANA metadata is discovered (schema-scoped seed + dependency walk via `SYS.OBJECT_DEPENDENCIES`), extracted, transformed into KG node types, validated, and written to content storage and graph DB. |
-| [`addons/sap-hana-lineage-explorer.md`](addons/sap-hana-lineage-explorer.md) | *(addon)* Lineage Explorer — read-only, ephemeral map of the HANA object dependency graph. No human enrichment; used by data engineers to navigate object dependencies and by the import procedure as the discovery index. |
+
+## Addons
+
+| Addon | Purpose |
+|---|---|
+| [`addons/sap-hana-lineage-explorer.md`](addons/sap-hana-lineage-explorer.md) | Lineage Explorer — read-only, ephemeral map of the HANA object dependency graph. No human enrichment; used by data engineers to navigate object dependencies and by the import procedure as the discovery index. |
 
 ---
 

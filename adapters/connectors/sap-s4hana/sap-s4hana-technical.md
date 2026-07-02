@@ -12,7 +12,12 @@ Technical objects — CDS views, DDIC tables, Fiori applications, transactions �
 |---|---|
 | **This file** — `sap-s4hana-technical.md` | Node type mapping, field mapping tables, edge mapping, extraction protocol. Reference for what maps to what and why. |
 | [`sap-s4hana-import.md`](sap-s4hana-import.md) | Import procedure — how S/4HANA metadata is discovered (seed + CDS dependency walk via `DDLS_RIS_INDEX`), extracted from `DDDDLSRC` and `DD*` tables, transformed into KG node types, validated, and written to the content storage and graph DB. |
-| [`addons/sap-s4hana-lineage-explorer.md`](addons/sap-s4hana-lineage-explorer.md) | *(addon)* Lineage Explorer — read-only, ephemeral map of the full S/4HANA CDS and DDIC object universe. No human enrichment; used by S/4HANA developers to navigate dependencies and by the import procedure as the discovery index. Shares the visualization format with the KG snapshot pipeline. |
+
+## Addons
+
+| Addon | Purpose |
+|---|---|
+| [`addons/sap-s4hana-lineage-explorer.md`](addons/sap-s4hana-lineage-explorer.md) | Lineage Explorer — read-only, ephemeral map of the full S/4HANA CDS and DDIC object universe. No human enrichment; used by S/4HANA developers to navigate dependencies and by the import procedure as the discovery index. Shares the visualization format with the KG snapshot pipeline. |
 
 The import procedure and the lineage explorer share the same underlying dependency index (`DDLS_RIS_INDEX`) but serve different purposes: the explorer maps the full technical landscape; the import extracts a curated, business-enriched subset of it.
 
