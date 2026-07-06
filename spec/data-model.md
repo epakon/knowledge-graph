@@ -226,7 +226,7 @@ The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) serv
 - **Duplicate tracking** — before creating a new node, check the node index to confirm no node with the same `(label, name)` already exists. This is the primary guard against duplicate pages and split-brain definitions.
 - **Graph DB import input** — each entry maps 1:1 to a `MERGE` upsert on a node or relationship, ready for import into any property graph store.
 
-For the full migration procedure, node/edge mapping tables, import examples, sync strategy, and candidate databases, see [adapters/engine/graph-db/README.md](../adapters/engine/graph-db/README.md).
+For the full migration procedure, node/edge mapping tables, import examples, and sync strategy, see the graph DB engine adapter contract in [adapters/engine/engine.md](../adapters/engine/engine.md#graph-db).
 
 ---
 

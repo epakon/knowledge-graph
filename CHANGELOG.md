@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.12](#1.3.12) | 2026-07-06 | Generic `graph-db/` adapter rebranded as Neo4j Community Edition adapter; Bloom Explore addon; status markers removed repo-wide |
 | [1.3.11](#1.3.11) | 2026-07-02 | Markdown engine adapter (content storage on git); `engine.md` contract doc; multi-backend co-existence |
 | [1.3.10](#1.3.10) | 2026-06-29 | dbt connector (technical + import); no vocabulary layer — manual authoring required |
 | [1.3.9](#1.3.9) | 2026-06-29 | SAP HANA connector (technical + import + lineage explorer addon); business layer made optional in connector contract |
@@ -28,6 +29,19 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.12] — 2026-07-06
+
+### Changed
+- **`adapters/engine/graph-db/README.md` → `adapters/engine/neo4j/neo4j-adapter.md`** — the generic, backend-undecided Graph DB adapter is now the concrete Neo4j Community Edition adapter: deployment, official driver instead of a bespoke API doc, node/edge mapping and import procedure carried over. "Candidate databases" comparison removed now that a backend is chosen.
+- **`adapters/engine/engine.md`** — Graph DB section absorbed the backend-agnostic content (what it is/is not, three purposes, architecture diagram) so it's shared by any future graph DB adapter instead of duplicated per backend. "Existing graph DB adapters" table now lists `Neo4j`.
+- **Status markers removed repo-wide** — `Complete` is no longer used; an adapter with no status marker is complete by default. Only `draft`/`planned` remain.
+- **`spec/data-model.md` §7**, **`README.md`** — links and structure listing updated to match.
+
+### Added
+- **`adapters/engine/neo4j/addons/bloom-explore.md`** *(addon)* — optional Neo4j Bloom Basic / Aura Console exploration setup; alternative tools listed (NeoDash, yWorks, SemSpect, Graphlytic).
 
 ---
 

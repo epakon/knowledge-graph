@@ -1,67 +1,49 @@
-# Graph DB Adapter
+# Neo4j Adapter
 
-> **Status: planned.** No graph database backend is implemented yet. This document defines the migration path, node/edge mapping, and import procedure for when a dedicated graph DB is introduced.
+> Implementation guide for the [Knowledge Graph Specification](../../SPEC.md) on Neo4j Community Edition.
 
-## What the Graph DB is — and is not
-
-The graph DB is a **structural projection** of the content storage, not a content copy.
-
-| | Content storage (Confluence, Markdown, …) | Graph DB |
-|---|---|---|
-| **What it holds** | Full knowledge — definitions, SQL, prose, reason/consequence, version history | Structural skeleton — node labels, key properties, typed relationships |
-| **Source of truth** | Yes | No — derived from content storage |
-| **Authoring surface** | Yes — humans and agents read and write here | No — never edited directly |
-| **Access pattern** | MCP tool calls, API or direct file read-write (per adapter), semantic search | Cypher / Gremlin — traversal, path finding, aggregations |
-
-**Why the Graph DB exists — three purposes:**
-
-1. **Duplicate prevention** — uniqueness constraints on `(label, name)` guard against duplicate nodes that content storage search alone can miss. Before creating a new node, check the index.
-2. **Fast graph traversal** — path finding, neighbor lookup, and impact analysis queries that are expensive or impossible via MCP.
-3. **Lineage and traceability** — every node retains its `page_id`, linking any graph query result back to the exact source page in the content storage. Graph traversal answers *what is connected*; `page_id` tells you *where the full definition lives*.
-
-### What does "structural projection" mean?
-
-A structural projection extracts only what is needed to represent the graph's topology, identity, and classification — not its meaning:
-
-- **Projected:** node labels, identity keys (`name`), classification properties (`domain`, `kind`, `status`, `mandatory`), relationship types, edge properties (`reason`, `consequence`), and `page_id` for traceability
-- **Not projected:** the full knowledge content — business definitions, SQL expressions, synonyms, description prose, `always_ask` questions, full rule text
-
-The result is a graph you can traverse, query, and deduplicate efficiently. To read the full meaning of any node, follow `page_id` back to the source page in the content storage.
+This document maps the Graph DB adapter contract to Neo4j-specific constructs: node/edge representation, deployment, import procedure, programmatic access, and sync strategy.
 
 ---
 
-## Role in the architecture
+## Deployment
 
+Neo4j **Community Edition** is sufficient for this adapter — no Enterprise features (clustering, online backup, Bloom Full Access) are required.
+
+Minimal local deployment via Docker:
+
+```yaml
+# docker-compose.yml
+services:
+  neo4j:
+    image: neo4j:5-community
+    ports:
+      - "7474:7474"   # HTTP (Browser)
+      - "7687:7687"   # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/<password>
+    volumes:
+      - neo4j_data:/data
+volumes:
+  neo4j_data:
 ```
-Content storage A (e.g. Confluence)     ← business knowledge — human-authored
-Content storage B (e.g. Markdown files) ← technical knowledge — auto-generated from codebase
-        │                      │
-        │  Knowledge Graph API — snapshot + structural export (one pipeline per backend)
-        ▼                      ▼
-  JSON indexes                       ← structural projection (labels, properties, relationships)
-  (kg-node-index.json,                  NOT full page bodies
-   kg-edge-index.json)
-        │
-        │  Graph DB import (MERGE upsert — merges projections from all backends)
-        ▼
-   Graph DB (Neo4j, Amazon Neptune, ArangoDB, …)
-        │
-        │  Cypher / Gremlin / graph API
-        ▼
-  Agent queries — traversal, path finding, impact analysis, duplicate checks
-```
 
-Multiple content storage backends are supported. Each backend has its own engine adapter and snapshot pipeline; the JSON indexes are a common intermediate format, so the graph DB import step is backend-agnostic. A `page_id` on every node links any graph query result back to the source page in whichever backend holds it.
+| Setting | Value |
+|---|---|
+| Bolt URI | `bolt://<host>:7687` (or `bolt+s://` if TLS-terminated) |
+| Browser / HTTP | `http://<host>:7474` |
+| Default database | `neo4j` |
+| Auth | Username/password, set via `NEO4J_AUTH` or `neo4j.conf` |
 
-Once a graph DB is in place, the content storage layers remain the **authoring surfaces** and become the graph DB's upstream sources. The Knowledge Graph API handles the sync between them.
+For a non-Docker install, see the official [Neo4j Community Edition download](https://neo4j.com/product/community-edition/) and Operations Manual.
 
 ---
 
 ## Node and edge mapping
 
-The spec uses generic graph terms throughout. The mapping to any property graph store is direct:
+The mapping from spec terms to Neo4j constructs is direct:
 
-| Spec term | Graph DB equivalent |
+| Spec term | Neo4j equivalent |
 |---|---|
 | Node type | Node label (e.g. `Subject`, `Measure`) |
 | Identity key (`name`) | Uniqueness constraint on the label |
@@ -70,17 +52,17 @@ The spec uses generic graph terms throughout. The mapping to any property graph 
 | Reified edge (Relationship page) | Relationship type with properties (`reason`, `consequence`) |
 | Edge kind | Relationship type name |
 
-**Relationship pages** are not nodes in the graph DB. They are flattened into typed relationships with properties during import. Their wiki pages remain in the content storage for human readability.
+**Relationship pages** are not nodes in Neo4j. They are flattened into typed relationships with properties during import. Their wiki pages remain in the content storage for human readability.
 
 **Domain nodes** can be imported as nodes or treated as a property (`domain: "Sales"`) on other nodes — decision deferred to implementation.
 
-> For the authoritative node type definitions, properties, and valid edge combinations see [`spec/schema.yaml`](../../spec/schema.yaml). The tables below show only the graph DB translation layer.
+> For the authoritative node type definitions, properties, and valid edge combinations see [`spec/schema.yaml`](../../../spec/schema.yaml). The tables below show only the Neo4j translation layer.
 
 ### What the structural projection contains — per node type
 
-Each node is projected from its content storage page into a graph node with a small set of structural properties. Everything else — the full knowledge content — stays in the page and is accessed via `page_id`.
+Each node is projected from its content storage page into a Neo4j node with a small set of structural properties. Everything else — the full knowledge content — stays in the page and is accessed via `page_id`.
 
-| Node type | Projected into graph DB | Stays in content storage only |
+| Node type | Projected into Neo4j | Stays in content storage only |
 |---|---|---|
 | `Subject` | `name`, `domain`, `status`, `page_id` | `business_definition`, `scope` text |
 | `Domain` | `name`, `page_id` | `owner` |
@@ -97,13 +79,13 @@ Each node is projected from its content storage page into a graph node with a sm
 
 ### Hyperlink edge kinds → relationship types
 
-Seven edge kinds with no properties. Back-references on content storage pages are navigation shortcuts and are **not** imported into the graph.
+Seven edge kinds with no properties. Back-references on content storage pages are navigation shortcuts and are **not** imported into Neo4j.
 
 | Edge kind | Relationship type | Notes |
 |---|---|---|
 | `implement` | `IMPLEMENTS` | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
 | `relatedTo` | `RELATED_TO` | Symmetric generic cross-link |
-| `calculate` | `CALCULATES` | Table → Attribute, Measure | Table is the source exposing the derived column (Attribute) or computing the KPI (Measure) |
+| `calculate` | `CALCULATES` | Table → Attribute, Measure — Table is the source exposing the derived column (Attribute) or computing the KPI (Measure) |
 | `joinedTo` | `JOINED_TO` | Symmetric; join key stored as property `on` |
 | `disambiguate` | `DISAMBIGUATES` | Subject → Disambiguation |
 | `apply` | `APPLIES_TO` | BusinessRule → Table, Measure |
@@ -125,7 +107,7 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 
 A given `(source, target)` pair must have at most one relationship of each type. When the same pair has both a `RELATED_TO` hyperlink and a reified relationship (e.g. `REQUIRES`), the reified relationship takes precedence — the weaker `RELATED_TO` should be removed before import. This is enforced by the audit step in the snapshot script.
 
-### Uniqueness constraints (Cypher example)
+### Uniqueness constraints
 
 ```cypher
 CREATE CONSTRAINT FOR (n:Subject)          REQUIRE n.name IS UNIQUE;
@@ -139,11 +121,13 @@ CREATE CONSTRAINT FOR (n:BusinessRule)     REQUIRE n.name IS UNIQUE;
 CREATE CONSTRAINT FOR (n:Disambiguation)   REQUIRE n.name IS UNIQUE;
 ```
 
+Community Edition supports uniqueness constraints natively — no Enterprise license required.
+
 ---
 
 ## Import procedure
 
-The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are the intermediate representation between the content storage and the graph DB. They are a **structural extract** — each entry contains labels, key properties, and relationship metadata, but not the full page body (definition text, SQL, prose). Each entry maps 1:1 to a `MERGE` upsert.
+The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are the intermediate representation between the content storage and Neo4j. They are a **structural extract** — each entry contains labels, key properties, and relationship metadata, but not the full page body (definition text, SQL, prose). Each entry maps 1:1 to a `MERGE` upsert.
 
 ### Node index fields
 
@@ -161,7 +145,7 @@ The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are 
 |---|---|
 | `source` | Full title of the source node (e.g. `Measure: Revenue`). |
 | `target` | Full title of the target node. |
-| `relationship_type` | Graph relationship type (from mapping tables above, e.g. `REQUIRES`). |
+| `relationship_type` | Neo4j relationship type (from mapping tables above, e.g. `REQUIRES`). |
 | `style` | `hyperlink` (no properties) or `reified` (has `reason` + `consequence`). |
 | `via` | For reified edges: the Relationship page title. `null` for hyperlinks. |
 | `properties` | For reified edges: `{ "reason": "...", "consequence": "..." }`. Empty object for hyperlinks. |
@@ -199,6 +183,39 @@ SET r.reason    = $reason,
 
 ---
 
+## Programmatic access
+
+Unlike the content storage adapters (Confluence, Markdown), which each need a dedicated `graph-api.md` to provide a stable, simplified interface over a wiki/filesystem API for bulk operations, Neo4j already ships **official, vendor-supported client libraries** that cover this need directly. No bespoke Knowledge Graph API document is required for this adapter — use the official driver for your language:
+
+| Language | Package | Notes |
+|---|---|---|
+| Python | [`neo4j`](https://pypi.org/project/neo4j/) | Official driver; parameterized Cypher execution, sessions, transactions |
+| JavaScript / TypeScript | [`neo4j-driver`](https://www.npmjs.com/package/neo4j-driver) | Official driver |
+| CLI | `cypher-shell` | Bundled with the Neo4j distribution; useful for scripting the import/constraint steps directly |
+
+Minimal example (Python) for the node import step described above:
+
+```python
+from neo4j import GraphDatabase
+
+driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "<password>"))
+
+def import_node(tx, name, label, page_id, domain, status):
+    tx.run(
+        f"MERGE (n:{label} {{name: $name}}) "
+        "SET n.page_id = $page_id, n.domain = $domain, n.status = $status",
+        name=name, page_id=page_id, domain=domain, status=status,
+    )
+
+with driver.session() as session:
+    for node in node_index:
+        session.execute_write(import_node, **node)
+```
+
+This same driver is what the sync pipeline (batch, event-driven, or on-demand — see below) uses to run the `MERGE` import steps against the node and edge indexes.
+
+---
+
 ## Sync strategy
 
 Not yet defined. Candidates:
@@ -207,18 +224,12 @@ Not yet defined. Candidates:
 - **Event-driven** — trigger export on page update (webhook for Confluence, file-watcher or CI pipeline for Markdown). Each backend triggers independently.
 - **On-demand** — agent or operator triggers a sync manually before a query session.
 
-The Knowledge Graph API in [`adapters/engine/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what a graph DB client would expose. When the backend changes, only the transport layer is replaced. Each content storage adapter provides its own snapshot pipeline implementation using the same JSON index format.
+The Knowledge Graph API in [`adapters/engine/confluence/graph-api.md`](../confluence/graph-api.md) is designed with this in mind — its core operations map directly to what the Neo4j driver expects as import input. Each content storage adapter provides its own snapshot pipeline implementation using the same JSON index format.
 
 ---
 
-## Candidate databases
+## Exploration and visualization (optional)
 
-The schema is intentionally generic. Any property graph store works:
+Agents query Neo4j via Cypher through the official driver, as described above. For **human** visual exploration of the graph, exploration tooling is optional and interchangeable — it does not affect graph semantics or the import procedure.
 
-| Database | Notes |
-|---|---|
-| Neo4j | Cypher query language; node labels and relationship types map directly |
-| Amazon Neptune | Gremlin or SPARQL; property graph model compatible |
-| ArangoDB | Multi-model (document + graph); AQL query language |
-
-No database has been selected. The choice depends on infrastructure, query patterns, and operational requirements at implementation time.
+The default option documented for this adapter is **Neo4j Bloom Basic / Explore**, via the Aura Console — see the [Bloom Explore addon](addons/bloom-explore.md). Other tools (NeoDash, yWorks Data Explorer, SemSpect, Graphlytic, or a custom build on the Neo4j Visualization Library) work equally well against the same Neo4j instance and can be documented as additional addons without changing this adapter.

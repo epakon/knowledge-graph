@@ -50,20 +50,22 @@ Agent builds correct SQL / answers / instructions without hallucinating business
   - [adapters.md](adapters/adapters.md) — Adapter taxonomy: engine adapters, connectors, addons
   - **engine/** — Graph engine and content storage adapters
     - [engine.md](adapters/engine/engine.md) — Engine adapter contract: content storage capability requirements, four-document contract, graph DB category
-    - **confluence/** — Confluence content storage adapter *(complete)*
+    - **confluence/** — Confluence content storage adapter
       - [confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) — Storage format, MCP tools, link encoding, Glean/Cortex integration
       - [agent-skill.md](adapters/engine/confluence/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
       - [graph-api.md](adapters/engine/confluence/graph-api.md) — Knowledge Graph API for programmatic graph operations
       - [snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) — Confluence → JSON snapshot → graph visualization pipeline
-    - **markdown/** — Markdown files in git content storage adapter *(complete)*
+    - **markdown/** — Markdown files in git content storage adapter
       - [markdown-adapter.md](adapters/engine/markdown/markdown-adapter.md) — File format, YAML frontmatter, directory structure, link encoding, git versioning, auto-generation guidance
       - [agent-skill.md](adapters/engine/markdown/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
       - [graph-api.md](adapters/engine/markdown/graph-api.md) — Knowledge Graph API for programmatic file operations
       - [snapshot-pipeline.md](adapters/engine/markdown/snapshot-pipeline.md) — Markdown file tree → JSON snapshot → graph visualization pipeline; multi-backend index merge
       - **addons/**
         - [openwiki.md](adapters/engine/markdown/addons/openwiki.md) — Codebase documentation generator; promotes OpenWiki output into draft KG nodes
-    - **graph-db/** — Graph DB adapter *(planned)*
-      - [README.md](adapters/engine/graph-db/README.md) — Node/edge mapping, import procedure, sync strategy
+    - **neo4j/** — Neo4j graph DB adapter
+      - [neo4j-adapter.md](adapters/engine/neo4j/neo4j-adapter.md) — Deployment, node/edge mapping, import procedure, programmatic access (official driver), sync strategy
+      - **addons/**
+        - [bloom-explore.md](adapters/engine/neo4j/addons/bloom-explore.md) — Optional human exploration via Neo4j Bloom Basic / Aura Console Explore; alternatives listed
   - **connectors/** — Source-system connectors
     - [connectors.md](adapters/connectors/connectors.md) — Connector contract: six mandatory sections every connector must implement
     - **sap-s4hana/** — SAP S/4HANA connector *(draft)*
