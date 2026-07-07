@@ -86,6 +86,8 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all pages to create** from the user's description.
 
+   **Before adding any `Relationship:` page, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/data-model.md §2.2](../../spec/data-model.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` page instead — check for an existing one first.
+
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No page body content.
 
@@ -113,7 +115,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 6. **After each page is created**, update the parent page to add a link to the new page:
    - Fetch the parent, add the link under the correct section.
-   - Version comment: `v<n> | <date> | agent | Summary: Added link to <new page>. Changed: <section>. Reason: New page created. Breaking: no`
+   - Native version comment: `Summary: Added link to <new page>. Changed: <section>. Reason: New page created. Breaking: no`
 
 ---
 
@@ -203,8 +205,8 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - `contentId`: resolved page ID
    - `limit`: 10 (or as requested)
 
-3. **Parse the version comments.** Each follows:
-   `v<n> | <date> | <author> | Summary: ... | Changed: ... | Reason: ... | Breaking: yes/no`
+3. **Parse the version comments.** Confluence returns version number, date, and author natively per entry; the comment text itself follows:
+   `Summary: ... | Changed: ... | Reason: ... | Breaking: yes/no`
 
 4. **Present as a table**: Version, Date, Author, Summary, Breaking. Highlight breaking changes.
 
@@ -216,7 +218,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 - **Never fabricate a page ID.** Always resolve via `confluence_search` or from the instance reference table.
 - **Always fetch the current version number** before calling `confluence_update_page`.
-- **Every `confluence_update_page` call must include a version comment** in the required format.
+- **Every `confluence_update_page` call must set the native `versionComment`** in the required format — never write it into the page body.
 - **Prose belongs only on Subject and Disambiguation pages.** All other pages use structured fields and predicate/definition blocks.
 - **When creating a page, also update its parent page** to add a link to the new page.
 - **No drafts.** `confluence_create_page` publishes immediately. Show a summary and wait for user confirmation before creating any pages.

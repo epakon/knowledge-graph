@@ -1,6 +1,5 @@
 # Knowledge Graph Specification
 
-**Version:** 1.3.11
 **License:** [CC BY-NC 4.0](LICENSE)
 
 ---
@@ -255,12 +254,11 @@ Each node type has a canonical template defining required header fields, section
 
 Full reference: [spec/versioning.md](spec/versioning.md)
 
-The backend (wiki, git, etc.) versions every page update automatically.
+The backend (wiki, git, etc.) versions every page update automatically, including the version number, timestamp, and author — this specification does not duplicate those into page content.
 
-Every update must include a **structured version comment**:
+Every update must set the backend's **native** version comment (Confluence version message / git commit message) to a **structured summary**:
 
 ```
-v<n> | <YYYY-MM-DD> | <author>
 Summary: <one sentence>
 Changed: <section or field>
 Reason: <why>

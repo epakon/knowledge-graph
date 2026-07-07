@@ -86,6 +86,8 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all files to create** from the user's description.
 
+   **Before adding any `Relationship:` file, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/data-model.md §2.2](../../spec/data-model.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` file instead — check for an existing one first.
+
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No file content.
 
@@ -109,7 +111,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 6. **Draft and write each file.** Show the draft to the user before writing.
 
-7. **After each file is created**, update the domain index file (`domain-<name>.md`) to add a link to the new file under the correct section. Version comment: `v<n> | <date> | agent | Summary: Added link to <new file>. Changed: <section>. Reason: New file created. Breaking: no`
+7. **After each file is created**, update the domain index file (`domain-<name>.md`) to add a link to the new file under the correct section. Commit message: `Summary: Added link to <new file>. Changed: <section>. Reason: New file created. Breaking: no`
 
 8. **Commit** all new files and domain index updates together with a structured version comment.
 
@@ -199,8 +201,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    git log --follow --format="%H %as %an%n%B" -- <path/to/file.md>
    ```
 
-3. **Parse the version comments** from commit message bodies. Each follows:
-   `v<n> | <date> | <author>`
+3. **Parse the version comments** from commit message bodies. Git returns the hash, date, and author natively per entry; the message body itself follows:
    `Summary: ... | Changed: ... | Reason: ... | Breaking: yes/no`
 
 4. **Present as a table**: Version, Date, Author, Summary, Breaking. Highlight breaking changes.
@@ -213,7 +214,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 - **Never fabricate a node path.** Always resolve via search or by deriving the path from the `name` field using the naming convention.
 - **Always read the current file content** before calling any write operation.
-- **Every commit must include a version comment** in the required format in the commit message body.
+- **Every commit must set the commit message body** to the structured summary in the required format — never write it into the file content.
 - **Prose belongs only on Subject and Disambiguation files.** All other files use structured frontmatter and predicate/definition blocks.
 - **When creating a file, also update its domain index** to add a link to the new file.
 - **No silent writes.** Show a draft or diff and wait for user confirmation before writing any file.

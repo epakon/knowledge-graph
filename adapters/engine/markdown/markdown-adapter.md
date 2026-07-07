@@ -145,10 +145,9 @@ Edge statements use standard Markdown links. The link text is the self-contained
 
 ## Version comment (git commit message)
 
-Every commit that modifies a KG node file must include a structured version comment as the git commit message body, following the format from [spec/versioning.md](../../spec/versioning.md):
+Every commit that modifies a KG node file must set the git commit message body — git already records the commit hash, date, and author natively — to a structured summary, following the format from [spec/versioning.md](../../spec/versioning.md):
 
 ```
-v<n> | <YYYY-MM-DD> | <author>
 Summary: <one sentence>
 Changed: <field or section>
 Reason: <why>

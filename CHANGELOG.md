@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.3.13](#1.3.13) | 2026-07-07 | Version comment format no longer duplicates backend-native version/date/author fields; clarified it must live in the backend's native version comment (Confluence) / commit message (Markdown), never in page body content; `spec/data-model.md` §2.2 rationale for why the reified edge-kind list is closed-but-extensible |
 | [1.3.12](#1.3.12) | 2026-07-06 | Generic `graph-db/` adapter rebranded as Neo4j Community Edition adapter; Bloom Explore addon; status markers removed repo-wide |
 | [1.3.11](#1.3.11) | 2026-07-02 | Markdown engine adapter (content storage on git); `engine.md` contract doc; multi-backend co-existence |
 | [1.3.10](#1.3.10) | 2026-06-29 | dbt connector (technical + import); no vocabulary layer — manual authoring required |
@@ -29,6 +30,17 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.3.13] — 2026-07-07
+
+### Changed
+- **`spec/versioning.md`** — clarified that the version comment lives exclusively in the backend's native versioning mechanism (Confluence page version comment / git commit message), never as a text block inside page content. Dropped the redundant `v<n> | <YYYY-MM-DD> | <author>` prefix from the required format since every backend already records version number, timestamp, and author natively; the required comment is now just `Summary`/`Changed`/`Reason`/`Breaking`. Added a "Where it lives, per backend" mapping table.
+- **`SPEC.md` §7**, **`adapters/engine/confluence/confluence-adapter.md`**, **`adapters/engine/confluence/agent-skill.md`**, **`adapters/engine/markdown/markdown-adapter.md`**, **`adapters/engine/markdown/agent-skill.md`** — updated version-comment format references and examples to match; `agent-skill.md` "Version history" workflows now note that the backend returns version/date/author separately from the comment text.
+
+### Added
+- **`spec/data-model.md` §2.2** — new "Why this list is closed (for now)" subsection explaining the reified edge-kind vocabulary: it is closed-but-extensible (not a permanent ceiling, not free-form), some hyperlink kinds structurally can never warrant a reified form (`calculate`, `contain`, `disambiguate`, ordinary `joinedTo` — no conditional risk to explain), `relatedTo` is the opposite case (most often promoted, but promotion always renames since `relatedTo` itself is too generic to carry a role), and agents/authors should route anything that doesn't fit a cataloged pattern to a `BusinessRule` page rather than inventing an ad-hoc reified kind.
 
 ---
 

@@ -142,10 +142,10 @@ Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` 
 
 ## Version comment
 
-Set on every `confluence_update_page` call as the `versionComment` parameter. Must follow the format from [spec/versioning.md](../../spec/versioning.md):
+Set on every `confluence_update_page` call as the `versionComment` parameter — this is Confluence's native version history mechanism, not a block written into the page body. Must follow the format from [spec/versioning.md](../../spec/versioning.md):
 
 ```
-v<n> | <YYYY-MM-DD> | <author> | Summary: <one sentence>. Changed: <field>. Reason: <why>. Breaking: yes/no
+Summary: <one sentence>. Changed: <field>. Reason: <why>. Breaking: yes/no
 ```
 
 ---
