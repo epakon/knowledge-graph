@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.4.0](#1.4.0) | 2026-07-09 | Conceptual/logical layer split; `Concept` and `Process` node types activated; four new conceptual edge kinds; `spec/conceptual-layer.md` added; `spec/data-model.md` renamed to `spec/logical-layer.md` |
 | [1.3.13](#1.3.13) | 2026-07-07 | Version comment format no longer duplicates backend-native version/date/author fields; clarified it must live in the backend's native version comment (Confluence) / commit message (Markdown), never in page body content; `spec/data-model.md` §2.2 rationale for why the reified edge-kind list is closed-but-extensible |
 | [1.3.12](#1.3.12) | 2026-07-06 | Generic `graph-db/` adapter rebranded as Neo4j Community Edition adapter; Bloom Explore addon; status markers removed repo-wide |
 | [1.3.11](#1.3.11) | 2026-07-02 | Markdown engine adapter (content storage on git); `engine.md` contract doc; multi-backend co-existence |
@@ -30,6 +31,24 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.4.0] — 2026-07-09
+
+### Added
+- **`spec/conceptual-layer.md`** — new normative document for the conceptual (vocabulary) layer: stability test, node type schema (`Subject`, `Concept`, `Process`), edge type schema (`comprises`, `produces`, `consumes`, `governs`, bridge edge `implement`), space structure, authorship guidance.
+- **`Concept` and `Process` node types** activated (`Process` promoted from reserved). `Concept` groups related Subjects (`comprises ->`); `Process` produces/consumes/governs Subject data.
+- **Four new hyperlink edge kinds**: `comprises`, `produces`, `consumes`, `governs` — all conceptual-layer, no properties.
+- **`Concept` and `Process` page templates**, and their container paths (`vocabulary/concepts/`, `vocabulary/processes/`).
+
+### Changed
+- **`spec/data-model.md` renamed to `spec/logical-layer.md`** — scope narrowed to the logical/domain layer; vocabulary-layer content redirected to `conceptual-layer.md`. Cross-references updated repo-wide.
+- **`spec/schema.yaml`** bumped to 1.4.0 with the new node/edge types.
+- **`SPEC.md`, `README.md`, `spec/space-structure.md`** — updated to reference the new layer split; each document keeps only content it owns and points to `conceptual-layer.md` / `logical-layer.md` for schema detail rather than restating node/edge tables.
+
+### Not changed
+- `Term` remains a reserved node type — not activated in this release.
 
 ---
 

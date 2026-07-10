@@ -1,23 +1,22 @@
-# Data Model
+# Logical Layer
 
 > Part of the [Knowledge Graph Specification](../SPEC.md).
+> For the conceptual layer (Concept, Subject, Process node types and the bridge to this layer) see [conceptual-layer.md](conceptual-layer.md).
 
 ---
 
-## 1. Two-layer architecture
+## 1. Logical layer
 
-The knowledge graph is organized into two distinct layers:
+The logical layer holds the technical implementation of business knowledge: table structures, SQL expressions, filter predicates, business rules scoped to a specific data domain, and verified queries. It is coupled to the data model and changes when the data model changes.
 
-| Layer | Path | Scope | Owned by | Changes when |
-|---|---|---|---|---|
-| **Vocabulary** | `vocabulary/` | Global — shared across all domains | Business / domain experts | Business terminology evolves |
-| **Domain** | `<domain>/` | Per-domain — tied to specific tables and SQL. Each node is owned by exactly one domain. | Data engineering | Data model changes |
+| Property | Value |
+|---|---|
+| **Path** | `<domain>/` |
+| **Scope** | Per-domain — each node is owned by exactly one domain |
+| **Authored by** | Data engineering |
+| **Changes when** | Data model changes |
 
-**Vocabulary layer** holds knowledge that exists independently of any table or SQL implementation: business terms, KPI definitions at a conceptual level, methodologies, and links to authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies). It is stable and does not break when data models change.
-
-**Domain layer** holds the technical implementation: table structures, SQL expressions, filter predicates, business rules scoped to a specific data domain, and verified queries. It is coupled to the data model and changes with it.
-
-The bridge between the two layers is the `implement ->` edge: a Vocabulary node (e.g. `Subject: DSO`) points to the Domain nodes that embody it (e.g. `Measure: DSO`, `Rule: dso-annualization`). This lets agents retrieve the business definition first, then follow edges to the SQL implementation.
+The bridge from the conceptual layer into this layer is the `implement ->` edge: a `Subject` in `vocabulary/` points to the domain nodes that embody it (e.g. `Subject: DSO` → `Measure: DSO`, `Rule: dso-annualization`). See [conceptual-layer.md](conceptual-layer.md) for the full bridge definition.
 
 ---
 
@@ -271,6 +270,4 @@ A simple aggregate over a single column — `SUM(revenue)`, `COUNT(order_id)` �
 
 Once a column has its own Attribute or Measure page, list it in the `Calculated` column of `## Semantic annotations`. Do **not** also add it to `## Links` — that is a duplicate link.
 
-### Cross-domain linking via Vocabulary
-
-When the same concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on a node in `vocabulary/` — today always a **Subject** page in `vocabulary/subjects/`. Each domain's Attribute or Measure page links to the Vocabulary node via `relatedTo ->`, and the Vocabulary node links back. The business definition is written once on the Vocabulary node; domain pages carry the domain-specific expression and access rules.
+> For how the same concept is linked across multiple domains via the conceptual layer, see [space-structure.md — Cross-domain linking via the conceptual layer](space-structure.md#cross-domain-linking-via-the-conceptual-layer).

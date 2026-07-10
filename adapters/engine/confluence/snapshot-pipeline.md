@@ -148,9 +148,9 @@ python knowledge_graph_snapshot.py \
   --audit
 ```
 
-- `--write-node-index`: writes `kg-node-index.json` (see [spec/data-model.md §3](../../spec/data-model.md#3-node-index))
-- `--write-edge-index`: writes `kg-edge-index.json` (see [spec/data-model.md §4](../../spec/data-model.md#4-edge-index))
-- `--audit`: runs audit rules from [spec/data-model.md §5](../../spec/data-model.md#5-audit-rules) and prints violations
+- `--write-node-index`: writes `kg-node-index.json` (see [spec/logical-layer.md §3](../../spec/logical-layer.md#3-node-index))
+- `--write-edge-index`: writes `kg-edge-index.json` (see [spec/logical-layer.md §4](../../spec/logical-layer.md#4-edge-index))
+- `--audit`: runs audit rules from [spec/logical-layer.md §5](../../spec/logical-layer.md#5-audit-rules) and prints violations
 
 ---
 

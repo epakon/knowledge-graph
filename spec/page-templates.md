@@ -49,6 +49,58 @@ The only page type where substantive prose lives. Kept stable — business conce
 
 > `## Citations` is optional. Use it to link authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies) that inform the business definition. Do not duplicate the external definition — link to it.
 
+> `## Links` on a Subject page may also carry back-references from `Concept` (`Concept: <Name> comprises <- Subject: <Name>`) and from `Process` (`Process: <Name> produces/consumes/governs <- Subject: <Name>`).
+
+---
+
+## Concept
+
+Abstract thematic grouping of related Subjects. Only create when the grouping carries company-specific meaning not derivable from the Subject names alone.
+
+```markdown
+# Concept: <Name>
+
+**Type:** Concept
+**Scope:** global
+
+## Definition
+<What unifies the Subjects in this concept. One paragraph. No SQL.>
+
+## Citations
+- [<Source name>](<URL>) — <one-line description of what this source contributes>
+
+## Links
+- [Subject: <Name>](path) — Concept: <Name> comprises -> Subject: <Name>
+```
+
+> `## Citations` is optional.
+
+---
+
+## Process
+
+Named business activity that produces, consumes, or governs data concepts. Only create when company-specific decisions are documented here that are not derivable from the Subjects it links to.
+
+```markdown
+# Process: <Name>
+
+**Type:** Process
+**Scope:** global
+
+## Description
+<What this activity does and what makes it company-specific. One paragraph. No SQL.>
+
+## Citations
+- [<Source name>](<URL>) — <one-line description of what this source contributes>
+
+## Links
+- [Subject: <Name>](path) — Process: <Name> produces -> Subject: <Name>
+- [Subject: <Name>](path) — Process: <Name> consumes -> Subject: <Name>
+- [Subject: <Name>](path) — Process: <Name> governs -> Subject: <Name>
+```
+
+> Use `produces` when the process generates this Subject's data as an output, `consumes` when it needs the data as input, `governs` when it defines the rules that constrain the Subject. A single Process may use all three kinds. `## Citations` is optional.
+
 ---
 
 ## Domain
@@ -138,7 +190,7 @@ The domain page is also the parent container for all type sub-folders. It is the
 
 ## Measure
 
-Promoted computed field. For promotion criteria see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
+Promoted computed field. For promotion criteria see [logical-layer.md §8](logical-layer.md#8-semantic-annotations-and-cross-domain-linking).
 
 ```markdown
 # Measure: <Name>
@@ -167,7 +219,7 @@ Promoted computed field. For promotion criteria see [data-model.md §8](data-mod
 
 ## Attribute
 
-Promoted column with semantic payload. For promotion criteria see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
+Promoted column with semantic payload. For promotion criteria see [logical-layer.md §8](logical-layer.md#8-semantic-annotations-and-cross-domain-linking).
 
 ```markdown
 # Attribute: <Name>

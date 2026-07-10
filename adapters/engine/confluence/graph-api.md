@@ -14,7 +14,7 @@ Two reasons to prefer the Knowledge Graph API over MCP tool calls for bulk work:
 
 1. **Token cost.** Each MCP tool call (`confluence_get_page`, `confluence_update_page`) consumes LLM context tokens — for the page body, the response, and the conversation turn. Updating 50 pages via MCP means 100+ tool calls inside a single agent session, which is expensive and slow. The Knowledge Graph API makes the same 100 HTTP calls outside the LLM entirely — zero token cost per page.
 
-2. **Backend independence.** The Knowledge Graph API defines graph operations (get/update/delete a page, crawl the tree, search) as an interface. Today the transport layer is the Confluence REST API. When Confluence is eventually replaced or supplemented by a dedicated graph database, only the transport layer changes — the calling convention and the operations themselves stay the same. This is the migration path described in [spec/data-model.md §7](../../spec/data-model.md#7-graph-database-migration-notes).
+2. **Backend independence.** The Knowledge Graph API defines graph operations (get/update/delete a page, crawl the tree, search) as an interface. Today the transport layer is the Confluence REST API. When Confluence is eventually replaced or supplemented by a dedicated graph database, only the transport layer changes — the calling convention and the operations themselves stay the same. This is the migration path described in [spec/logical-layer.md §7](../../spec/logical-layer.md#7-graph-database-migration-notes).
 
 ---
 
@@ -118,7 +118,7 @@ An audit is a read-only pass — one check function per spec-compliance rule:
 check(page) -> [ Finding(page_id, title, category, detail), ... ]
 ```
 
-Each check independently inspects a page and yields zero or more findings; it never modifies anything. The set of checks is not a fixed list — it must be kept in sync with the spec, growing whenever the spec changes in a way that could make existing live pages non-compliant. A check should validate against the spec's actual source of truth wherever a machine-readable one exists (e.g. a schema's enum of valid values), rather than hardcoding its own copy of that list — otherwise the check silently drifts out of sync the next time the spec's list changes, exactly the kind of duplication risk called out in [spec/data-model.md §2.2](../../spec/data-model.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties).
+Each check independently inspects a page and yields zero or more findings; it never modifies anything. The set of checks is not a fixed list — it must be kept in sync with the spec, growing whenever the spec changes in a way that could make existing live pages non-compliant. A check should validate against the spec's actual source of truth wherever a machine-readable one exists (e.g. a schema's enum of valid values), rather than hardcoding its own copy of that list — otherwise the check silently drifts out of sync the next time the spec's list changes, exactly the kind of duplication risk called out in [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties).
 
 ## Dry-run / apply pattern
 

@@ -33,7 +33,7 @@ This table maps natural-language user requests to the workflow that handles them
 
 Before starting any workflow:
 
-1. Read `SPEC.md` and `spec/data-model.md` if not already done in this session.
+1. Read `SPEC.md` and `spec/logical-layer.md` if not already done in this session.
 2. Know the space key and parent page ID for the target domain (from your instance reference table — never fabricate a page ID).
 3. For write operations: always fetch the current page version number immediately before calling `confluence_update_page`.
 
@@ -86,7 +86,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all pages to create** from the user's description.
 
-   **Before adding any `Relationship:` page, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/data-model.md §2.2](../../spec/data-model.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` page instead — check for an existing one first.
+   **Before adding any `Relationship:` page, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` page instead — check for an existing one first.
 
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No page body content.

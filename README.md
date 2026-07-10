@@ -30,7 +30,8 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 | **Edge** | A typed link between two nodes, embedded in the page body as a readable label |
 | **Relationship page** | A reified edge: a dedicated page that carries a typed link plus a reason and consequence |
 | **Domain** | A scoped collection of nodes coupled to specific data tables |
-| **Subject** | A global, domain-agnostic concept page — the shared business definition |
+| **Conceptual layer** | The domain-agnostic, stable part of the graph (`vocabulary/`) — see [spec/conceptual-layer.md](spec/conceptual-layer.md) |
+| **Logical layer** | The per-domain, SQL-coupled part of the graph — see [spec/logical-layer.md](spec/logical-layer.md) |
 
 ---
 
@@ -40,7 +41,8 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 - [CHANGELOG.md](CHANGELOG.md) — Version history (semantic versioning)
 - [LICENSE](LICENSE) — CC BY-NC 4.0
 - **spec/** — Normative specification
-  - [data-model.md](spec/data-model.md) — Node types, edge kinds, indexes, audit rules, graph-DB migration
+  - [conceptual-layer.md](spec/conceptual-layer.md) — Conceptual layer: Concept, Subject, Process node types; stability test; bridge to logical layer
+  - [logical-layer.md](spec/logical-layer.md) — Logical layer: node types, edge kinds, indexes, audit rules, graph-DB migration
   - [link-format.md](spec/link-format.md) — Edge-statement syntax, back-reference rules, visualization conventions
   - [page-templates.md](spec/page-templates.md) — Canonical page templates for all node types
   - [space-structure.md](spec/space-structure.md) — Logical hierarchy, container pages, naming conventions
@@ -95,7 +97,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 ## Quick start
 
 1. Read [SPEC.md](SPEC.md) for the complete normative specification.
-2. Read [spec/data-model.md](spec/data-model.md) for the node and edge schema.
+2. Read [spec/conceptual-layer.md](spec/conceptual-layer.md) for the vocabulary layer and [spec/logical-layer.md](spec/logical-layer.md) for the domain layer schema.
 3. Read [spec/page-templates.md](spec/page-templates.md) to understand what each page looks like.
 4. Choose a backend and read the matching adapter doc (e.g. [adapters/engine/confluence/confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) for Confluence, [adapters/engine/markdown/markdown-adapter.md](adapters/engine/markdown/markdown-adapter.md) for Markdown files in git).
 5. See [examples/](examples/) for concrete illustrations.

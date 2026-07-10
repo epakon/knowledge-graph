@@ -69,7 +69,7 @@ Programmatic interface for bulk and automated operations. Must cover:
 - Higher-level operations: validate, fix links, inject back-references
 - Common pitfalls specific to the backend
 
-The JSON index output format is shared across all backends — see [spec/data-model.md §4–5](../../spec/data-model.md#4-node-index) for the node index and edge index schemas. Every adapter's snapshot pipeline must produce indexes conforming to this format so the graph DB import pipeline works without modification.
+The JSON index output format is shared across all backends — see [spec/logical-layer.md §4–5](../../spec/logical-layer.md#4-node-index) for the node index and edge index schemas. Every adapter's snapshot pipeline must produce indexes conforming to this format so the graph DB import pipeline works without modification.
 
 **4. `snapshot-pipeline.md` — Snapshot pipeline**
 

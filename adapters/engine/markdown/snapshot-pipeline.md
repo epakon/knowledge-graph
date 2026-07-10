@@ -166,7 +166,7 @@ python kg_snapshot_markdown.py \
 
 - `--write-node-index`: writes `kg-node-index.json`
 - `--write-edge-index`: writes `kg-edge-index.json`
-- `--audit`: runs audit rules from [spec/data-model.md §5](../../spec/data-model.md#5-audit-rules) and prints violations
+- `--audit`: runs audit rules from [spec/logical-layer.md §5](../../spec/logical-layer.md#5-audit-rules) and prints violations
 
 The index format is identical to the Confluence adapter's indexes. When combining both backends, merge the two node indexes and edge indexes before running graph DB import — the `page_id` field disambiguates the source.
 

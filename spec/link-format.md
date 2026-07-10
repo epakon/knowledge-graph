@@ -63,7 +63,7 @@ Every edge starts as a hyperlink. Promote it to a Relationship page when it gain
 
 ### When individual pages are warranted
 
-The same promotion logic applies to columns and computed fields inside a Table. For the full promotion criteria — when a column warrants an Attribute page, when it warrants a Measure page, and when it stays inline — see [data-model.md §8](data-model.md#8-semantic-annotations-and-cross-domain-linking).
+The same promotion logic applies to columns and computed fields inside a Table. For the full promotion criteria — when a column warrants an Attribute page, when it warrants a Measure page, and when it stays inline — see [logical-layer.md §8](logical-layer.md#8-semantic-annotations-and-cross-domain-linking).
 
 ---
 

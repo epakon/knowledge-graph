@@ -31,7 +31,7 @@
 
 Before starting any workflow:
 
-1. Read `SPEC.md` and `spec/data-model.md` if not already done in this session.
+1. Read `SPEC.md` and `spec/logical-layer.md` if not already done in this session.
 2. Know the root path of the knowledge graph directory tree in the repository.
 3. For write operations: always read the current file content before modifying — never overwrite blindly.
 
@@ -86,7 +86,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all files to create** from the user's description.
 
-   **Before adding any `Relationship:` file, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/data-model.md §2.2](../../spec/data-model.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` file instead — check for an existing one first.
+   **Before adding any `Relationship:` file, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` file instead — check for an existing one first.
 
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No file content.

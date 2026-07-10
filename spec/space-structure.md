@@ -17,17 +17,21 @@ This structure is **backend-agnostic**: it maps to Confluence parent pages, dire
 ```
 Knowledge Graph: <Domain>         (root container — one per domain)
 │
-├── vocabulary/                   global, shared across all domains
-│   └── subjects/
-│       └── Subject: <Name>       one page per subject
+├── vocabulary/                   conceptual layer — global, shared across all domains
+│   ├── concepts/
+│   │   └── Concept: <Name>       abstract thematic grouping of Subjects
+│   ├── subjects/
+│   │   └── Subject: <Name>       business concept with data implementation
+│   └── processes/
+│       └── Process: <Name>       business activity with company-specific decisions
 │
-└── Domain: <Name>                domain index page (follows Domain template)
+└── Domain: <Name>                logical layer — domain index page (follows Domain template)
     ├── tables/
     │   └── Table: <Name>
     ├── measures/
     │   └── Measure: <Name>
     ├── attributes/
-    │   └── Attribute: <Name>     promoted columns only (see data-model.md §8)
+    │   └── Attribute: <Name>     promoted columns only (see logical-layer.md §8)
     ├── filters/
     │   └── Filter: <Name>
     ├── verified-queries/
@@ -48,7 +52,9 @@ Page titles use a **type prefix + colon + name** pattern:
 
 | Node type | Title format | Example |
 |---|---|---|
+| Concept | `Concept: <Name>` | `Concept: Liquidity` |
 | Subject | `Subject: <Name>` | `Subject: Write-Off` |
+| Process | `Process: <Name>` | `Process: Period-Close` |
 | Domain | `Domain: <Name>` | `Domain: Sales` |
 | Table | `Table: <Name>` | `Table: ORDERS` |
 | Measure | `Measure: <Name>` | `Measure: REVENUE` |
@@ -72,7 +78,9 @@ The following container pages must exist under each domain:
 | Container | Path |
 |---|---|
 | vocabulary root | `vocabulary/` |
+| concepts root | `vocabulary/concepts/` |
 | subjects root | `vocabulary/subjects/` |
+| processes root | `vocabulary/processes/` |
 | domain index | `Domain: <Name>` |
 | tables | `<domain>/tables/` |
 | measures | `<domain>/measures/` |
@@ -85,30 +93,9 @@ The following container pages must exist under each domain:
 
 ---
 
-## The `vocabulary/` layer — design notes
+## The `vocabulary/` layer
 
-The `vocabulary/` container is intentionally kept separate from domain containers. It is the **vocabulary layer** of the knowledge graph — domain-agnostic, stable, and shared.
-
-The vocabulary layer holds knowledge that exists independently of any specific table or SQL implementation: business terms, methodologies, KPI definitions at a conceptual level, and links to external authoritative sources such as glossaries, regulatory definitions, data dictionaries, and ontologies. This is the layer business users author and trust; it changes slowly and does not break when data models change.
-
-### Subject, Term, Concept, and Process — current and future node types
-
-Currently only one node type lives in the conceptual layer: **Subject**. A Subject represents a business concept tied to data — something that has SQL implementations in one or more domains (a Measure, Filter, or Rule that embodies it).
-
-Three additional node types are reserved for future use at the conceptual layer:
-
-| Node type | Status | Intended purpose |
-|---|---|---|
-| `Subject` | Active | Business concept with direct data implementation. Has `implement ->` edges to Measures, Filters, Rules. |
-| `Term` | Reserved | Pure business vocabulary — a term that appears in business communication but may not have a direct SQL implementation yet. Useful for onboarding and disambiguation without a data anchor. |
-| `Concept` | Reserved | Abstract or composite idea that groups multiple Subjects. Useful for cross-domain thematic grouping (e.g. "Liquidity" grouping DSO, Cash Received, Open Balance). |
-| `Process` | Reserved | A named sequence of business activities with defined triggers, participants, and outcomes (e.g. "Procure-to-Pay", "Period Close", "Order-to-Cash"). Provides the business context that explains *why* certain rules, filters, and measures exist — a Process node can link to the Subjects, Rules, and Measures it governs, making the causal chain from business activity to data implementation explicit. |
-
-Do not create `Term`, `Concept`, or `Process` pages until the node type is formally added to the schema. Use `Subject` for all conceptual nodes today.
-
-### Linking external knowledge to the conceptual layer
-
-The `vocabulary/` layer is also the natural attachment point for **external references** — links to glossaries, regulatory definitions, data dictionaries, or ontologies that inform a business concept. Rather than duplicating external definitions inside Subject pages, a Subject can carry a `## Citations` section with links to authoritative external sources. This avoids maintaining duplicate copies of definitions that are owned externally.
+The `vocabulary/` container is intentionally kept separate from domain containers — it is the **conceptual layer** of the knowledge graph. For node types, properties, edge kinds, the stability test, authorship guidance, and external-reference linking see [conceptual-layer.md](conceptual-layer.md).
 
 ---
 
@@ -137,9 +124,11 @@ When the same concept appears in multiple domains, a single Subject page in `voc
 
 ---
 
-## Cross-domain nodes — ownership and linking
+## Cross-domain linking via the conceptual layer
 
 A node is owned by exactly one domain — the domain with the `contain ->` edge to it. Ownership means that domain is responsible for the node's correctness and verification. The page is stored in the owning domain's folder.
+
+When the same concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on the corresponding `Subject` page in the conceptual layer rather than being redefined per domain. Each domain's Attribute or Measure page links to the Subject via `relatedTo ->`, and the Subject links back. The business definition is written once on the Subject; domain pages carry only the domain-specific expression and access rules.
 
 Other domains that use the node do not add a `contain ->` edge. Their connection is visible in the graph through the existing edges from their own nodes (e.g. a Measure in Finance that links via `relatedTo ->` to a Rule owned by Sales).
 

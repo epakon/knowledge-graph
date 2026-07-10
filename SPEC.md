@@ -35,7 +35,7 @@
 | Term | Definition |
 |---|---|
 | **Node** | A single-topic page representing one business entity. Each node has a type, a unique name, and structured header fields. |
-| **Node type** | The category of a node: `Subject`, `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. |
+| **Node type** | The category of a node. Conceptual layer: `Concept`, `Subject`, `Process`. Logical layer: `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. |
 | **Edge** | A typed, directed link between two nodes. Encoded as a readable label embedded in the source page body. |
 | **Edge kind** | The semantic verb describing the relationship: `implement`, `relatedTo`, `attribute`, `joinedTo`, `disambiguate`, `apply`, `contain`. |
 | **Owning side** | The page that declares the edge (source → target direction). |
@@ -50,68 +50,44 @@
 
 ## 3. Data Model
 
-Full schema: [spec/data-model.md](spec/data-model.md)
+The graph has two layers. Full layer specifications:
+- Conceptual layer (node types, properties, edge kinds, stability test): [spec/conceptual-layer.md](spec/conceptual-layer.md)
+- Logical layer (node types, properties, edge kinds, indexes, audit rules): [spec/logical-layer.md](spec/logical-layer.md)
+
 Machine-readable schema: [spec/schema.yaml](spec/schema.yaml)
-
-### 3.1 Node types
-
-| Node type | Identity key | Core properties | Scope |
-|---|---|---|---|
-| `Subject` | `name` | `business_definition`, `scope` | global |
-| `Domain` | `name` | `owner` | per-domain |
-| `Table` | `name` | `table_kind`, `source`, `description` | per-domain |
-| `Measure` | `name` | `kind`, `synonyms`, `status`, `definition_sql` | per-domain |
-| `Attribute` | `name` | `kind`, `synonyms`, `access_modifier`, `expression_sql` | per-domain |
-| `Filter` | `name` | `mandatory`, `synonyms`, `predicate_sql` | per-domain |
-| `VerifiedQuery` | `name` | `onboarding_question`, `verified_by`, `verified_at`, `status`, `question`, `sql` | per-domain |
-| `BusinessRule` | `name` | `definition`, `consequence_if_violated` | per-domain |
-| `Disambiguation` | `name` | `always_ask` | per-domain |
 
 > **Relationship pages are not nodes.** They are reified edges — flattened into typed relationships with properties in any graph database export. They remain pages for human readability.
 
-### 3.2 Edge kinds
-
-#### Hyperlink edges (no properties)
-
-| Kind | Valid source types | Valid target types | Notes |
-|---|---|---|---|
-| `implement` | Subject, Measure, BusinessRule, Filter | Filter, Measure, BusinessRule, VerifiedQuery | Subject → any; others → VerifiedQuery only |
-| `relatedTo` | any | any | Symmetric generic cross-link |
-| `attribute` | Table | Attribute | |
-| `joinedTo` | Table | Table | Symmetric |
-| `disambiguate` | Subject | Disambiguation | |
-| `apply` | BusinessRule | Table, Measure | |
-| `contain` | Domain | Table, Measure, Filter, VerifiedQuery, BusinessRule | |
-
-#### Reified edges (Relationship pages — carry `reason` and `consequence`)
-
-| Kind | Source type | Target type |
-|---|---|---|
-| `mandatory` | Filter | Table |
-| `requires` | Measure | Filter |
-| `guards` | Filter | Measure |
-| `overrides` | BusinessRule | Attribute |
-| `demonstrates` | VerifiedQuery | BusinessRule |
-
-### 3.3 Schema diagram
+### 3.1 Schema diagram
 
 ```mermaid
 graph LR
-    Subject["Subject"]
-    Domain["Domain"]
-    Table["Table"]
-    Measure["Measure"]
-    Attribute["Attribute"]
-    Filter["Filter"]
-    VerifiedQuery["VerifiedQuery"]
-    BusinessRule["BusinessRule"]
-    Disambiguation["Disambiguation"]
+    subgraph conceptual["Conceptual layer (vocabulary/)"]
+        Concept["Concept"]
+        Subject["Subject"]
+        Process["Process"]
+    end
+
+    subgraph logical["Logical layer (domain/)"]
+        Domain["Domain"]
+        Table["Table"]
+        Measure["Measure"]
+        Attribute["Attribute"]
+        Filter["Filter"]
+        VerifiedQuery["VerifiedQuery"]
+        BusinessRule["BusinessRule"]
+        Disambiguation["Disambiguation"]
+    end
+
+    Concept -->|comprises| Subject
+    Process -->|produces| Subject
+    Process -->|consumes| Subject
+    Process -->|governs| Subject
 
     Subject -->|implement| Filter
     Subject -->|implement| Measure
     Subject -->|implement| BusinessRule
     Subject -->|disambiguate| Disambiguation
-    Subject -->|relatedTo| Subject
 
     Domain -->|contain| Table
     Domain -->|contain| Measure
@@ -119,7 +95,8 @@ graph LR
     Domain -->|contain| VerifiedQuery
     Domain -->|contain| BusinessRule
 
-    Table -->|attribute| Attribute
+    Table -->|calculate| Attribute
+    Table -->|calculate| Measure
     Table -->|joinedTo| Table
 
     Table --- mandatory{mandatory}
@@ -140,17 +117,11 @@ graph LR
 
     BusinessRule -->|apply| Table
     BusinessRule -->|apply| Measure
-    BusinessRule -->|relatedTo| Filter
-    BusinessRule -->|relatedTo| Disambiguation
     BusinessRule -->|implement| VerifiedQuery
 
     Measure -->|implement| VerifiedQuery
-    Measure -->|relatedTo| BusinessRule
-
     Filter -->|implement| VerifiedQuery
 
-    Attribute -->|relatedTo| BusinessRule
-    Attribute -->|relatedTo| Filter
     Attribute -->|relatedTo| Subject
 ```
 
@@ -193,48 +164,7 @@ Rules:
 
 Full reference: [spec/space-structure.md](spec/space-structure.md)
 
-The knowledge base is organized as a **parent-container hierarchy**:
-
-```
-Knowledge Graph: <Domain>   (root container)
-│
-├── vocabulary/             (global, shared across all domains)
-│   └── subjects/
-│       └── Subject: <Name>
-│
-└── Domain: <Name>          (domain index — one per domain)
-    ├── tables/
-    │   └── Table: <Name>
-    ├── measures/
-    │   └── Measure: <Name>
-    ├── attributes/
-    │   └── Attribute: <Name>
-    ├── filters/
-    │   └── Filter: <Name>
-    ├── verified-queries/
-    │   └── VerifiedQuery: <Name>
-    ├── rules/
-    │   └── Rule: <Name>
-    ├── relationships/
-    │   └── Relationship: <From> <kind> <To>
-    └── disambiguations/
-        └── Disambiguation: <Term>
-```
-
-**Page title conventions** (type prefix + colon + name):
-
-```
-Subject: Write-Off
-Domain: Sales
-Table: ORDERS
-Measure: REVENUE
-Attribute: PAYMENT_METHOD
-Filter: ACTIVE_CUSTOMERS
-Rule: exclude-reversals
-VerifiedQuery: REVENUE_BY_REGION
-Relationship: REVENUE requires ACTIVE_CUSTOMERS
-Disambiguation: bad-debt
-```
+The knowledge base is organized as a **parent-container hierarchy**: a global `vocabulary/` container for the conceptual layer, and one container per domain for the logical layer. Page titles use a `<NodeType>: <Name>` prefix convention. See the full reference for the canonical hierarchy diagram, naming conventions, and container-page requirements.
 
 ---
 

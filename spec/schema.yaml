@@ -1,16 +1,34 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.3.0
+# Version: 1.4.0
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 
-spec_version: "1.3.0"
+spec_version: "1.4.0"
 
 # ---------------------------------------------------------------------------
-# Node Types
+# Node Types — Conceptual layer (vocabulary/)
+# See spec/conceptual-layer.md for authorship guidance and stability test.
 # ---------------------------------------------------------------------------
 node_types:
+  - name: Concept
+    label: Concept
+    layer: conceptual
+    scope: global
+    identity_key: name
+    properties:
+      - name: definition
+        type: string
+        required: true
+        description: >
+          What unifies the Subjects in this concept. One paragraph. No SQL.
+          Only create a Concept node when the grouping carries company-specific
+          meaning not derivable from the Subject names alone.
+    page_title_prefix: "Concept:"
+    container_path: "vocabulary/concepts/"
+
   - name: Subject
     label: Subject
+    layer: conceptual
     scope: global
     identity_key: name
     properties:
@@ -25,6 +43,26 @@ node_types:
     page_title_prefix: "Subject:"
     container_path: "vocabulary/subjects/"
 
+  - name: Process
+    label: Process
+    layer: conceptual
+    scope: global
+    identity_key: name
+    properties:
+      - name: description
+        type: string
+        required: true
+        description: >
+          What this activity does and what makes it company-specific. One paragraph. No SQL.
+          Only create a Process node when company-specific decisions are documented here
+          that are not derivable from the Subjects it links to.
+    page_title_prefix: "Process:"
+    container_path: "vocabulary/processes/"
+
+# ---------------------------------------------------------------------------
+# Node Types — Logical layer (<domain>/)
+# See spec/logical-layer.md for schema details.
+# ---------------------------------------------------------------------------
   - name: Domain
     label: Domain
     scope: global
@@ -214,14 +252,49 @@ node_types:
 # Hyperlink Edge Kinds (no properties, encoded as clickable link labels)
 # ---------------------------------------------------------------------------
 hyperlink_edge_kinds:
+
+  # -- Conceptual layer edges (vocabulary/ → vocabulary/) ------------------
+
+  - kind: comprises
+    relationship_type: COMPRISES
+    valid_sources: [Concept]
+    valid_targets: [Subject]
+    notes: >
+      A Concept groups one or more Subjects thematically.
+      Owning side: Concept page. Back-reference on Subject page.
+
+  - kind: produces
+    relationship_type: PRODUCES
+    valid_sources: [Process]
+    valid_targets: [Subject]
+    notes: The Process generates this Subject's data as an output.
+
+  - kind: consumes
+    relationship_type: CONSUMES
+    valid_sources: [Process]
+    valid_targets: [Subject]
+    notes: The Process requires this Subject's data as an input to operate.
+
+  - kind: governs
+    relationship_type: GOVERNS
+    valid_sources: [Process]
+    valid_targets: [Subject]
+    notes: >
+      The Process defines the rules that constrain this Subject.
+      Use when the process shapes the rules around a value rather than creating the value itself.
+
+  # -- Bridge edge (conceptual → logical) -----------------------------------
+
   - kind: implement
     relationship_type: IMPLEMENTS
     valid_sources: [Subject, Measure, BusinessRule, Filter]
     valid_targets: [Filter, Measure, BusinessRule, VerifiedQuery]
     notes: >
-      Subject may implement any target type.
+      Subject may implement any target type (bridge from conceptual to logical layer).
       Measure, BusinessRule, Filter may only implement VerifiedQuery.
       implement is NOT valid between two Subjects — use relatedTo.
+
+  # -- Logical layer edges (<domain>/ → <domain>/) --------------------------
 
   - kind: relatedTo
     relationship_type: RELATED_TO
