@@ -52,7 +52,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 | `Attribute` | `Attribute` | `name` | `kind`, `synonyms`, `access_modifier`, `expression_sql` | per-domain |
 | `Filter` | `Filter` | `name` | `mandatory`, `synonyms`, `predicate_sql` | per-domain |
 | `VerifiedQuery` | `VerifiedQuery` | `name` | `onboarding_question`, `verified_by`, `verified_at`, `status`, `question`, `sql` | per-domain |
-| `BusinessRule` | `BusinessRule` | `name` | `definition`, `consequence_if_violated` | per-domain |
+| `BusinessRule` | `BusinessRule` | `name` | `definition`, `rule_modality`, `consequence_if_violated` | per-domain |
 | `Disambiguation` | `Disambiguation` | `name` | `always_ask` | per-domain |
 
 > **`Relationship` pages are not nodes in the target graph database.** They are flattened into typed relationships with properties (see §2.2). They remain pages for human readability but are not registered as nodes.

@@ -197,10 +197,22 @@ node_types:
         type: string
         required: true
         description: Exact column names, values, and filter expressions. No prose.
+      - name: rule_modality
+        type: enum
+        values: [necessity, obligation, prohibition]
+        required: false
+        description: >
+          SBVR-style modality. necessity = structural/definitional, true by
+          construction (violating it means the query is wrong, not risky).
+          obligation/prohibition = a violable business policy. Defaults to
+          treating consequence_if_violated as required when unset.
       - name: consequence_if_violated
         type: string
         required: true
-        description: One sentence — quantify if possible.
+        description: >
+          One sentence — quantify if possible. Required unless
+          rule_modality is necessity, in which case it is optional
+          (restating "the query is wrong" is often redundant with definition).
     page_title_prefix: "Rule:"
     container_path: "<domain>/rules/"
 

@@ -47,6 +47,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
   - [page-templates.md](spec/page-templates.md) — Canonical page templates for all node types
   - [space-structure.md](spec/space-structure.md) — Logical hierarchy, container pages, naming conventions
   - [versioning.md](spec/versioning.md) — Version comment format, breaking change policy, rollback procedure
+  - [governance.md](spec/governance.md) — *(draft)* Who changes graph objects and when review is required, staleness detection when a source system changes, change log and monitoring
   - [schema.yaml](spec/schema.yaml) — Machine-readable schema: node types, edge kinds, properties, audit rules
 - **adapters/** — Engine adapters, source-system connectors, addons
   - [adapters.md](adapters/adapters.md) — Adapter taxonomy: engine adapters, connectors, addons
