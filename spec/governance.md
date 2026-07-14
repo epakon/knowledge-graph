@@ -34,7 +34,7 @@ This is not a versioning failure. `versioning.md`'s `Breaking: yes/no` field wor
 | **Source model author** (whoever changes the upstream semantic model, e.g. a dbt model or equivalent) | Responsible for flagging, in their own PR description, whether the change affects a convention that a downstream KG rule might depend on (sign handling, aggregation logic, filter semantics, join cardinality). This is a cheap check at the point of most context — the author just changed the logic and knows why. |
 | **KG reviewer** (whoever approves the source PR, or a designated KG steward if the two are decoupled) | Confirms the flag in the PR description was actually checked against the KG before merge, or explicitly waives it. |
 
-This mirrors `versioning.md`'s existing breaking-change propagation step (dependent Relationship pages, downstream notification, VerifiedQuery review) — it just adds the missing *inbound* direction: source system → KG, not just KG page → KG page.
+This mirrors `versioning.md`'s existing breaking-change propagation step (dependent Reification pages, downstream notification, VerifiedQuery review) — it just adds the missing *inbound* direction: source system → KG, not just KG page → KG page.
 
 ---
 
@@ -50,7 +50,7 @@ A change may be applied directly by its author, with no second approver, when **
 
 - **Non-breaking** per `versioning.md`'s breaking-change table (description/synonym edits, new `## Links` edge, verified-by/date updates).
 - **Scoped to a single domain** the author owns (per `Domain.owner`) or a conceptual-layer page they authored per `conceptual-layer.md` §5.
-- **Does not change a property that other pages' correctness depends on** — i.e. not `definition_sql`, `predicate_sql`, `expression_sql`, `mandatory`, `rule_modality`, or a `Relationship` page's `reason`/`consequence`.
+- **Does not change a property that other pages' correctness depends on** — i.e. not `definition_sql`, `predicate_sql`, `expression_sql`, `mandatory`, `rule_modality`, or a `Reification` page's `reason`/`consequence`.
 
 Self-serve changes still require a version comment (per `versioning.md`) — "no review required" is not "no record."
 
@@ -102,7 +102,7 @@ This is a manual grep-and-confirm step, not tooling that needs to be built befor
 
 ## 5. Change log
 
-This is a log of changes to **graph objects** (node and Relationship pages) — who changed what, when, and why. It is a different axis from [`CHANGELOG.md`](../CHANGELOG.md), which tracks changes to the **spec itself** (node types, edge kinds, schema fields). Do not conflate the two: adding `rule_modality` to `BusinessRule` is a `CHANGELOG.md` entry; a domain owner editing one `Rule:` page's definition next month is a governance change-log entry. The former changes what a page *can* contain; the latter changes what one page *does* contain.
+This is a log of changes to **graph objects** (node and Reification pages) — who changed what, when, and why. It is a different axis from [`CHANGELOG.md`](../CHANGELOG.md), which tracks changes to the **spec itself** (node types, edge kinds, schema fields). Do not conflate the two: adding `rule_modality` to `BusinessRule` is a `CHANGELOG.md` entry; a domain owner editing one `Rule:` page's definition next month is a governance change-log entry. The former changes what a page *can* contain; the latter changes what one page *does* contain.
 
 There is no separate log to maintain by hand. Every content storage adapter is already required to provide **version history** as a capability (`engine.md`'s content storage capability table) and every change is already required to carry a structured version comment (`versioning.md`: `Summary`/`Changed`/`Reason`/`Breaking`). The change log is this history, read back:
 
@@ -122,12 +122,12 @@ The mechanism already exists and does not need to be invented: every content sto
 | Check | What it catches | Basis |
 |---|---|---|
 | **Duplicate nodes** | Two pages for the same real-world thing (e.g. two connectors independently creating a `Subject: Customer`) | Already an audit rule (`logical-layer.md` §6, `no_duplicate_nodes`). Monitoring makes it a recurring check, not just a pre-creation guard. |
-| **Orphaned `Relationship` pages** | A reified edge whose `from`/`to` page was renamed or deleted, leaving a dangling reference | New check: confirm every `Relationship` page's `from`/`to` still resolves to a live node. |
+| **Orphaned `Reification` pages** | A reified edge whose `from`/`to` page was renamed or deleted, leaving a dangling reference | New check: confirm every `Reification` page's `from`/`to` still resolves to a live node. |
 | **Domains missing `owner`** | A domain with no accountable owner, so §3's ownership model has no one to page | New check: `Domain.owner` is optional in schema — flag any `Domain` node where it's unset. |
 | **Stale rules** | A `BusinessRule` whose linked `Table`/`Attribute` has been edited more recently than the rule itself, suggesting the rule may not have been re-certified | New check, using §5's change history: the mechanical, always-on complement to §4's PR-time check — §4 catches it at the moment the source changes; this catches it if §4 was skipped or the connection wasn't obvious at review time. |
 | **Deprecated nodes still referenced** | A `Measure`/`VerifiedQuery` with `status: Deprecated` that still has live inbound edges, meaning agents may still be traversing into it | New check: cross-reference `status` against inbound edge count. |
 
-None of these require a new schema field — every input already exists in the node index, edge index, or §5's change history. What's missing is running existing checks on a schedule and adding a few more of the same kind, not building new infrastructure. The risk this guards against is real: `graph-api.md` §"Crawling" documents an incident where an audit silently produced a false "0 findings" result because it scanned an incomplete set of pages — the exact failure mode monitoring exists to prevent is a check that's defined but not actually running, or running against incomplete input, with nothing surfacing the gap. Scheduling and the cross-page checks (stale rules, orphaned Relationships) are proposed additions, not yet implemented by any adapter.
+None of these require a new schema field — every input already exists in the node index, edge index, or §5's change history. What's missing is running existing checks on a schedule and adding a few more of the same kind, not building new infrastructure. The risk this guards against is real: `graph-api.md` §"Crawling" documents an incident where an audit silently produced a false "0 findings" result because it scanned an incomplete set of pages — the exact failure mode monitoring exists to prevent is a check that's defined but not actually running, or running against incomplete input, with nothing surfacing the gap. Scheduling and the cross-page checks (stale rules, orphaned Reifications) are proposed additions, not yet implemented by any adapter.
 
 ---
 

@@ -166,7 +166,7 @@ python knowledge_graph_snapshot.py \
 
 ---
 
-## Relationship to the import procedure
+## Reification to the import procedure
 
 The Lineage Explorer and the KG import procedure share the dependency index as a common technical foundation but serve different purposes:
 

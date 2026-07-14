@@ -245,10 +245,10 @@ Back-references are written on the target page as `<-` labels following the link
 
 ### Reified edge stubs
 
-For each detected `mandatory` or `requires` edge, a stub Relationship page is created:
+For each detected `mandatory` or `requires` edge, a stub Reification page is created:
 
 ```
-Title: Relationship: Filter: <filter name> mandatory Table: <table name>
+Title: Reification: Filter: <filter name> mandatory Table: <table name>
 
 ## Reason
 <filter expression from semantic model, or "REQUIRES MANUAL AUTHORING">
@@ -327,8 +327,8 @@ The following fields are set to `REQUIRES MANUAL AUTHORING` on import and must b
 | KG field | Node type | Action for domain expert |
 |---|---|---|
 | `consequence_if_violated` | `BusinessRule` | Describe the business impact of violating this constraint in production |
-| `consequence` on reified edges | `Relationship` | Describe what goes wrong in a query or report if the dependency is ignored |
-| `reason` on `guards` / `demonstrates` / `overrides` edges | `Relationship` | Explain why the dependency exists |
+| `consequence` on reified edges | `Reification` | Describe what goes wrong in a query or report if the dependency is ignored |
+| `reason` on `guards` / `demonstrates` / `overrides` edges | `Reification` | Explain why the dependency exists |
 | `question` | `VerifiedQuery` | Formulate the natural-language business question this consumer answers |
 | `sql` | `VerifiedQuery` | Provide the actual SQL used by the downstream consumer |
 | `always_ask` | `Disambiguation` | Write the clarifying question to present to a query agent |

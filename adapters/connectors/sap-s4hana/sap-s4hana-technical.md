@@ -42,7 +42,7 @@ SAP S/4HANA is an ERP suite that encodes business processes across Finance, Proc
 | `VerifiedQuery` | A business question with a validated SQL answer | BW query; OData `$filter/$select` from SAP API Hub; ABAP report with documented output |
 | `BusinessRule` | A rule that governs how data must be filtered, signed, or aggregated | CDS `CASE` expression; RAP behavior definition validation; Customizing configuration value |
 | `Disambiguation` | A term or field with context-dependent meaning | ABAP domain with overlapping values; dual-role business partner field; date field with multiple interpretations |
-| `Relationship` | A dependency between two nodes that carries a business reason and consequence | CDS association with documented business rationale; reified only when reason + consequence can be stated |
+| `Reification` | A dependency between two nodes that carries a business reason and consequence | CDS association with documented business rationale; reified only when reason + consequence can be stated |
 
 ### Domain layer — business processes
 
@@ -223,7 +223,7 @@ SAP S/4HANA is an ERP suite that encodes business processes across Finance, Proc
 | `contain` | An application area contains data entities | Application component hierarchy | 1:N |
 | `disambiguate` | A subject has a context-dependent meaning | ABAP domain with overlapping fixed values | 1:N |
 
-### Reified edges (require Relationship page)
+### Reified edges (require Reification page)
 
 | KG edge kind | SAP business situation | `reason` + `consequence` |
 |---|---|---|
@@ -233,7 +233,7 @@ SAP S/4HANA is an ERP suite that encodes business processes across Finance, Proc
 | `overrides` | A business rule or Customizing setting overrides a default field value | `reason`: from RAP behavior definition comment; `consequence`: manual authoring |
 | `demonstrates` | A verified query provides a working example of a business rule in action | Manual authoring |
 
-For `guards` and `demonstrates`, stub Relationship pages with `REQUIRES MANUAL AUTHORING` placeholders are created on import. A domain expert must complete these before the edge is considered verified.
+For `guards` and `demonstrates`, stub Reification pages with `REQUIRES MANUAL AUTHORING` placeholders are created on import. A domain expert must complete these before the edge is considered verified.
 
 ---
 

@@ -93,8 +93,8 @@ Line items are in TABLE: ORDER_LINES.
 | ORDER_DATE    | time_dimension | date, order date |                         | —                                                   |
 | TOTAL_AMOUNT  | fact           | revenue, amount  |                         | [Measure: GROSS_REVENUE](../measures/Measure: GROSS_REVENUE) |
 
-## Relationships
-- [Relationship: ACTIVE_ORDERS mandatory -> ORDERS](../../relationships/Relationship: ACTIVE_ORDERS mandatory ORDERS)
+## Reifications
+- [Reification: ACTIVE_ORDERS mandatory -> ORDERS](../../reifications/Reification: ACTIVE_ORDERS mandatory ORDERS)
 
 ## Joins
 - [Table: ORDER_LINES](path) — Table: ORDERS joinedTo -> Table: ORDER_LINES on ORDERS.ORDER_ID = ORDER_LINES.ORDER_ID
@@ -125,8 +125,8 @@ SUM(ORDERS.TOTAL_AMOUNT)
 ## Links
 - [Table: ORDERS](../tables/Table: ORDERS)
 
-## Relationships
-- [Relationship: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../relationships/Relationship: GROSS_REVENUE requires ACTIVE_ORDERS)
+## Reifications
+- [Reification: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../reifications/Reification: GROSS_REVENUE requires ACTIVE_ORDERS)
 
 ## Links
 - [Rule: exclude-cancelled-orders](../rules/Rule: exclude-cancelled-orders) — Measure: GROSS_REVENUE relatedTo -> Rule: exclude-cancelled-orders
@@ -184,9 +184,9 @@ categories: active, inactive, and pending.
 ORDER_STATUS IN ('confirmed', 'shipped', 'delivered')
 ```
 
-## Relationships
-- [Relationship: ACTIVE_ORDERS mandatory -> ORDERS](../../relationships/Relationship: ACTIVE_ORDERS mandatory ORDERS)
-- [Relationship: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../relationships/Relationship: GROSS_REVENUE requires ACTIVE_ORDERS)
+## Reifications
+- [Reification: ACTIVE_ORDERS mandatory -> ORDERS](../../reifications/Reification: ACTIVE_ORDERS mandatory ORDERS)
+- [Reification: GROSS_REVENUE requires -> ACTIVE_ORDERS](../../reifications/Reification: GROSS_REVENUE requires ACTIVE_ORDERS)
 
 ## Links
 - [Subject: Revenue](path) — Subject: Revenue implement <- Filter: ACTIVE_ORDERS
@@ -210,8 +210,8 @@ ORDER_STATUS IN ('confirmed', 'shipped', 'delivered')
 ## Question
 What is the gross revenue by region for each month?
 
-## Relationships
-- [Relationship: GROSS_REVENUE demonstrates -> exclude-cancelled-orders](../../relationships/Relationship: ...)
+## Reifications
+- [Reification: GROSS_REVENUE demonstrates -> exclude-cancelled-orders](../../reifications/Reification: ...)
 
 ## Links
 - [Measure: GROSS_REVENUE](path) — VerifiedQuery: REVENUE_BY_REGION_MONTHLY implement -> Measure: GROSS_REVENUE
@@ -281,12 +281,12 @@ Cancelled and returned orders inflate revenue by up to 12% in months with high r
 
 ---
 
-## Relationship: GROSS_REVENUE requires ACTIVE_ORDERS
+## Reification: GROSS_REVENUE requires ACTIVE_ORDERS
 
 ```markdown
-# Relationship: GROSS_REVENUE requires ACTIVE_ORDERS
+# Reification: GROSS_REVENUE requires ACTIVE_ORDERS
 
-**Type:** Relationship
+**Type:** Reification
 **Kind:** requires
 **From:** [Measure: GROSS_REVENUE](../measures/Measure: GROSS_REVENUE)
 **To:** [Filter: ACTIVE_ORDERS](../filters/Filter: ACTIVE_ORDERS)

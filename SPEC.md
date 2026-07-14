@@ -40,8 +40,8 @@
 | **Edge kind** | The semantic verb describing the relationship: `implement`, `relatedTo`, `attribute`, `joinedTo`, `disambiguate`, `apply`, `contain`. |
 | **Owning side** | The page that declares the edge (source → target direction). |
 | **Back-reference** | A convenience link on the target page pointing back to the source. Navigation only — not a separate semantic edge. |
-| **Relationship page** | A reified edge: a dedicated page for an edge that carries a `Reason` and `Consequence if Ignored`. Encoded as a page rather than a bare link. |
-| **Reified edge kind** | An edge kind that requires a Relationship page: `mandatory`, `requires`, `guards`, `overrides`, `demonstrates`. |
+| **Reification page** | A reified edge: a dedicated page for an edge that carries a `Reason` and `Consequence if Ignored`. Encoded as a page rather than a bare link. |
+| **Reified edge kind** | An edge kind that requires a Reification page: `mandatory`, `requires`, `guards`, `overrides`, `demonstrates`. |
 | **Domain** | A scoped collection of nodes tied to specific data tables and SQL expressions. |
 | **Subject** | A global node (shared across all domains) that holds the business definition of a concept. |
 | **Identity key** | The field whose value uniquely identifies a node within its type (always `name`). |
@@ -56,7 +56,7 @@ The graph has two layers. Full layer specifications:
 
 Machine-readable schema: [spec/schema.yaml](spec/schema.yaml)
 
-> **Relationship pages are not nodes.** They are reified edges — flattened into typed relationships with properties in any graph database export. They remain pages for human readability.
+> **Reification pages are not nodes.** They are reified edges — flattened into typed relationships with properties in any graph database export. They remain pages for human readability.
 
 ### 3.1 Schema diagram
 
@@ -125,7 +125,7 @@ graph LR
     Attribute -->|relatedTo| Subject
 ```
 
-> Rectangles = node types. Diamonds = reified edge kinds (Relationship pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
+> Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
 
 ---
 
@@ -142,14 +142,14 @@ Owning side (source page):
 Back-reference (target page):
   [Source: SourceName edgeKind <- Target: TargetName]
 
-Relationship page link (same label on both From and To pages):
-  [Relationship: X kind -> Y]
+Reification page link (same label on both From and To pages):
+  [Reification: X kind -> Y]
 ```
 
 Rules:
 - Use ASCII `->` and `<-` — not unicode arrows.
 - All hyperlink edges live in a `## Links` section.
-- Relationship page links live in a separate `## Relationships` section.
+- Reification page links live in a separate `## Reifications` section.
 - Back-references are navigation shortcuts only — not separate semantic edges.
 
 ### Back-reference constraints

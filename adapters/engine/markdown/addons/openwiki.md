@@ -48,7 +48,7 @@ All generated files open with `<!-- status: draft -->`.
 
 **Fields left as `<!-- TODO -->` for domain expert review:**
 - `**Domain:**` link — requires knowing which KG domain this table belongs to
-- `## Relationships` — reified edges (`reason`, `consequence`) require domain judgment
+- `## Reifications` — reified edges (`reason`, `consequence`) require domain judgment
 - `## Links` — Attribute and Measure links depend on what gets promoted
 - `business_definition`, `consequence_if_violated` on any Rule nodes
 - `Verified by`, `Verified at` on any VerifiedQuery nodes
@@ -142,6 +142,6 @@ OpenWiki captures what code does, not what it means in business terms. The follo
 fields are always outside its scope:
 
 - `business_definition`, `consequence_if_violated` — require domain expert knowledge
-- **Reified edges** (Relationship pages) — `reason` and `consequence` can only be supplied by a domain expert
+- **Reified edges** (Reification pages) — `reason` and `consequence` can only be supplied by a domain expert
 - **VerifiedQuery nodes** — require human approval; OpenWiki may surface candidate SQL but cannot produce verified nodes
 - **Cross-domain linking** — `Subject` nodes and `implement ->` edges require deliberate authoring decisions

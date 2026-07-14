@@ -90,7 +90,7 @@ For each KG node type the source system can populate, provide a mapping table:
 | `VerifiedQuery` | ... | ... |
 | `BusinessRule` | ... | ... |
 | `Disambiguation` | ... | ... |
-| `Relationship` | ... | ... |
+| `Reification` | ... | ... |
 
 Node types with no meaningful mapping in the source system must be listed as `not applicable` with a one-line rationale.
 

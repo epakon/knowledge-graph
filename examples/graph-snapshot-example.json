@@ -79,10 +79,10 @@
       "color": "#00B8D9"
     },
     {
-      "id": "relationship-gross-revenue-requires-active-orders",
-      "title": "Relationship: GROSS_REVENUE requires ACTIVE_ORDERS",
+      "id": "reification-gross-revenue-requires-active-orders",
+      "title": "Reification: GROSS_REVENUE requires ACTIVE_ORDERS",
       "label": "GROSS_REVENUE requires ACTIVE_ORDERS",
-      "type": "Relationship",
+      "type": "Reification",
       "page_id": "<page_id>",
       "url": "https://<instance>.atlassian.net/wiki/...",
       "color": "#8777D9"
@@ -122,7 +122,7 @@
       "target": "Filter: ACTIVE_ORDERS",
       "kind": "requires",
       "style": "reified",
-      "via": "Relationship: GROSS_REVENUE requires ACTIVE_ORDERS",
+      "via": "Reification: GROSS_REVENUE requires ACTIVE_ORDERS",
       "properties": {
         "reason": "GROSS_REVENUE is defined as revenue from valid, non-cancelled orders only.",
         "consequence": "Including cancelled and returned orders inflates reported revenue by up to 12% in high-return months."
@@ -133,7 +133,7 @@
       "target": "Table: ORDERS",
       "kind": "mandatory",
       "style": "reified",
-      "via": "Relationship: ACTIVE_ORDERS mandatory ORDERS",
+      "via": "Reification: ACTIVE_ORDERS mandatory ORDERS",
       "properties": {
         "reason": "All revenue queries must exclude inactive orders.",
         "consequence": "Queries that omit this filter return inflated totals."

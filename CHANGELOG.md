@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.4.1](#1.4.1) | 2026-07-14 | `Relationship` node type renamed to `Reification` repo-wide (page prefix, container folder, section headers, diagram shapes); no new concept introduced, terminology-only |
 | [1.4.0](#1.4.0) | 2026-07-09 | Conceptual/logical layer split; `Concept` and `Process` node types activated; four new conceptual edge kinds; `spec/conceptual-layer.md` added; `spec/data-model.md` renamed to `spec/logical-layer.md` |
 | [1.3.13](#1.3.13) | 2026-07-07 | Version comment format no longer duplicates backend-native version/date/author fields; clarified it must live in the backend's native version comment (Confluence) / commit message (Markdown), never in page body content; `spec/data-model.md` §2.2 rationale for why the reified edge-kind list is closed-but-extensible |
 | [1.3.12](#1.3.12) | 2026-07-06 | Generic `graph-db/` adapter rebranded as Neo4j Community Edition adapter; Bloom Explore addon; status markers removed repo-wide |
@@ -31,6 +32,14 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.4.1] — 2026-07-14
+
+### Changed
+- **`Relationship` node type renamed to `Reification`** repo-wide: page title prefix (`Relationship: X kind -> Y` → `Reification: X kind -> Y`), container folder (`<domain>/relationships/` → `<domain>/reifications/`), section header (`## Relationships` → `## Reifications`), terminology entries in `SPEC.md`, and all schema/adapter/example references. Reason: "Relationship" collided with the generic graph-database term for any typed edge; "Reification" matches the "reified edge kind" terminology already used throughout the spec, so the collision is removed rather than footnoted.
+- **`spec/link-format.md`** — removed the now-unnecessary "these two concepts share the word 'relationship'" disambiguation paragraph under "Structural edges vs. semantic edges". Added a new "Properties are defined per kind, not per mechanism" note clarifying that each reified kind owns its own property schema; the fact that all five current kinds share `reason`/`consequence` is coincidental, not a rule.
 
 ---
 

@@ -45,7 +45,7 @@ python knowledge_graph_snapshot.py \
   --stats
 ```
 
-Relationship pages live under the domain's `relationships/` container and are discovered automatically as children of the domain tree.
+Reification pages live under the domain's `reifications/` container and are discovered automatically as children of the domain tree.
 
 ---
 
@@ -56,10 +56,10 @@ Relationship pages live under the domain's `relationships/` container and are di
 A page becomes a **node** when its title matches a known node-type prefix:
 
 - `Subject:`, `Table:`, `Measure:`, `Attribute:`, `Filter:`, `Rule:`
-- `Relationship:`, `Disambiguation:`, `VerifiedQuery:`
+- `Reification:`, `Disambiguation:`, `VerifiedQuery:`
 
 **Excluded** (not nodes, treated as structural containers):
-- Index/container pages: `subjects`, `tables`, `measures`, `attributes`, `filters`, `rules`, `relationships`, `verified-queries`, `disambiguations`, `vocabulary`
+- Index/container pages: `subjects`, `tables`, `measures`, `attributes`, `filters`, `rules`, `reifications`, `verified-queries`, `disambiguations`, `vocabulary`
 - Domain pages (`Domain: <Name>`) — excluded by default: Domain pages are navigational containers. Their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning.
 
 ### Edges
@@ -75,21 +75,21 @@ The edge kind is taken from the link label context:
 | Link location | Kind |
 |---|---|
 | `## Links` section | Edge kind extracted from the `<ac:link-body>` label |
-| `## Relationships` section | `relationships` (link to a Relationship page) |
+| `## Reifications` section | `reifications` (link to a Reification page) |
 | `## Joins` section | `joins` |
 | Other header fields | Field name as-is |
 
 Links to pages outside the scoped node set (e.g. Domain pages) are ignored.
 
-#### 2. Relationship pages (reified edges)
+#### 2. Reification pages (reified edges)
 
-Pages with title `Relationship: <From> <kind> <To>` define a semantic edge:
+Pages with title `Reification: <From> <kind> <To>` define a semantic edge:
 
 - **From**, **To**, and **Kind** parsed from the page body (`**From:**`, `**To:**`, `**Kind:**`)
-- Stored as `style: "reified"` with `via` set to the Relationship page title
-- The `From:` / `To:` / `Kind:` header links on Relationship pages are **not** duplicated as separate hyperlink edges
+- Stored as `style: "reified"` with `via` set to the Reification page title
+- The `From:` / `To:` / `Kind:` header links on Reification pages are **not** duplicated as separate hyperlink edges
 
-In the diagram, reified edges render as two hops through the Relationship node (hexagon shape).
+In the diagram, reified edges render as two hops through the Reification node (hexagon shape).
 
 ---
 
@@ -120,7 +120,7 @@ In the diagram, reified edges render as two hops through the Relationship node (
       "target": "Filter: ACTIVE_CUSTOMERS",
       "kind": "requires",
       "style": "reified",
-      "via": "Relationship: REVENUE requires ACTIVE_CUSTOMERS"
+      "via": "Reification: REVENUE requires ACTIVE_CUSTOMERS"
     },
     {
       "source": "Rule: exclude-reversals",
@@ -169,22 +169,22 @@ Open `knowledge_graph_graph.ipynb` and run all cells.
 | Attribute | Rounded rectangle | `#B3D4FF` |
 | Rule | Rounded rectangle | `#FF5630` |
 | Disambiguation | Rounded rectangle | `#00B8D9` |
-| Relationship | **Hexagon** | `#8777D9` |
+| Reification | **Hexagon** | `#8777D9` |
 | VerifiedQuery | Rounded rectangle | `#97A0AF` |
 
-Relationship nodes use a hexagon to signal that they are reified edges — pages that exist to carry a Reason and Consequence — not first-class semantic entities like the other node types.
+Reification nodes use a hexagon to signal that they are reified edges — pages that exist to carry a Reason and Consequence — not first-class semantic entities like the other node types.
 
 ### Edge styles
 
 | Style | Color | Meaning |
 |---|---|---|
 | `hyperlink` | `#5E6C84` | Direct page link |
-| `reified` | `#8777D9` | Relationship page (two hops through a hexagon node) |
+| `reified` | `#8777D9` | Reification page (two hops through a hexagon node) |
 
 ### Layout options
 
 - **Labels**: full page title (`Filter: ACTIVE_CUSTOMERS`), not the short name.
-- **Relationship nodes**: hexagon shape. All other types: rounded rectangles.
+- **Reification nodes**: hexagon shape. All other types: rounded rectangles.
 - **Color legend**: rendered above the widget.
 - **Data panel**: select a node and open the widget sidebar to see `type`, `title`, `url`, `page_id`.
 
@@ -250,12 +250,12 @@ pip install requests pelote yfiles_jupyter_graphs pandas
 
 ## Maintenance
 
-When pages change (new links, new Relationship pages):
+When pages change (new links, new Reification pages):
 
 1. Re-run `knowledge_graph_snapshot.py`
 2. Re-run the notebook
 
-The diagram is only as complete as the links on the Confluence pages. Missing edges usually indicate a missing hyperlink on a page or a missing Relationship page under `relationships/`.
+The diagram is only as complete as the links on the Confluence pages. Missing edges usually indicate a missing hyperlink on a page or a missing Reification page under `reifications/`.
 
 ---
 

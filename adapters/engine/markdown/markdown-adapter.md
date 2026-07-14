@@ -4,7 +4,7 @@
 
 This document describes how the backend-agnostic spec maps to Markdown-specific constructs: the file format, directory hierarchy, link encoding, and version history.
 
-The Markdown adapter is the natural backend for **auto-generated technical documentation** extracted from a codebase — table schemas, column definitions, business rules derived from code. Human-authored business knowledge (Subjects, Measures, Relationships) may live in Confluence alongside it; both backends feed the same graph DB via their respective snapshot pipelines.
+The Markdown adapter is the natural backend for **auto-generated technical documentation** extracted from a codebase — table schemas, column definitions, business rules derived from code. Human-authored business knowledge (Subjects, Measures, Reifications) may live in Confluence alongside it; both backends feed the same graph DB via their respective snapshot pipelines.
 
 ---
 
@@ -36,7 +36,7 @@ Each file is named `<lowercase-type>-<kebab-name>.md`:
 | `VerifiedQuery` | `verified-query-<name>.md` | `verified-query-revenue-by-region.md` |
 | `BusinessRule` | `rule-<name>.md` | `rule-exclude-reversals.md` |
 | `Disambiguation` | `disambiguation-<name>.md` | `disambiguation-bad-debt.md` |
-| `Relationship` | `relationship-<from>-<kind>-<to>.md` | `relationship-revenue-requires-active-customers.md` |
+| `Reification` | `reification-<from>-<kind>-<to>.md` | `reification-revenue-requires-active-customers.md` |
 
 The page title (`# Type: Name`) inside the file is the canonical node identity — the filename is for filesystem navigation only. Agents and scripts resolve nodes by the `name` frontmatter field, not by filename.
 
@@ -67,8 +67,8 @@ Mirrors the canonical hierarchy from [spec/space-structure.md](../../spec/space-
     │   └── verified-query-<name>.md
     ├── rules/
     │   └── rule-<name>.md
-    ├── relationships/
-    │   └── relationship-<from>-<kind>-<to>.md
+    ├── reifications/
+    │   └── reification-<from>-<kind>-<to>.md
     └── disambiguations/
         └── disambiguation-<name>.md
 ```
@@ -129,8 +129,8 @@ Edge statements use standard Markdown links. The link text is the self-contained
 ```
 
 ```markdown
-## Relationships
-- [Relationship: REVENUE requires ACTIVE_CUSTOMERS](../relationships/relationship-revenue-requires-active-customers.md)
+## Reifications
+- [Reification: REVENUE requires ACTIVE_CUSTOMERS](../reifications/reification-revenue-requires-active-customers.md)
 ```
 
 ### Important notes
@@ -139,7 +139,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 - Use ASCII `->` and `<-` in link text, exactly as specified in [spec/link-format.md](../../spec/link-format.md).
 - Use relative paths. Never use absolute paths or URLs — the repo may be cloned in different locations.
 - Back-references use `<-` in the link text and point back to the source file.
-- All hyperlink edges live in `## Links`; Relationship page links live in `## Relationships`. Do not mix them.
+- All hyperlink edges live in `## Links`; Reification page links live in `## Reifications`. Do not mix them.
 
 ---
 

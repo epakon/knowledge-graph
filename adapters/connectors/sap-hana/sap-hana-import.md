@@ -176,10 +176,10 @@ When inference is ambiguous, flag as `REQUIRES MANUAL AUTHORING` and log for dom
 | CV depends on another CV (`VIEW → VIEW` in `OBJECT_DEPENDENCIES`) | `joinedTo` candidate |
 | CV depends on a physical table (`TABLE → VIEW`) | `calculate` (table feeds CV measure/attribute) |
 | Synonym resolves to a CV (`SYNONYM → VIEW`) | `relatedTo` (after synonym transparent resolution) |
-| CV mandatory parameter | `mandatory` reified edge candidate (stub Relationship page) |
+| CV mandatory parameter | `mandatory` reified edge candidate (stub Reification page) |
 | CV in package → Domain node | `contain` |
 
-Reified edge candidates are created as stub Relationship pages with `REQUIRES MANUAL AUTHORING` for `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
+Reified edge candidates are created as stub Reification pages with `REQUIRES MANUAL AUTHORING` for `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
 
 ---
 
@@ -202,7 +202,7 @@ Validation failures are written to an import log, not silently dropped.
 Follows the generic procedure in [`connectors.md`](../connectors.md) §Section 6:
 
 1. **Node creation** — content storage pages with template sections; graph DB upsert via `MERGE (label, name)`.
-2. **Edge creation** — link statements per [`spec/link-format.md`](../../../spec/link-format.md); stub Relationship pages for reified edges.
+2. **Edge creation** — link statements per [`spec/link-format.md`](../../../spec/link-format.md); stub Reification pages for reified edges.
 3. **Duplicate handling** — existing `Active` node: skip and log; existing `Deprecated` node: create new, link with `relatedTo`.
 4. **Post-import audit** — audit rules from [`spec/schema.yaml`](../../../spec/schema.yaml).
 5. **Version comment** on every created or updated page:
@@ -233,12 +233,12 @@ Objects whose source schema changed but that are not in the current seed list ar
 |---|---|---|
 | `business_definition` | `Subject` | No annotation framework; requires data model docs or domain expert |
 | `always_ask` | `Disambiguation` | Project-specific usage context |
-| `consequence` on reified edges | `Relationship` | Business impact not encoded in HANA metadata |
+| `consequence` on reified edges | `Reification` | Business impact not encoded in HANA metadata |
 | `question` | `VerifiedQuery` | Natural-language question requires human formulation |
 | `table_kind` | `Table` (ambiguous naming) | No `@Analytics.dataCategory` equivalent |
 | `kind` | `Measure` | HANA does not annotate measure vs. attribute columns structurally |
 | `definition_sql` | `BusinessRule` | Graphical CV calculation nodes do not expose SQL text |
-| `reason` on `guards` / `demonstrates` | `Relationship` | No structural signal |
+| `reason` on `guards` / `demonstrates` | `Reification` | No structural signal |
 
 ---
 

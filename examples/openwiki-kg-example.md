@@ -67,8 +67,8 @@ Reporting view that combines original FI-CA document items (DFKKOP) with their c
 | AmountInTransactionCurrency | fact | Amount (txn ccy) | Negated for cleared mirror rows (DFKKOP.BETRW). | — |
 | AmountInLocalCurrency | fact | Amount (local ccy) | Negated for cleared mirror rows (DFKKOP.BETRH). | — |
 
-## Relationships
-<!-- TODO: Add Relationship pages once mandatory filters and business rules are identified by a domain expert. -->
+## Reifications
+<!-- TODO: Add Reification pages once mandatory filters and business rules are identified by a domain expert. -->
 
 ## Joins
 - [Table: fact_document_item_base](../fact_document_item_base) — Table: fact_document_items_with_clearing joinedTo -> Table: fact_document_item_base on ClearingDocumentNumber = header_DocumentNumber (cleared CTE only; INNER JOIN)

@@ -77,7 +77,7 @@ BFS walk of the entire KG directory tree, filtered to files that have a recognis
 ```python
 KG_NODE_TYPES = {
     "Subject", "Domain", "Table", "Measure", "Attribute",
-    "Filter", "VerifiedQuery", "BusinessRule", "Relationship", "Disambiguation"
+    "Filter", "VerifiedQuery", "BusinessRule", "Reification", "Disambiguation"
 }
 
 def collect_kg_pages(root: Path) -> list[dict]:
@@ -121,7 +121,7 @@ def name_to_path(root: Path, node_type: str, name: str) -> Path:
         "VerifiedQuery": "{domain}/verified-queries",
         "BusinessRule": "{domain}/rules",
         "Disambiguation": "{domain}/disambiguations",
-        "Relationship": "{domain}/relationships",
+        "Reification": "{domain}/reifications",
     }
     slug = name.lower().replace(" ", "-").replace("_", "-").replace(":", "")
     filename = f"{node_type.lower()}-{slug}.md"

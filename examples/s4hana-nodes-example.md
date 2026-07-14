@@ -180,10 +180,10 @@ FROM _SYS_BIC."sap.s4.beh.finance.v1/C_CUSTOMEROPENITEMSRV"
 
 Currency: `CompanyCodeCurrency` (local currency of the company code).
 
-## Relationships
+## Reifications
 
-- [Relationship: Open Receivables Amount requires Company Code Filter]
-- [Relationship: Open Receivables Amount requires Fiscal Year Filter]
+- [Reification: Open Receivables Amount requires Company Code Filter]
+- [Reification: Open Receivables Amount requires Fiscal Year Filter]
 
 ## Links
 
@@ -234,10 +234,10 @@ JOIN _SYS_BIC."sap.s4.beh.sd.v1/C_BILLINGDOCUMENTSRV" bi
 
 > Cross-domain measure. `Revenue` belongs to domain `FI-SD`. See [Subject: Revenue] for definition.
 
-## Relationships
+## Reifications
 
-- [Relationship: Days Sales Outstanding requires Company Code Filter]
-- [Relationship: Days Sales Outstanding requires Fiscal Year Filter]
+- [Reification: Days Sales Outstanding requires Company Code Filter]
+- [Reification: Days Sales Outstanding requires Fiscal Year Filter]
 
 ## Links
 
@@ -267,10 +267,10 @@ JOIN _SYS_BIC."sap.s4.beh.sd.v1/C_BILLINGDOCUMENTSRV" bi
 WHERE CompanyCode = '<P_CompanyCode>'
 ```
 
-## Relationships
+## Reifications
 
-- [Relationship: Company Code Filter mandatory for Customer Open Item]
-- [Relationship: Open Receivables Amount requires Company Code Filter]
+- [Reification: Company Code Filter mandatory for Customer Open Item]
+- [Reification: Open Receivables Amount requires Company Code Filter]
 
 ## Links
 
@@ -382,9 +382,9 @@ ORDER BY
     OpenReceivablesAmount DESC
 ```
 
-## Relationships
+## Reifications
 
-- [Relationship: Open Receivables by Customer demonstrates Exclude Statistical Postings Rule]
+- [Reification: Open Receivables by Customer demonstrates Exclude Statistical Postings Rule]
 
 ## Links
 
@@ -393,13 +393,13 @@ ORDER BY
 
 ---
 
-## Relationship pages (reified edges)
+## Reification pages (reified edges)
 
-### Relationship: Company Code Filter mandatory for Customer Open Item
+### Reification: Company Code Filter mandatory for Customer Open Item
 
-# Relationship: Company Code Filter mandatory for Customer Open Item
+# Reification: Company Code Filter mandatory for Customer Open Item
 
-**Type:** Relationship  
+**Type:** Reification  
 **Kind:** mandatory  
 **From:** Filter: Company Code  
 **To:** Table: Customer Open Item
@@ -414,11 +414,11 @@ Omitting the company code filter returns data from all company codes, violating 
 
 ---
 
-### Relationship: Open Receivables Amount requires Company Code Filter
+### Reification: Open Receivables Amount requires Company Code Filter
 
-# Relationship: Open Receivables Amount requires Company Code Filter
+# Reification: Open Receivables Amount requires Company Code Filter
 
-**Type:** Relationship  
+**Type:** Reification  
 **Kind:** requires  
 **From:** Measure: Open Receivables Amount  
 **To:** Filter: Company Code

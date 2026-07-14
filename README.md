@@ -28,7 +28,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 |---|---|
 | **Node** | A single-topic page representing one business entity (a metric, a rule, a filter, etc.) |
 | **Edge** | A typed link between two nodes, embedded in the page body as a readable label |
-| **Relationship page** | A reified edge: a dedicated page that carries a typed link plus a reason and consequence |
+| **Reification page** | A reified edge: a dedicated page that carries a typed link plus a reason and consequence |
 | **Domain** | A scoped collection of nodes coupled to specific data tables |
 | **Conceptual layer** | The domain-agnostic, stable part of the graph (`vocabulary/`) — see [spec/conceptual-layer.md](spec/conceptual-layer.md) |
 | **Logical layer** | The per-domain, SQL-coupled part of the graph — see [spec/logical-layer.md](spec/logical-layer.md) |

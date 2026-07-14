@@ -95,7 +95,7 @@ HANA has no lifecycle contract system. Stability is inferred from:
 | `VerifiedQuery` | SQL query against a `_SYS_BIC` path, reviewed and approved by a domain expert | Manual authoring only; cannot be auto-generated |
 | `BusinessRule` | Calculated column containing CASE/IF logic; union node encoding a classification | Often requires manual review to determine if rule is significant |
 | `Disambiguation` | Column name with different semantics across schemas or views | Manual authoring only |
-| `Relationship` | Dependency between two nodes with a stated business reason and consequence | Reified only when `reason` + `consequence` can be authored by a domain expert |
+| `Reification` | Dependency between two nodes with a stated business reason and consequence | Reified only when `reason` + `consequence` can be authored by a domain expert |
 
 `Subject` and `Disambiguation` nodes may be added manually by domain experts as the KG matures. The connector does not block their creation — it simply cannot auto-generate them.
 
@@ -186,7 +186,7 @@ HANA has no lifecycle contract system. Stability is inferred from:
 | `implement` | A Calculation View implements a concept in the Vocabulary layer | Manual authoring — links to a manually-authored `Subject` node | N:M | |
 | `disambiguate` | A subject has a context-dependent meaning | Manual authoring only — no structural signal in HANA | 1:N | |
 
-### Reified edges (require Relationship page)
+### Reified edges (require Reification page)
 
 | KG edge kind | HANA situation | `reason` + `consequence` |
 |---|---|---|

@@ -18,7 +18,7 @@ Four reasons make that unworkable:
 
 **Missing fields.** dbt descriptions are prose notes on a technical artifact. KG fields like `consequence_if_violated`, `predicate_sql`, `mandatory`, `definition_sql`, and `reason`/`consequence` on reified edges do not exist in dbt. They are either derived during import or authored by a domain expert afterward — neither of which happens in the dbt project itself.
 
-**Wrong authoring surface.** The KG content storage is where domain experts enrich knowledge over time: completing a `consequence`, filling an `always_ask`, promoting a hyperlink edge to a Relationship page. If dbt YAML were the source of truth, every enrichment would have to flow back into the dbt repository, coupling the knowledge lifecycle to the dbt deployment cycle and making the KG dependent on a code repo for its authoring surface.
+**Wrong authoring surface.** The KG content storage is where domain experts enrich knowledge over time: completing a `consequence`, filling an `always_ask`, promoting a hyperlink edge to a Reification page. If dbt YAML were the source of truth, every enrichment would have to flow back into the dbt repository, coupling the knowledge lifecycle to the dbt deployment cycle and making the KG dependent on a code repo for its authoring surface.
 
 ---
 
@@ -72,7 +72,7 @@ The primary extraction surface is **`manifest.json`**, produced by `dbt compile`
 | `BusinessRule` | Snapshot `strategy` + `unique_key` + `updated_at` | The SCD2 versioning rule is a business rule about record lifecycle. |
 | `VerifiedQuery` | `exposures:` node | Downstream validated consumers. `verified_by` from `owner.email`; `question` requires manual authoring. |
 | `Disambiguation` | Not derivable automatically | Flagged during import when a column description contains indicators of multiple interpretations. Requires manual authoring. |
-| `Relationship` | `mandatory`/`requires` reified edges | Stub pages created where a semantic model filter or foreign-key test implies a dependency. `reason` and `consequence` require manual authoring. |
+| `Reification` | `mandatory`/`requires` reified edges | Stub pages created where a semantic model filter or foreign-key test implies a dependency. `reason` and `consequence` require manual authoring. |
 
 ---
 
@@ -237,7 +237,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 | `implement` | Not derivable | No dbt concept for "this model implements a business concept" | — | Requires manual authoring after Vocabulary layer is authored |
 | `disambiguate` | Not derivable | No dbt concept | — | Manual |
 
-### Reified edges (Relationship pages)
+### Reified edges (Reification pages)
 
 | KG edge kind | dbt source situation | `reason` derivability | `consequence` derivability |
 |---|---|---|---|
@@ -247,7 +247,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 | `overrides` | Not derivable automatically | `REQUIRES MANUAL AUTHORING` | `REQUIRES MANUAL AUTHORING` |
 | `demonstrates` | Not derivable automatically | `REQUIRES MANUAL AUTHORING` | `REQUIRES MANUAL AUTHORING` |
 
-Stub Relationship pages are created for `mandatory` and `requires` edges where the dependency can be detected structurally. `reason` is pre-populated from the filter expression; `consequence` is left as `REQUIRES MANUAL AUTHORING` for a domain expert to complete.
+Stub Reification pages are created for `mandatory` and `requires` edges where the dependency can be detected structurally. `reason` is pre-populated from the filter expression; `consequence` is left as `REQUIRES MANUAL AUTHORING` for a domain expert to complete.
 
 ---
 
@@ -289,12 +289,12 @@ Stub Relationship pages are created for `mandatory` and `requires` edges where t
 | KG field | Node type | Reason |
 |---|---|---|
 | `always_ask` | `Disambiguation` | Depends on project-specific usage patterns; no dbt encoding |
-| `consequence` on reified edges | `Relationship` | Tests check correctness but do not encode business impact |
+| `consequence` on reified edges | `Reification` | Tests check correctness but do not encode business impact |
 | `question` | `VerifiedQuery` | `description:` on an exposure is a consumer note, not a business question |
 | `sql` | `VerifiedQuery` | dbt does not know the consumer's query |
 | `business_definition` | `Subject` | No cross-project stable concept — all Vocabulary nodes are manual |
 | `table_kind` | `Table` | When model name has no recognized prefix and `meta.table_kind` is absent |
-| `reason` on `guards` / `demonstrates` / `overrides` | `Relationship` | No dbt structural signal for these edge kinds |
+| `reason` on `guards` / `demonstrates` / `overrides` | `Reification` | No dbt structural signal for these edge kinds |
 
 ---
 

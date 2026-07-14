@@ -35,15 +35,15 @@ The agent searches Glean with a natural-language phrase:
 "mandatory filters for <TABLE_NAME>"
 ```
 
-Glean returns the Table page, mandatory Filter pages, and related Relationship pages.
+Glean returns the Table page, mandatory Filter pages, and related Reification pages.
 
 ---
 
 ## Step 2 — Mandatory filters discovered
 
-The Table page's `## Relationships` section links to Relationship pages of kind `mandatory`. The agent fetches each one and extracts the Filter predicate.
+The Table page's `## Reifications` section links to Reification pages of kind `mandatory`. The agent fetches each one and extracts the Filter predicate.
 
-**Example Relationship page:** `Relationship: <FILTER_A> mandatory <TABLE_NAME>`
+**Example Reification page:** `Reification: <FILTER_A> mandatory <TABLE_NAME>`
 
 ```
 Reason:    <Filter A> excludes records of the wrong type — omitting it inflates counts and amounts materially.
@@ -138,12 +138,12 @@ GROUP BY t.<time_column>
 
 **What the knowledge graph prevented:**
 - Using the wrong column for the metric (the Rule page explicitly warns this produces results off by orders of magnitude)
-- Omitting mandatory filters (the Relationship pages state the consequence: materially distorted counts and amounts)
+- Omitting mandatory filters (the Reification pages state the consequence: materially distorted counts and amounts)
 - Writing SQL from scratch when a verified reference already exists
 
 **What the agent cited:**
 - Table page (schema and joins)
-- Relationship pages (mandatory filter reason + consequence)
+- Reification pages (mandatory filter reason + consequence)
 - Rule page (exact filter expression)
 - VerifiedQuery page (reference SQL pattern)
 

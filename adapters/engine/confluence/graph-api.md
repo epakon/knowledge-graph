@@ -118,7 +118,7 @@ An audit is a read-only pass — one check function per spec-compliance rule:
 check(page) -> [ Finding(page_id, title, category, detail), ... ]
 ```
 
-Each check independently inspects a page and yields zero or more findings; it never modifies anything. The set of checks is not a fixed list — it must be kept in sync with the spec, growing whenever the spec changes in a way that could make existing live pages non-compliant. A check should validate against the spec's actual source of truth wherever a machine-readable one exists (e.g. a schema's enum of valid values), rather than hardcoding its own copy of that list — otherwise the check silently drifts out of sync the next time the spec's list changes, exactly the kind of duplication risk called out in [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties).
+Each check independently inspects a page and yields zero or more findings; it never modifies anything. The set of checks is not a fixed list — it must be kept in sync with the spec, growing whenever the spec changes in a way that could make existing live pages non-compliant. A check should validate against the spec's actual source of truth wherever a machine-readable one exists (e.g. a schema's enum of valid values), rather than hardcoding its own copy of that list — otherwise the check silently drifts out of sync the next time the spec's list changes, exactly the kind of duplication risk called out in [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties).
 
 ## Dry-run / apply pattern
 

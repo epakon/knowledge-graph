@@ -230,7 +230,7 @@ The full HANA dependency graph is too large to render in a single diagram. Scope
 
 ---
 
-## Relationship to the import procedure
+## Reification to the import procedure
 
 The Lineage Explorer and the KG import procedure share `SYS.OBJECT_DEPENDENCIES` as a common technical foundation but serve different purposes:
 

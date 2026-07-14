@@ -57,7 +57,7 @@ The S/4HANA where-used index for CDS objects provides the inverse dependency dir
 
 > **Source table:** `DDLS_RIS_INDEX` — the CDS-specific reverse-index that covers both SQL-view-backed and HANA-native activation paths. Unlike the classic ABAP cross-reference (`WBCROSSGT`), it is not limited to objects with generated SQL views. Exact column names and available `DEPTYPE` values should be verified on a live system; see [`addons/sap-s4hana-lineage-explorer.md`](addons/sap-s4hana-lineage-explorer.md) for the full schema notes.
 
-### Relationship to the Knowledge Graph's own graph DB
+### Reification to the Knowledge Graph's own graph DB
 
 The where-used index in S/4HANA is itself a dependency graph. Once extracted, it can optionally be projected into the Knowledge Graph's graph DB as a subgraph of CDS-to-CDS `RELATED_TO` or `joinedTo` edges. This is **not required for the initial import** — the graph DB's primary purpose here is duplicate prevention and traversal of KG nodes. However, projecting the S/4HANA dependency structure into the graph DB enables:
 
@@ -173,7 +173,7 @@ These are flagged as `REQUIRES MANUAL AUTHORING` — the `always_ask` text canno
 | Element derived from association path | Source table calculates measure/attribute | `calculate` |
 | `PARAMETERS` binding on view | Filter is mandatory for table | `mandatory` (reified candidate) |
 
-Reified edge candidates (`mandatory`, `requires`, `guards`) are created as stub Relationship pages with `REQUIRES MANUAL AUTHORING` on `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
+Reified edge candidates (`mandatory`, `requires`, `guards`) are created as stub Reification pages with `REQUIRES MANUAL AUTHORING` on `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
 
 ---
 
@@ -196,7 +196,7 @@ Validation failures are written to an import log, not silently dropped.
 Follows the generic procedure in [`connectors.md`](../connectors.md) §Section 6:
 
 1. **Node creation** — content storage pages with template sections; graph DB upsert via `MERGE (label, name)`
-2. **Edge creation** — link statements per [`spec/link-format.md`](../../../spec/link-format.md); stub Relationship pages for reified edges
+2. **Edge creation** — link statements per [`spec/link-format.md`](../../../spec/link-format.md); stub Reification pages for reified edges
 3. **Duplicate handling** — existing `Active` node: skip and log; existing `Deprecated` node: create new, link with `relatedTo`
 4. **Post-import audit** — audit rules from [`spec/schema.yaml`](../../../spec/schema.yaml)
 5. **Version comment** on every created or updated page:
@@ -228,11 +228,11 @@ The following always require domain expert authoring after import:
 | KG field | Node type | Reason |
 |---|---|---|
 | `always_ask` | `Disambiguation` | Depends on project-specific usage context |
-| `consequence` on reified edges | `Relationship` | Business impact not encoded in CDS metadata |
+| `consequence` on reified edges | `Reification` | Business impact not encoded in CDS metadata |
 | `question` | `VerifiedQuery` | Natural-language question requires human formulation |
 | `table_kind` | `Table` (DDIC fallback) | No `@Analytics.dataCategory` — heuristic only |
 | `business_definition` | `Subject` | `@EndUserText` is technical; business meaning requires BRD |
-| `reason` on `guards` / `demonstrates` edges | `Relationship` | Cannot be derived from structural metadata |
+| `reason` on `guards` / `demonstrates` edges | `Reification` | Cannot be derived from structural metadata |
 
 ---
 

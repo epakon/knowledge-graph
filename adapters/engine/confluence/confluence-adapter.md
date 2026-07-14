@@ -19,7 +19,7 @@ This document describes how the backend-agnostic spec maps to Confluence-specifi
 
 ---
 
-## Joins vs. Relationship pages — naming disambiguation
+## Joins vs. Reification pages — naming disambiguation
 
 See [spec/link-format.md — Structural edges vs. semantic edges](../../spec/link-format.md#structural-edges-vs-semantic-edges) for the full conceptual distinction.
 
@@ -28,9 +28,9 @@ In Confluence specifically:
 | Concept | Confluence location |
 |---|---|
 | **`joinedTo` edge** (structural — SQL join fact) | `## Joins` section of a Table page, as a hyperlink: `Table: A joinedTo -> Table: B on A.col = B.col` |
-| **Relationship page** (semantic — business dependency with Reason + Consequence) | Dedicated page under `<domain>/relationships/`: `Relationship: X requires Y` |
+| **Reification page** (semantic — business dependency with Reason + Consequence) | Dedicated page under `<domain>/reifications/`: `Reification: X requires Y` |
 
-**Snowflake note:** the Snowflake Semantic View `relationships:` YAML key (table-level join definitions) maps to `joinedTo` hyperlink edges in `## Joins` — not to Knowledge Graph Relationship pages. Same word, completely different concept.
+**Snowflake note:** the Snowflake Semantic View `relationships:` YAML key (table-level join definitions) maps to `joinedTo` hyperlink edges in `## Joins` — not to Knowledge Graph Reification pages. Same word, completely different concept.
 
 ---
 
@@ -51,10 +51,10 @@ The edge statement label from [spec/link-format.md](../../spec/link-format.md) i
   <ac:link-body>Measure: REVENUE relatedTo <- Rule: exclude-reversals</ac:link-body>
 </ac:link>
 
-<!-- Relationship page link (same label on both From and To pages): -->
+<!-- Reification page link (same label on both From and To pages): -->
 <ac:link>
-  <ri:page ri:content-title="Relationship: REVENUE requires ACTIVE_CUSTOMERS" ri:space-key="<SPACE_KEY>"/>
-  <ac:link-body>Relationship: REVENUE requires -> ACTIVE_CUSTOMERS</ac:link-body>
+  <ri:page ri:content-title="Reification: REVENUE requires ACTIVE_CUSTOMERS" ri:space-key="<SPACE_KEY>"/>
+  <ac:link-body>Reification: REVENUE requires -> ACTIVE_CUSTOMERS</ac:link-body>
 </ac:link>
 ```
 
@@ -112,7 +112,7 @@ Parent pages must be created before child pages can be placed under them. The fo
 | `<domain>/filters/` | Filter pages |
 | `<domain>/verified-queries/` | VerifiedQuery pages |
 | `<domain>/rules/` | Rule pages |
-| `<domain>/relationships/` | Relationship pages |
+| `<domain>/reifications/` | Reification pages |
 | `<domain>/disambiguations/` | Disambiguation pages |
 
 Store the page IDs of these parent pages in a reference table for use by agents and scripts. Agents must never fabricate a page ID — always resolve via `confluence_search` or from the reference table.
@@ -136,7 +136,7 @@ Node properties are encoded as a header paragraph at the top of each page body, 
 </p>
 ```
 
-Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` in the header — no `<ac:link-body>` needed for header fields, only for edge statement links in `## Links` and `## Relationships`.
+Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` in the header — no `<ac:link-body>` needed for header fields, only for edge statement links in `## Links` and `## Reifications`.
 
 ---
 

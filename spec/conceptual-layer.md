@@ -74,7 +74,7 @@ Two groups of edges: hyperlink edges within the conceptual layer, and the single
 
 ### 3.1 Hyperlink edge kinds — within the conceptual layer
 
-| Kind | Relationship type | Valid source labels | Valid target labels | Notes |
+| Kind | Reification type | Valid source labels | Valid target labels | Notes |
 |---|---|---|---|---|
 | `comprises` | `COMPRISES` | Concept | Subject | The Concept groups this Subject. Owning side: Concept page. |
 | `produces` | `PRODUCES` | Process | Subject | The Process generates this Subject's data as an output. |
@@ -94,7 +94,7 @@ When in doubt between `produces` and `governs`: if the process *creates* the val
 
 The only edge kind that crosses from the conceptual layer into the logical layer is `implement`:
 
-| Kind | Relationship type | Valid source labels | Valid target labels | Notes |
+| Kind | Reification type | Valid source labels | Valid target labels | Notes |
 |---|---|---|---|---|
 | `implement` | `IMPLEMENTS` | Subject | Measure, Filter, BusinessRule, VerifiedQuery | Defined in [logical-layer.md](logical-layer.md). Subject is the owning side. |
 

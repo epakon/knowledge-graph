@@ -16,7 +16,7 @@ Markdown files in git repo (source of truth)
 GraphWidget  (interactive diagram)
 ```
 
-The Markdown files **are** the graph. The snapshot script reads frontmatter and `## Links` / `## Relationships` sections; the notebook visualizes the JSON.
+The Markdown files **are** the graph. The snapshot script reads frontmatter and `## Links` / `## Reifications` sections; the notebook visualizes the JSON.
 
 The snapshot JSON format is identical to the Confluence snapshot format — the same visualization notebook and graph DB import pipeline work with both backends without modification.
 
@@ -62,7 +62,7 @@ python kg_snapshot_markdown.py \
 A `.md` file becomes a **node** when its `type` frontmatter field matches a known node type:
 
 - `Subject`, `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`
-- `Relationship`, `Disambiguation`, `VerifiedQuery`
+- `Reification`, `Disambiguation`, `VerifiedQuery`
 
 **Excluded** (not nodes, treated as structural containers):
 - Files with no `type` frontmatter field (index files, READMEs)
@@ -87,13 +87,13 @@ The edge kind is extracted from the link text:
 
 Back-references (`<-` in link text) are **not** imported as separate edges — they are navigation artifacts, same as in the Confluence adapter.
 
-#### 2. Relationship pages (reified edges)
+#### 2. Reification pages (reified edges)
 
-Files with `type: Relationship` in frontmatter define a semantic edge. The `from`, `to`, and `kind` fields in frontmatter are used directly — no body parsing required for the edge itself:
+Files with `type: Reification` in frontmatter define a semantic edge. The `from`, `to`, and `kind` fields in frontmatter are used directly — no body parsing required for the edge itself:
 
 ```yaml
 ---
-type: Relationship
+type: Reification
 name: REVENUE requires ACTIVE_CUSTOMERS
 kind: requires
 from: Measure: REVENUE
@@ -101,7 +101,7 @@ to: Filter: ACTIVE_CUSTOMERS
 ---
 ```
 
-Stored as `style: "reified"` with `via` set to the Relationship file's `name` field.
+Stored as `style: "reified"` with `via` set to the Reification file's `name` field.
 
 ---
 
@@ -134,7 +134,7 @@ Identical to the Confluence adapter format. The `page_id` field contains the rel
       "target": "Filter: ACTIVE_CUSTOMERS",
       "kind": "requires",
       "style": "reified",
-      "via": "Relationship: REVENUE requires ACTIVE_CUSTOMERS"
+      "via": "Reification: REVENUE requires ACTIVE_CUSTOMERS"
     },
     {
       "source": "Rule: exclude-reversals",
@@ -264,14 +264,14 @@ No `requests` dependency — the Markdown adapter does not make HTTP calls.
 
 ## Maintenance
 
-When files change (new links, new Relationship files):
+When files change (new links, new Reification files):
 
 1. Re-run `kg_snapshot_markdown.py`
 2. Re-run the notebook
 
 For auto-generated files updated by CI: add the snapshot script to the same CI pipeline so the JSON snapshot is always up to date alongside the source files.
 
-The diagram is only as complete as the links in the Markdown files. Missing edges usually indicate a missing `## Links` entry or a missing Relationship file under `relationships/`.
+The diagram is only as complete as the links in the Markdown files. Missing edges usually indicate a missing `## Links` entry or a missing Reification file under `reifications/`.
 
 ---
 

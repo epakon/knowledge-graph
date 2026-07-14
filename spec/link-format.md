@@ -21,8 +21,8 @@ Owning side (source page — this page is the source of the edge):
 Back-reference (target page — someone else points to this page):
   [Source: SourceName edgeKind <- Target: TargetName]
 
-Relationship page link (same label on both From and To pages):
-  [Relationship: X kind -> Y]
+Reification page link (same label on both From and To pages):
+  [Reification: X kind -> Y]
 ```
 
 ### Rules
@@ -30,9 +30,9 @@ Relationship page link (same label on both From and To pages):
 - Use ASCII `->` and `<-`. Do not use unicode `→`/`←` or HTML entities `&rarr;`/`&larr;`.
 - The link navigates to the **other** page — never the current page.
 - `->` = owning side (I point to the target). `<-` = back-reference (someone points to me).
-- Relationship page links always show `->` regardless of which side they appear on.
+- Reification page links always show `->` regardless of which side they appear on.
 - All hyperlink edges live in a `## Links` section.
-- Relationship page links live in a separate `## Relationships` section.
+- Reification page links live in a separate `## Reifications` section.
 
 ---
 
@@ -42,24 +42,28 @@ Relationship page link (same label on both From and To pages):
 ## Links
   ← all hyperlink edges for this page (both owning and back-reference)
 
-## Relationships
-  ← all Relationship page links (reified edges this page participates in)
+## Reifications
+  ← all Reification page links (reified edges this page participates in)
 ```
 
-These two sections must be kept separate. Mixing hyperlink edges and Relationship page links in a single section is invalid.
+These two sections must be kept separate. Mixing hyperlink edges and Reification page links in a single section is invalid.
 
 ---
 
-## When to use a hyperlink edge vs. a Relationship page
+## When to use a hyperlink edge vs. a Reification page
 
-Every edge starts as a hyperlink. Promote it to a Relationship page when it gains semantic weight — a stated reason and a consequence if ignored.
+Every edge starts as a hyperlink. Promote it to a Reification page when it gains semantic weight — a stated reason and a consequence if ignored.
 
 | Situation | Use |
 |---|---|
 | "A depends on B" — the dependency is self-evident from the node types | Hyperlink edge in `## Links` |
-| "A depends on B, and here is **why**, and here is **what breaks** if ignored" | Relationship page under `relationships/` |
+| "A depends on B, and here is **why**, and here is **what breaks** if ignored" | Reification page under `reifications/` |
 
-**Promotion rule:** if you find yourself wanting to annotate a hyperlink edge with a reason or a consequence, stop — create a Relationship page instead. A hyperlink that says "why" is a Relationship page waiting to happen.
+**Promotion rule:** if you find yourself wanting to annotate a hyperlink edge with a reason or a consequence, stop — create a Reification page instead. A hyperlink that says "why" is a Reification page waiting to happen.
+
+### Properties are defined per kind, not per mechanism
+
+Promotion does not attach one spec-wide property set. Each reified kind defines its own schema — `requires` and `mandatory` are free to end up with different fields as the model matures. The current catalog (see [logical-layer.md §2.2](logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties)) happens to give all five existing kinds the same two fields, `reason` and `consequence` — that's a fact about what's been modeled so far, not a constraint of the promotion mechanism itself.
 
 ### When individual pages are warranted
 
@@ -71,20 +75,18 @@ The same promotion logic applies to columns and computed fields inside a Table. 
 
 This is the most important distinction in the data model. Two kinds of edges exist, and they mean fundamentally different things:
 
-| | Structural edge (`joinedTo`) | Semantic edge (Relationship page) |
+| | Structural edge (`joinedTo`) | Semantic edge (Reification page) |
 |---|---|---|
 | **What it expresses** | "These two tables share a key and can be joined in a query" | "This dependency exists for a business reason, and violating it causes a specific consequence" |
 | **Carries meaning?** | No — it is a technical fact about data structure | Yes — it encodes business logic and domain knowledge |
 | **Has Reason / Consequence?** | Never | Always |
-| **Encoded as** | Hyperlink edge in `## Joins`: `Table: A joinedTo -> Table: B on A.col = B.col` | Dedicated Relationship page in `relationships/`: `Relationship: X requires Y` |
+| **Encoded as** | Hyperlink edge in `## Joins`: `Table: A joinedTo -> Table: B on A.col = B.col` | Dedicated Reification page in `reifications/`: `Reification: X requires Y` |
 | **Equivalent in other tools** | SQL `JOIN`, ERD foreign key, dbt `relationships:` test, Snowflake Semantic View `relationships:` YAML | No direct equivalent — this is domain knowledge, not a database construct |
 | **Agent should use it to…** | Construct the correct `JOIN` clause in SQL | Determine which filters are mandatory, which rules apply, why a dependency exists |
 
 ### The rule in one sentence
 
-> `joinedTo` tells you **how** to join tables. A Relationship page tells you **why** a dependency exists and **what breaks** if you ignore it.
-
-These two concepts share the word "relationship" in common usage and in many data tools — which is why the distinction must be made explicit. In this standard, "Relationship" (capitalised, as a node type) always means a reified semantic edge with Reason + Consequence. Lower-case "relationship" in the context of database tooling means a join definition.
+> `joinedTo` tells you **how** to join tables. A Reification page tells you **why** a dependency exists and **what breaks** if you ignore it.
 
 ---
 
@@ -128,16 +130,16 @@ Measure: REVENUE owns a cross-link to Rule: exclude-reversals:
 [Measure: REVENUE relatedTo <- Rule: exclude-reversals]
 ```
 
-### Reified edge — Relationship page links
+### Reified edge — Reification page links
 
 Filter: ACTIVE_CUSTOMERS participates in a reified mandatory relationship with Table: ORDERS. Both sides show the owning `->` direction:
 
 ```
-## Relationships                        ← on Filter: ACTIVE_CUSTOMERS
-[Relationship: ACTIVE_CUSTOMERS mandatory -> ORDERS]
+## Reifications                        ← on Filter: ACTIVE_CUSTOMERS
+[Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS]
 
-## Relationships                        ← on Table: ORDERS
-[Relationship: ACTIVE_CUSTOMERS mandatory -> ORDERS]
+## Reifications                        ← on Table: ORDERS
+[Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS]
 ```
 
 ### Join edge with join key
@@ -197,15 +199,15 @@ Use `relatedTo` for Subject-to-Subject links.
 
 When drawing the graph (e.g. Mermaid diagram):
 
-- **Rectangles** (`[Label]`) — all node types except Relationship: Subject, Table, Measure, Attribute, Filter, Rule, VerifiedQuery, Disambiguation, Domain.
-- **Diamonds** (`{Label}`) — Relationship pages only. A Relationship page is a reified edge with its own page carrying Reason + Consequence.
+- **Rectangles** (`[Label]`) — all node types except Reification: Subject, Table, Measure, Attribute, Filter, Rule, VerifiedQuery, Disambiguation, Domain.
+- **Diamonds** (`{Label}`) — Reification pages only. A Reification page is a reified edge with its own page carrying Reason + Consequence.
 - **Labelled arrows** (`-->|kind|`) — hyperlink edges. No dedicated page.
 
 ```
-# Reified edge (Relationship page exists):
+# Reified edge (Reification page exists):
 Filter: ACTIVE_CUSTOMERS --- {mandatory} --- Table: ORDERS
 
-# Hyperlink edge (no Relationship page):
+# Hyperlink edge (no Reification page):
 Subject: Write-Off -->|implement| Filter: WRITE_OFF_INVOICES
 ```
 
@@ -215,7 +217,7 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 
 ## Node/edge kind quick reference
 
-| Node type | Header fields | Typical `## Links` edges | `## Relationships`? |
+| Node type | Header fields | Typical `## Links` edges | `## Reifications`? |
 |---|---|---|---|
 | `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
 | `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule | No |
@@ -226,4 +228,4 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 | `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement ->` Measure · `relatedTo ->/<-` Filter, Rule | Yes (demonstrates) |
 | `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject | No |
 | `Disambiguation` | Type, Domain | `disambiguate <-` Subject | No |
-| `Relationship` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |
+| `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

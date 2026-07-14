@@ -37,9 +37,9 @@ Knowledge Graph (root)
 │   │   └── VerifiedQuery: REVENUE_BY_REGION_MONTHLY
 │   ├── rules/
 │   │   └── Rule: exclude-cancelled-orders
-│   ├── relationships/
-│   │   ├── Relationship: GROSS_REVENUE requires ACTIVE_ORDERS
-│   │   └── Relationship: ACTIVE_ORDERS mandatory ORDERS
+│   ├── reifications/
+│   │   ├── Reification: GROSS_REVENUE requires ACTIVE_ORDERS
+│   │   └── Reification: ACTIVE_ORDERS mandatory ORDERS
 │   └── disambiguations/
 │       └── Disambiguation: order-status
 │
@@ -52,8 +52,8 @@ Knowledge Graph (root)
     │   └── Filter: EXCLUDE_WRITE_OFFS
     ├── rules/
     │   └── Rule: write-off-threshold
-    └── relationships/
-        └── Relationship: NET_REVENUE requires EXCLUDE_WRITE_OFFS
+    └── reifications/
+        └── Reification: NET_REVENUE requires EXCLUDE_WRITE_OFFS
 ```
 
 ---
@@ -95,4 +95,4 @@ To add a **Logistics** domain:
 2. Create domain index: `Domain: Logistics`
 3. Create type containers: `tables/`, `measures/`, `filters/`, etc.
 4. For shared concepts (e.g. "Active Customer"), link to existing Subject pages — do not create new Subject pages.
-5. Create domain-specific Relationship pages for mandatory filters and requires edges in the new domain.
+5. Create domain-specific Reification pages for mandatory filters and requires edges in the new domain.

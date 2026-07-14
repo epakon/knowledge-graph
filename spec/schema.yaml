@@ -1,9 +1,9 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.4.0
+# Version: 1.4.1
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 
-spec_version: "1.4.0"
+spec_version: "1.4.1"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -228,13 +228,13 @@ node_types:
     page_title_prefix: "Disambiguation:"
     container_path: "<domain>/disambiguations/"
 
-  - name: Relationship
-    label: Relationship
+  - name: Reification
+    label: Reification
     scope: per-domain
     identity_key: name
     is_reified_edge: true
     description: >
-      A Relationship page is a reified edge with Reason and Consequence.
+      A Reification page is a reified edge with Reason and Consequence.
       It is NOT a node in the graph — it is flattened into a typed relationship on export.
     properties:
       - name: kind
@@ -257,8 +257,8 @@ node_types:
         type: string
         required: true
         description: One sentence describing what breaks if the dependency is ignored.
-    page_title_prefix: "Relationship:"
-    container_path: "<domain>/relationships/"
+    page_title_prefix: "Reification:"
+    container_path: "<domain>/reifications/"
 
 # ---------------------------------------------------------------------------
 # Hyperlink Edge Kinds (no properties, encoded as clickable link labels)
@@ -350,7 +350,7 @@ hyperlink_edge_kinds:
     valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule]
 
 # ---------------------------------------------------------------------------
-# Reified Edge Kinds (require a Relationship page; carry reason + consequence)
+# Reified Edge Kinds (require a Reification page; carry reason + consequence)
 # ---------------------------------------------------------------------------
 reified_edge_kinds:
   - kind: mandatory
@@ -435,5 +435,5 @@ audit_rules:
 
   - id: relationship_pages_flattened
     description: >
-      Every Relationship page must have a corresponding entry in the edge index
+      Every Reification page must have a corresponding entry in the edge index
       with style: reified.

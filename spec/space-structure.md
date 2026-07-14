@@ -38,8 +38,8 @@ Knowledge Graph: <Domain>         (root container — one per domain)
     │   └── VerifiedQuery: <Name>
     ├── rules/
     │   └── Rule: <Name>
-    ├── relationships/
-    │   └── Relationship: <From> <kind> <To>
+    ├── reifications/
+    │   └── Reification: <From> <kind> <To>
     └── disambiguations/
         └── Disambiguation: <Term>
 ```
@@ -63,7 +63,7 @@ Page titles use a **type prefix + colon + name** pattern:
 | VerifiedQuery | `VerifiedQuery: <Name>` | `VerifiedQuery: REVENUE_BY_REGION` |
 | BusinessRule | `Rule: <Name>` | `Rule: exclude-reversals` |
 | Disambiguation | `Disambiguation: <Term>` | `Disambiguation: bad-debt` |
-| Relationship | `Relationship: <From> <kind> <To>` | `Relationship: REVENUE requires ACTIVE_CUSTOMERS` |
+| Reification | `Reification: <From> <kind> <To>` | `Reification: REVENUE requires ACTIVE_CUSTOMERS` |
 
 The prefix is critical — it is how agents and scripts identify node type from the page title alone.
 
@@ -88,7 +88,7 @@ The following container pages must exist under each domain:
 | filters | `<domain>/filters/` |
 | verified queries | `<domain>/verified-queries/` |
 | rules | `<domain>/rules/` |
-| relationships | `<domain>/relationships/` |
+| reifications | `<domain>/reifications/` |
 | disambiguations | `<domain>/disambiguations/` |
 
 ---
@@ -151,9 +151,9 @@ Does the node's SQL reference a specific table?
 
 1. Create the root container page: `Knowledge Graph: <Domain>`
 2. Create the domain index page: `Domain: <Name>` as a child of the root
-3. Create each type container: `tables/`, `measures/`, `attributes/`, `filters/`, `verified-queries/`, `rules/`, `relationships/`, `disambiguations/`
+3. Create each type container: `tables/`, `measures/`, `attributes/`, `filters/`, `verified-queries/`, `rules/`, `reifications/`, `disambiguations/`
 4. For concepts already in `vocabulary/subjects/` (e.g. a shared business term), the new domain's node pages link to the existing Subject — do not duplicate the definition
-5. Create Relationship pages for semantic edges specific to the new domain
+5. Create Reification pages for semantic edges specific to the new domain
 6. The new domain inherits all shared Subjects automatically via semantic search
 
 ---

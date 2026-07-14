@@ -13,8 +13,8 @@
 |---|---|---|
 | "What does `<term>` mean?" | Search → Subject or Disambiguation file → answer from Business Definition | A — Read |
 | "What is the `<measure>` formula?" | Search → Measure file → return Definition + `## Links` (Table sources) | A — Read |
-| "Which filters are mandatory for table T?" | Search Relationship files where kind=`mandatory` and To=T | A — Read |
-| "Show lineage for measure X" | Fetch Measure file → follow Relationship + Related links to Filters, Rules, Tables | D — Navigate |
+| "Which filters are mandatory for table T?" | Search Reification files where kind=`mandatory` and To=T | A — Read |
+| "Show lineage for measure X" | Fetch Measure file → follow Reification + Related links to Filters, Rules, Tables | D — Navigate |
 | "What depends on filter F?" | Search for files referencing `Filter: F` → traverse downstream | D — Navigate |
 | "Show me verified SQL for question Q" | Search → VerifiedQuery file matching Q → return SQL | A — Read |
 | "What are the onboarding questions for domain D?" | Search VerifiedQuery files with `onboarding_question: true` in domain D | A — Read |
@@ -72,7 +72,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 3. **Read the file.**
 
-4. **Follow links** if needed. If the file references Relationship files, Disambiguation files, or Subjects in `## Relationships` or `## Links`, read those too for a complete answer.
+4. **Follow links** if needed. If the file references Reification files, Disambiguation files, or Subjects in `## Reifications` or `## Links`, read those too for a complete answer.
 
 5. **Answer** using retrieved file content. Cite which files you retrieved. Never fabricate definitions — every claim must come from a retrieved file.
 
@@ -86,7 +86,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all files to create** from the user's description.
 
-   **Before adding any `Relationship:` file, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` file instead — check for an existing one first.
+   **Before adding any `Reification:` file, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` file instead — check for an existing one first.
 
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No file content.
@@ -145,7 +145,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 5. **Write the updated file** and commit with a structured version comment (see [spec/versioning.md](../../spec/versioning.md)).
 
-6. **If breaking:** find Relationship files referencing this node — update `## Consequence if Ignored` if needed.
+6. **If breaking:** find Reification files referencing this node — update `## Consequence if Ignored` if needed.
 
 ### Steps for bulk updates (6+ files)
 
@@ -169,16 +169,16 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
      ```bash
      rg "<NodeType>: <Name>" <kg-root>/ --include="*.md" -l
      ```
-   - **Upstream** (what X depends on): follow `## Links` and `## Relationships` links inside the file.
+   - **Upstream** (what X depends on): follow `## Links` and `## Reifications` links inside the file.
 
 3. **Read linked files** for each relevant hop. Do not traverse the full graph — stop at the depth that answers the question.
 
 4. **Present the lineage** as a structured list showing node type, name, and edge kind:
    ```
    Measure: REVENUE
-     --[mandatory]--> Relationship: ACTIVE_CUSTOMERS mandatory -> ORDERS
+     --[mandatory]--> Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS
        --[to]-->      Filter: ACTIVE_CUSTOMERS
-     --[requires]--> Relationship: REVENUE requires ACTIVE_CUSTOMERS
+     --[requires]--> Reification: REVENUE requires ACTIVE_CUSTOMERS
        --[to]-->      Filter: ACTIVE_CUSTOMERS
      --[implement <-]- VerifiedQuery: REVENUE_BY_REGION
      --[implement <-]- Subject: Revenue

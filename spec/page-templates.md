@@ -170,8 +170,8 @@ The domain page is also the parent container for all type sub-folders. It is the
 | <col>  | dimension \| fact \| time_dimension | <syn> | <note> | [Measure: X](path) |
 | <col>  | dimension \| fact \| time_dimension | <syn> | <note> | — |
 
-## Relationships
-- [Relationship: <Name>](../../relationships/<Name>)
+## Reifications
+- [Reification: <Name>](../../reifications/<Name>)
 
 ## Joins
 - [Table: <Name>](path) — Table: <TableName> joinedTo -> Table: <Name> on <left_col> = <right_col>
@@ -204,8 +204,8 @@ Promoted computed field. For promotion criteria see [logical-layer.md §8](logic
 ## Definition
 <SQL expression or formula>
 
-## Relationships
-- [Relationship: <Name>](../../relationships/<Name>)
+## Reifications
+- [Reification: <Name>](../../reifications/<Name>)
 
 ## Links
 - [Table: <Name>](path) — Table: <Name> calculate <- Measure: <Name>
@@ -263,8 +263,8 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 <WHERE clause expression>
 ```
 
-## Relationships
-- [Relationship: <Name>](../../relationships/<Name>)
+## Reifications
+- [Reification: <Name>](../../reifications/<Name>)
 
 ## Links
 - [Subject: <Name>](path) — Subject: <Name> implement <- Filter: <Name>
@@ -288,8 +288,8 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Question
 <Exact natural-language question this SQL answers.>
 
-## Relationships
-- [Relationship: <Name>](../../relationships/<Name>)
+## Reifications
+- [Reification: <Name>](../../reifications/<Name>)
 
 ## Links
 - [Measure: <Name>](path) — VerifiedQuery: <Name> implement -> Measure: <Name>
@@ -351,14 +351,14 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 
 ---
 
-## Relationship
+## Reification
 
 Short by design. Reason and consequence are one sentence each. This page is a **reified edge** — it encodes a semantic dependency between two nodes with a stated reason and consequence.
 
 ```markdown
-# Relationship: <From> <kind> <To>
+# Reification: <From> <kind> <To>
 
-**Type:** Relationship
+**Type:** Reification
 **Kind:** requires | guards | mandatory | overrides | demonstrates
 **From:** [<NodeType>: <Name>](path)
 **To:** [<NodeType>: <Name>](path)

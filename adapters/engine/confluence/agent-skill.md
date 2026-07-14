@@ -15,8 +15,8 @@ This table maps natural-language user requests to the workflow that handles them
 |---|---|---|
 | "What does `<term>` mean?" | Search → Subject or Disambiguation page → answer from Business Definition | A — Read |
 | "What is the `<measure>` formula?" | Search → Measure page → return Definition + `## Links` (Table sources) | A — Read |
-| "Which filters are mandatory for table T?" | Search → Relationship pages where kind=`mandatory` and To=T | A — Read |
-| "Show lineage for measure X" | Fetch Measure page → follow Relationship + Related links to Filters, Rules, Tables | D — Navigate |
+| "Which filters are mandatory for table T?" | Search → Reification pages where kind=`mandatory` and To=T | A — Read |
+| "Show lineage for measure X" | Fetch Measure page → follow Reification + Related links to Filters, Rules, Tables | D — Navigate |
 | "What depends on filter F?" | Search for pages referencing `Filter: F` → traverse downstream | D — Navigate |
 | "Show me verified SQL for question Q" | Search → VerifiedQuery page matching Q → return SQL | A — Read |
 | "What are the onboarding questions for domain D?" | Search VerifiedQuery pages with `Onboarding question: Yes` in domain D | A — Read |
@@ -72,7 +72,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 3. **Fetch the page** with `confluence_get_page`.
 
-4. **Follow links** if needed. If the page references Relationship pages, Disambiguation pages, or Subjects, fetch those too for a complete answer.
+4. **Follow links** if needed. If the page references Reification pages, Disambiguation pages, or Subjects, fetch those too for a complete answer.
 
 5. **Answer** using retrieved page content. Cite which pages you retrieved. Never fabricate definitions — every claim must come from a retrieved page.
 
@@ -86,7 +86,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 1. **Identify all pages to create** from the user's description.
 
-   **Before adding any `Relationship:` page, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-relationship-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` page instead — check for an existing one first.
+   **Before adding any `Reification:` page, check the intended Kind against `spec/schema.yaml`'s `reified_edge_kinds` list** — no other kind qualifies, however strong the "why it matters" narrative behind the edge (see [spec/logical-layer.md §2.2](../../spec/logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties) for why). If a caveat doesn't fit one of those kinds but still needs its own Reason/Consequence, put it on a `BusinessRule` page instead — check for an existing one first.
 
 2. **Present a creation plan and ask for confirmation BEFORE creating anything.**
    Show a compact table — node type, count, names only. No page body content.
@@ -150,7 +150,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - `body`: updated content
    - Version comment in the required format (see [spec/versioning.md](../../spec/versioning.md))
 
-6. **If breaking:** check Relationship pages referencing this node — update `## Consequence if Ignored` if needed.
+6. **If breaking:** check Reification pages referencing this node — update `## Consequence if Ignored` if needed.
 
 ### Steps for bulk updates (6+ pages)
 
@@ -174,16 +174,16 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
      ```
      text ~ "<NodeType>: <Name>" AND space = "<SPACE_KEY>"
      ```
-   - **Upstream** (what X depends on): follow `## Links` and `## Relationships` links inside the page.
+   - **Upstream** (what X depends on): follow `## Links` and `## Reifications` links inside the page.
 
 3. **Fetch linked pages** for each relevant hop. Do not traverse the full graph — stop at the depth that answers the question.
 
 4. **Present the lineage** as a structured list showing node type, name, and edge kind:
    ```
    Measure: REVENUE
-     --[mandatory]--> Relationship: ACTIVE_CUSTOMERS mandatory -> ORDERS
+     --[mandatory]--> Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS
        --[to]-->      Filter: ACTIVE_CUSTOMERS
-     --[requires]--> Relationship: REVENUE requires ACTIVE_CUSTOMERS
+     --[requires]--> Reification: REVENUE requires ACTIVE_CUSTOMERS
        --[to]-->      Filter: ACTIVE_CUSTOMERS
      --[implement <-]- VerifiedQuery: REVENUE_BY_REGION
      --[implement <-]- Subject: Revenue

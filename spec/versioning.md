@@ -78,7 +78,7 @@ A change is **breaking** if it could cause an agent or SQL query that was correc
 
 When a change is marked `Breaking: yes`:
 
-1. **Update dependent Relationship pages** — check `## Consequence if Ignored` for accuracy.
+1. **Update dependent Reification pages** — check `## Consequence if Ignored` for accuracy.
 2. **Notify downstream consumers** — annotate the version comment with `BREAKING CHANGE:` prefix if the backend supports full-text search indexing of version comments.
 3. **Review VerifiedQuery pages** that reference the changed node — their SQL may need updating.
 

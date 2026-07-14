@@ -37,7 +37,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 | `VerifiedQuery` | Human-approved SQL with verifier name, verification date, and onboarding flag. |
 | `BusinessRule` | Named rule governing query construction or interpretation. |
 | `Disambiguation` | Ambiguous term requiring clarification before any query is issued. |
-| `Relationship` | Reified semantic edge with Reason + Consequence if Ignored. Has its own page; is not a node in the graph DB. |
+| `Reification` | Reified semantic edge with Reason + Consequence if Ignored. Has its own page; is not a node in the graph DB. |
 
 > Visualization shapes (rectangles vs. diamonds in diagrams) are a rendering convention, not a schema property. See [adapters/engine/confluence/snapshot-pipeline.md](../adapters/engine/confluence/snapshot-pipeline.md) for node colors and shapes used in the graph diagram.
 
@@ -55,7 +55,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 | `BusinessRule` | `BusinessRule` | `name` | `definition`, `rule_modality`, `consequence_if_violated` | per-domain |
 | `Disambiguation` | `Disambiguation` | `name` | `always_ask` | per-domain |
 
-> **`Relationship` pages are not nodes in the target graph database.** They are flattened into typed relationships with properties (see §2.2). They remain pages for human readability but are not registered as nodes.
+> **`Reification` pages are not nodes in the target graph database.** They are flattened into typed relationships with properties (see §2.2). They remain pages for human readability but are not registered as nodes.
 
 ### Uniqueness constraints
 
@@ -84,7 +84,7 @@ Two classes of edges in the knowledge base map to two classes of graph relations
 Seven kinds, all single-verb. These become relationships with type only — no properties.
 Back-references on pages are navigation shortcuts and are **not** imported into the graph.
 
-| Kind | Relationship type | Valid source labels | Valid target labels | Notes |
+| Kind | Reification type | Valid source labels | Valid target labels | Notes |
 |---|---|---|---|---|
 | `implement` | `IMPLEMENTS` | Subject, Measure, BusinessRule, Filter | Filter, Measure, BusinessRule, VerifiedQuery | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
 | `relatedTo` | `RELATED_TO` | any | any | Symmetric generic cross-link |
@@ -94,11 +94,11 @@ Back-references on pages are navigation shortcuts and are **not** imported into 
 | `apply` | `APPLIES_TO` | BusinessRule | Table, Measure | |
 | `contain` | `CONTAINS` | Domain | Table, Measure, Filter, VerifiedQuery, BusinessRule | Exactly one Domain per node — see `spec/space-structure.md` for ownership rules |
 
-### 2.2 Reified edge kinds (Relationship pages → typed relationships with properties)
+### 2.2 Reified edge kinds (Reification pages → typed relationships with properties)
 
-Relationship pages are **flattened** into graph relationships with `reason` and `consequence` properties. The page title encodes source, kind, and target; the body provides the semantic payload.
+Reification pages are **flattened** into graph relationships with `reason` and `consequence` properties. The page title encodes source, kind, and target; the body provides the semantic payload.
 
-| Kind | Relationship type | Source label | Target label | Properties |
+| Kind | Reification type | Source label | Target label | Properties |
 |---|---|---|---|---|
 | `mandatory` | `MANDATORY_FOR` | Filter | Table | `reason`, `consequence` |
 | `requires` | `REQUIRES` | Measure | Filter | `reason`, `consequence` |
@@ -108,13 +108,13 @@ Relationship pages are **flattened** into graph relationships with `reason` and 
 
 #### Why this list is closed (for now)
 
-The five reified kinds are not a general-purpose "any dependency can become a Relationship" mechanism — each one is a specific `(source type, target type, direction)` pattern identified as a recurring way this data warehouse silently produces wrong answers if the dependency is ignored. The list is closed in the sense that a Relationship page's `Kind` must currently be one of these five; it is open in the sense that new kinds can be added by a future spec revision if a new recurring failure pattern is identified. It is neither a fixed permanent ceiling nor "reify whatever you want, whenever you want."
+The five reified kinds are not a general-purpose "any dependency can become a Reification" mechanism — each one is a specific `(source type, target type, direction)` pattern identified as a recurring way this data warehouse silently produces wrong answers if the dependency is ignored. The list is closed in the sense that a Reification page's `Kind` must currently be one of these five; it is open in the sense that new kinds can be added by a future spec revision if a new recurring failure pattern is identified. It is neither a fixed permanent ceiling nor "reify whatever you want, whenever you want."
 
 Some hyperlink kinds structurally can never warrant a reified form. `calculate`, `contain`, `disambiguate`, and `joinedTo`'s ordinary case describe facts that are unconditionally true by construction — a Table either calculates an Attribute or it doesn't; a Domain either contains a Table or it doesn't. There is no "sometimes true, and here's what breaks if you get it wrong" story to tell, so there is nothing for a Reason/Consequence pair to add. Promoting these produces an empty page, not a more precise one. That said, this isn't a logical impossibility for every instance of every such kind forever — a `joinedTo` edge can carry real risk (e.g. a join that fans out and silently duplicates rows if the wrong key is used), which is a genuine reason/consequence story with no cataloged reified kind yet, simply because no such case has been identified in this knowledge base so far. If one is found, the right move is a new spec-versioned reified kind — not reusing `joinedTo`'s name with reason/consequence fields bolted on.
 
 At the opposite extreme, `relatedTo` is the kind most often promoted — several of today's reified kinds are, structurally, promotions of what would otherwise be a `relatedTo` edge between the same two node types (see the Edge conflict rule below). But promotion never keeps the `relatedTo` name: it is deliberately generic, carrying no direction or role, so reifying it as-is (`relatedTo` + reason + consequence) wouldn't add meaning, only length — the graph still couldn't tell "this filter is load-bearing for the table" from "this filter protects one specific measure" without reading prose. The promoted kind has to name the specific role (`mandatory`, `requires`, `guards`, ...) precisely because `relatedTo` itself is too generic to say anything on its own.
 
-Practical implication for agents/authors: before creating a `Relationship:` page, check whether the dependency matches one of the five cataloged patterns. If it does, use that kind. If it doesn't fit any pattern but still has genuine business-rule weight, put it on a `BusinessRule` page instead (open-ended prose, linked via the ordinary hyperlink kinds) rather than inventing an ad-hoc sixth reified kind on the spot. Proposing an actual new reified kind is a deliberate spec change, not a per-page decision.
+Practical implication for agents/authors: before creating a `Reification:` page, check whether the dependency matches one of the five cataloged patterns. If it does, use that kind. If it doesn't fit any pattern but still has genuine business-rule weight, put it on a `BusinessRule` page instead (open-ended prose, linked via the ordinary hyperlink kinds) rather than inventing an ad-hoc sixth reified kind on the spot. Proposing an actual new reified kind is a deliberate spec change, not a per-page decision.
 
 ### Edge conflict rule
 
@@ -181,7 +181,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
       "relationship_type": "REQUIRES",
       "kind": "requires",
       "style": "reified",
-      "via": "Relationship: <From> requires <To>",
+      "via": "Reification: <From> requires <To>",
       "properties": {
         "reason": "<one sentence>",
         "consequence": "<one sentence>"
@@ -209,7 +209,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 | `relationship_type` | Graph relationship type (from §2 schema). |
 | `kind` | Edge kind (`apply`, `requires`, etc.). |
 | `style` | `hyperlink` (no properties) or `reified` (has Reason + Consequence). |
-| `via` | For reified edges: the Relationship page title. `null` for hyperlinks. |
+| `via` | For reified edges: the Reification page title. `null` for hyperlinks. |
 | `properties` | For reified edges: `reason` and `consequence` strings. Empty object for hyperlinks. |
 
 ---
@@ -224,7 +224,7 @@ These rules should be validated after every snapshot regeneration:
 | No duplicate edges | `(source, target, relationship_type)` must be unique in the edge index |
 | Reified beats hyperlink | If `(source, target)` has both a `RELATED_TO` hyperlink and a reified edge, flag the `RELATED_TO` as redundant |
 | Back-refs not imported | Edges where the label contains `<-` are navigation back-refs — excluded from the edge index |
-| Relationship pages flattened | Every Relationship page must have a corresponding entry in the edge index with `style: reified` |
+| Reification pages flattened | Every Reification page must have a corresponding entry in the edge index with `style: reified` |
 
 ---
 
