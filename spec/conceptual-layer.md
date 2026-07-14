@@ -81,6 +81,8 @@ Two groups of edges: hyperlink edges within the conceptual layer, and the single
 | `consumes` | `CONSUMES` | Process | Subject | The Process requires this Subject's data as an input. |
 | `governs` | `GOVERNS` | Process | Subject | The Process defines the rules that constrain this Subject. |
 
+**`comprises` is a thematic grouping, not a strict classification.** It groups Subjects under a shared theme — it does not mean "is a kind of." A rule, property, or constraint that applies to a Concept does not automatically apply to the Subjects it comprises: `Concept: Liquidity` comprising `Subject: DSO` says only "these belong to the same theme," not "DSO is a kind of Liquidity" or "whatever holds for Liquidity holds for DSO." Don't chain `comprises` edges to infer indirect grouping either — each edge is a direct, independently-authored assertion.
+
 Back-references follow the standard convention: the target page carries the `<-` form of the label in its `## Links` section.
 
 **Choosing between `produces`, `consumes`, and `governs`:**
