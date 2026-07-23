@@ -32,6 +32,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 | **Domain** | A scoped collection of nodes coupled to specific data tables |
 | **Conceptual layer** | The domain-agnostic, stable part of the graph (`vocabulary/`) — see [spec/conceptual-layer.md](spec/conceptual-layer.md) |
 | **Logical layer** | The per-domain, SQL-coupled part of the graph — see [spec/logical-layer.md](spec/logical-layer.md) |
+| **Consumption layer** | The global part of the graph describing AI consumption surfaces (`ai/`) — see [spec/consumption-layer.md](spec/consumption-layer.md) |
 
 ---
 
@@ -43,6 +44,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 - **spec/** — Normative specification
   - [conceptual-layer.md](spec/conceptual-layer.md) — Conceptual layer: Concept, Subject, Process node types; stability test; bridge to logical layer
   - [logical-layer.md](spec/logical-layer.md) — Logical layer: node types, edge kinds, indexes, audit rules, graph-DB migration
+  - [consumption-layer.md](spec/consumption-layer.md) — Consumption layer: `Agent` node type, `uses` edge kind, stability test, why it must never duplicate what it reads *(draft)*
   - [link-format.md](spec/link-format.md) — Edge-statement syntax, back-reference rules, visualization conventions
   - [page-templates.md](spec/page-templates.md) — Canonical page templates for all node types
   - [space-structure.md](spec/space-structure.md) — Logical hierarchy, container pages, naming conventions

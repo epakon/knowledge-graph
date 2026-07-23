@@ -351,6 +351,45 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 
 ---
 
+## Agent
+
+Represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an MCP tool, or future equivalent), in vendor-neutral form. For the stability test, why this is a separate layer, and why it must never restate the content it reads, see [consumption-layer.md](consumption-layer.md).
+
+```markdown
+# Agent: <Name>
+
+**Type:** Agent
+**Status:** Active | Deprecated
+
+## Purpose
+<One sentence — what this agent answers questions about. No SQL, no vendor syntax.>
+
+## Response Instructions
+<Vendor-neutral rules for how the agent should format/present answers.>
+
+## Orchestration Instructions
+<Vendor-neutral rules for choosing between tools/views and routing a question.>
+
+## Sample Questions
+- <question>
+- <question>
+
+## Differentiation
+<Only required if a `uses`-overlap review (consumption-layer.md §8) flagged this agent against another Active agent. One or two sentences: which of the reasonable-overlap axes (audience, orchestration, scope shape) distinguishes them. Omit this section entirely if no overlap was flagged.>
+
+## Links
+- [Table: <Name>](path) — Agent: <Name> uses -> Table: <Name>
+- [Measure: <Name>](path) — Agent: <Name> uses -> Measure: <Name>
+- [BusinessRule: <Name>](path) — Agent: <Name> uses -> Rule: <Name>
+- [VerifiedQuery: <Name>](path) — Agent: <Name> uses -> VerifiedQuery: <Name>
+- [Subject: <Name>](path) — Agent: <Name> uses -> Subject: <Name>
+- [Agent: <surviving>](path) — Agent: <Name> relatedTo -> Agent: <surviving>   ← only if Status: Deprecated, per consumption-layer.md §8.4
+```
+
+> **Never restate what a `uses` target already says.** If the agent needs a synonym, a join caveat, or a calculation rule to answer correctly, that content lives on the `Attribute`, `BusinessRule`, or `Measure` page it links to — not copied onto this page. See [consumption-layer.md §5](consumption-layer.md#5-relationship-to-existing-content--never-a-second-authored-copy).
+
+---
+
 ## Reification
 
 Short by design. Reason and consequence are one sentence each. This page is a **reified edge** — it encodes a semantic dependency between two nodes with a stated reason and consequence.

@@ -25,6 +25,9 @@ Knowledge Graph: <Domain>         (root container — one per domain)
 │   └── processes/
 │       └── Process: <Name>       business activity with company-specific decisions
 │
+├── ai/                           consumption layer — global, not owned by any one domain
+│   └── Agent: <Name>             AI consumption surface (Cortex Agent, Claude/Cursor Skill, ...)
+│
 └── Domain: <Name>                logical layer — domain index page (follows Domain template)
     ├── tables/
     │   └── Table: <Name>
@@ -64,6 +67,7 @@ Page titles use a **type prefix + colon + name** pattern:
 | BusinessRule | `Rule: <Name>` | `Rule: exclude-reversals` |
 | Disambiguation | `Disambiguation: <Term>` | `Disambiguation: bad-debt` |
 | Reification | `Reification: <From> <kind> <To>` | `Reification: REVENUE requires ACTIVE_CUSTOMERS` |
+| Agent | `Agent: <Name>` | `Agent: SALES_ASSISTANT` |
 
 The prefix is critical — it is how agents and scripts identify node type from the page title alone.
 
@@ -81,6 +85,7 @@ The following container pages must exist under each domain:
 | concepts root | `vocabulary/concepts/` |
 | subjects root | `vocabulary/subjects/` |
 | processes root | `vocabulary/processes/` |
+| AI root | `ai/` |
 | domain index | `Domain: <Name>` |
 | tables | `<domain>/tables/` |
 | measures | `<domain>/measures/` |
@@ -96,6 +101,12 @@ The following container pages must exist under each domain:
 ## The `vocabulary/` layer
 
 The `vocabulary/` container is intentionally kept separate from domain containers — it is the **conceptual layer** of the knowledge graph. For node types, properties, edge kinds, the stability test, authorship guidance, and external-reference linking see [conceptual-layer.md](conceptual-layer.md).
+
+---
+
+## The `ai/` layer
+
+The `ai/` container is the **consumption layer** — global like `vocabulary/`, but holding a different kind of knowledge: not business meaning, but the behavior of AI consumers (agents, skills) that read the graph. For the node type itself, the dedicated `uses` edge kind, the stability test, and why it must never duplicate the content it reads, see [consumption-layer.md](consumption-layer.md).
 
 ---
 
@@ -161,6 +172,6 @@ Does the node's SQL reference a specific table?
 ## What does NOT live in the knowledge base
 
 - **Physical database schemas** — table definitions, column types, DDL. These are maintained in the data source (dbt, data catalog, etc.). The knowledge base stores semantic annotations only.
-- **Dashboard or report definitions** — these reference measures but are not graph nodes.
+- **Dashboard or report definitions** — these reference measures but are not graph nodes. This is deliberately different from `Agent`: a dashboard is a static, human-reviewed artifact settled at build time, with no live-interpretation failure mode to guard against. An `Agent` autonomously interprets meaning and generates SQL at query time, which is exactly the correctness-propagation problem the consumption layer's `uses` edge exists to hook into `versioning.md`/`governance.md` for.
 - **Data lineage at the column level** — fine-grained column-to-column lineage lives in a data catalog. The knowledge base captures business-level dependencies (which filters are mandatory, which rules apply).
 - **Live data or query results** — the knowledge base is a definition layer, not a query execution layer.

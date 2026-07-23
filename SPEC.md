@@ -35,9 +35,9 @@
 | Term | Definition |
 |---|---|
 | **Node** | A single-topic page representing one business entity. Each node has a type, a unique name, and structured header fields. |
-| **Node type** | The category of a node. Conceptual layer: `Concept`, `Subject`, `Process`. Logical layer: `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. |
+| **Node type** | The category of a node. Conceptual layer: `Concept`, `Subject`, `Process`. Logical layer: `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. Consumption layer: `Agent`. |
 | **Edge** | A typed, directed link between two nodes. Encoded as a readable label embedded in the source page body. |
-| **Edge kind** | The semantic verb describing the relationship: `implement`, `relatedTo`, `attribute`, `joinedTo`, `disambiguate`, `apply`, `contain`. |
+| **Edge kind** | The semantic verb describing the relationship: `implement`, `relatedTo`, `attribute`, `joinedTo`, `disambiguate`, `apply`, `contain`, `uses`. |
 | **Owning side** | The page that declares the edge (source → target direction). |
 | **Back-reference** | A convenience link on the target page pointing back to the source. Navigation only — not a separate semantic edge. |
 | **Reification page** | A reified edge: a dedicated page for an edge that carries a `Reason` and `Consequence if Ignored`. Encoded as a page rather than a bare link. |
@@ -50,9 +50,10 @@
 
 ## 3. Data Model
 
-The graph has two layers. Full layer specifications:
+The graph has three layers. Full layer specifications:
 - Conceptual layer (node types, properties, edge kinds, stability test): [spec/conceptual-layer.md](spec/conceptual-layer.md)
 - Logical layer (node types, properties, edge kinds, indexes, audit rules): [spec/logical-layer.md](spec/logical-layer.md)
+- Consumption layer (the `Agent` node type, the `uses` edge kind, stability test): [spec/consumption-layer.md](spec/consumption-layer.md)
 
 Machine-readable schema: [spec/schema.yaml](spec/schema.yaml)
 
@@ -77,6 +78,10 @@ graph LR
         VerifiedQuery["VerifiedQuery"]
         BusinessRule["BusinessRule"]
         Disambiguation["Disambiguation"]
+    end
+
+    subgraph consumption["Consumption layer (ai/)"]
+        Agent["Agent"]
     end
 
     Concept -->|comprises| Subject
@@ -123,6 +128,12 @@ graph LR
     Filter -->|implement| VerifiedQuery
 
     Attribute -->|relatedTo| Subject
+
+    Agent -->|uses| Table
+    Agent -->|uses| Measure
+    Agent -->|uses| BusinessRule
+    Agent -->|uses| VerifiedQuery
+    Agent -->|uses| Subject
 ```
 
 > Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
@@ -164,7 +175,7 @@ Rules:
 
 Full reference: [spec/space-structure.md](spec/space-structure.md)
 
-The knowledge base is organized as a **parent-container hierarchy**: a global `vocabulary/` container for the conceptual layer, and one container per domain for the logical layer. Page titles use a `<NodeType>: <Name>` prefix convention. See the full reference for the canonical hierarchy diagram, naming conventions, and container-page requirements.
+The knowledge base is organized as a **parent-container hierarchy**: a global `vocabulary/` container for the conceptual layer, a global `ai/` container for the consumption layer, and one container per domain for the logical layer. Page titles use a `<NodeType>: <Name>` prefix convention. See the full reference for the canonical hierarchy diagram, naming conventions, and container-page requirements.
 
 ---
 
@@ -206,6 +217,8 @@ This specification uses [Semantic Versioning](https://semver.org):
 
 ## 8. Agent Integration
 
+> **Terminology note.** "Agent" in this section means any AI system reading the knowledge base — the generic sense used throughout this spec. `Agent` the node type (capitalized, [spec/consumption-layer.md](spec/consumption-layer.md)) is a specific, narrower thing: a page representing one named consumption surface (a Cortex Agent, a Claude/Cursor Skill) and what it's for. Every agent in the generic sense should follow the workflow below; only some of them will also have a corresponding `Agent` page.
+
 ### How agents consume the knowledge base
 
 Agents must query the knowledge base **before writing any SQL** and **before answering any business question**. The graph encodes the correct SQL construction pattern:
@@ -229,6 +242,7 @@ Agents must query the knowledge base **before writing any SQL** and **before ans
 | User asks about a business rule | `Rule: <name>` |
 | Ambiguous term in the question | `Disambiguation: <term>` — ask the clarifying question first |
 | User asks about a column or derived field | `Attribute: <name>` |
+| User asks what an existing agent/skill can answer, or which agent to use | `Agent: <name>` — or `uses <-` back-references on the node in question to find agents that already read it |
 
 ### Semantic search strategy
 

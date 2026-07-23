@@ -1,9 +1,9 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.4.1
+# Version: 1.5.0
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 
-spec_version: "1.4.1"
+spec_version: "1.5.0"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -58,6 +58,51 @@ node_types:
           that are not derivable from the Subjects it links to.
     page_title_prefix: "Process:"
     container_path: "vocabulary/processes/"
+
+# ---------------------------------------------------------------------------
+# Node Types — Consumption layer (ai/)
+# See spec/consumption-layer.md for stability test, authorship guidance,
+# and why "Agent" is the only node type in this layer today.
+# ---------------------------------------------------------------------------
+  - name: Agent
+    label: Agent
+    layer: consumption
+    scope: global
+    identity_key: name
+    properties:
+      - name: purpose
+        type: string
+        required: true
+        description: >
+          One sentence — what this agent answers questions about. No SQL,
+          no vendor-specific syntax.
+      - name: response_instructions
+        type: string
+        required: false
+        description: >
+          Vendor-neutral rules for how the agent should format or present
+          answers (e.g. always disclose which node was used, never silently
+          substitute an inaccessible view).
+      - name: orchestration_instructions
+        type: string
+        required: false
+        description: >
+          Vendor-neutral rules for choosing between multiple tools/views and
+          routing a question to the right one.
+      - name: sample_questions
+        type: list[string]
+        required: false
+        description: Representative questions this agent is expected to answer.
+      - name: status
+        type: enum
+        values: [Active, Deprecated]
+        required: true
+        description: >
+          Deprecated means this agent has been merged/superseded — see
+          spec/consumption-layer.md §8. A consumer adapter must never render
+          or keep deployed an Agent with status Deprecated.
+    page_title_prefix: "Agent:"
+    container_path: "ai/"
 
 # ---------------------------------------------------------------------------
 # Node Types — Logical layer (<domain>/)
@@ -350,6 +395,22 @@ hyperlink_edge_kinds:
     valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule]
 
 # ---------------------------------------------------------------------------
+# Consumption layer edge (ai/ -> vocabulary/ | <domain>/)
+# See spec/consumption-layer.md §3 for why this is a dedicated kind rather
+# than reusing the conceptual layer's "consumes" (Process -> Subject).
+# ---------------------------------------------------------------------------
+
+  - kind: uses
+    relationship_type: USES
+    valid_sources: [Agent]
+    valid_targets: [Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain]
+    notes: >
+      An Agent reads this node's content to answer questions or generate SQL
+      correctly. Owning side: Agent page. Back-reference on the target page:
+      Agent: X uses <- Table: Y. Plain hyperlink, not reified — navigational/
+      traceability, not a query-correctness dependency.
+
+# ---------------------------------------------------------------------------
 # Reified Edge Kinds (require a Reification page; carry reason + consequence)
 # ---------------------------------------------------------------------------
 reified_edge_kinds:
@@ -437,3 +498,12 @@ audit_rules:
     description: >
       Every Reification page must have a corresponding entry in the edge index
       with style: reified.
+
+  - id: agent_overlap_review
+    description: >
+      Informational, not blocking (unlike the rules above). For every pair of
+      Agent nodes with status: Active, compute the Jaccard similarity of their
+      "uses" target sets from the edge index. Pairs above the review threshold
+      are reported for human review, not auto-rejected — see
+      spec/consumption-layer.md §8 for the reasonable-overlap test and the
+      merge procedure.

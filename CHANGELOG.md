@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.5.0](#1.5.0) | 2026-07-23 | Consumption layer added: `Agent` node type (`ai/`), `uses` edge kind, overlap/deduplication mechanism, `spec/consumption-layer.md` |
 | [1.4.1](#1.4.1) | 2026-07-14 | `Relationship` node type renamed to `Reification` repo-wide (page prefix, container folder, section headers, diagram shapes); no new concept introduced, terminology-only |
 | [1.4.0](#1.4.0) | 2026-07-09 | Conceptual/logical layer split; `Concept` and `Process` node types activated; four new conceptual edge kinds; `spec/conceptual-layer.md` added; `spec/data-model.md` renamed to `spec/logical-layer.md` |
 | [1.3.13](#1.3.13) | 2026-07-07 | Version comment format no longer duplicates backend-native version/date/author fields; clarified it must live in the backend's native version comment (Confluence) / commit message (Markdown), never in page body content; `spec/data-model.md` §2.2 rationale for why the reified edge-kind list is closed-but-extensible |
@@ -32,6 +33,22 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.5.0] — 2026-07-23
+
+### Added
+- **`spec/consumption-layer.md`** — new normative document for a third layer, alongside the conceptual and logical layers: the **consumption layer**, holding knowledge about who reads the graph and how they should behave, rather than business meaning or SQL implementation. Named "Consumption" rather than "AI" so a future non-agent consumer would not require a layer rename — see §1 and §6 for the reasoning and why `Agent` is the only node type in it today.
+- **`Agent` node type** (global, `ai/` — folder name deliberately broader than the current node type, for the same reason the layer itself avoids "AI" in its name) — represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an MCP tool, or future equivalent) in vendor-neutral form. Properties: `purpose` (required), `response_instructions`, `orchestration_instructions`, `sample_questions` (optional), `status` (required, `Active`/`Deprecated`). Vendor-specific rendering details never belong on this node — see the layer's stability test in §1.
+- **`uses` edge kind** (hyperlink, not reified) — `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain`. Deliberately a separate kind from the conceptual layer's existing `consumes` (`Process -> Subject`), so it can grow its own properties independently. Back-references make "which agents depend on this node" answerable from any node's own `## Links`, and because it's an ordinary graph edge, `Agent` pages automatically inherit `versioning.md`'s breaking-change propagation and `governance.md`'s staleness monitoring with no bespoke mechanism.
+- **`Agent` page template** in `spec/page-templates.md`, with `Status` field, an optional `## Differentiation` section (required only when an overlap review flags the page), and an explicit rule that it must never restate content that belongs on a `BusinessRule`, `Attribute`, or `Measure` page — only the agent's own behavior.
+- **Overlap and deduplication mechanism** (`spec/consumption-layer.md` §8) — Jaccard similarity over `Agent.uses` target sets, computed from the edge index, surfaces high-overlap `Active` agent pairs for human review; a reasonable-overlap test (differing `response_instructions`, `orchestration_instructions`, or scope shape) distinguishes intentional overlap from true duplication; true duplicates are merged via `status: Deprecated` + a `relatedTo` pointer to the surviving agent, which rides the existing breaking-change propagation in `versioning.md`. Runs both at page-creation time (extending the existing duplicate-check workflow) and on a recurring schedule (new `agent_overlap_review` audit rule in `schema.yaml` / `governance.md` §6), since two independently-built agents can converge over time.
+
+### Changed
+- **`spec/schema.yaml`** bumped to 1.5.0 with the new node type, edge kind, `status` property, and `agent_overlap_review` audit rule.
+- **`spec/governance.md` §6** — added `agent_overlap_review` to recurring monitoring.
+- **`SPEC.md`, `README.md`, `spec/space-structure.md`** — updated to reference the three-layer architecture; `space-structure.md`'s existing "dashboards are not graph nodes" exclusion now explicitly distinguishes it from `Agent` (a dashboard is static and human-reviewed at build time; an `Agent` interprets meaning and generates SQL live, which is the correctness-propagation risk the layer exists to guard).
 
 ---
 
