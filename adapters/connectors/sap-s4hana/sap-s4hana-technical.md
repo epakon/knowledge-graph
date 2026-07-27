@@ -229,11 +229,10 @@ SAP S/4HANA is an ERP suite that encodes business processes across Finance, Proc
 |---|---|---|
 | `mandatory` | A filter that must be applied for a query to be legally, organizationally, or semantically valid | `reason`: derive from `@EndUserText.quickInfo` or parameter description; `consequence`: manual authoring |
 | `requires` | A measure's calculation depends on a filter to scope its population correctly | `reason`: from CDS expression or parameter description; `consequence`: incorrect aggregation if omitted |
-| `guards` | A filter restricts the valid rows for a measure | Manual authoring — cannot be derived from metadata |
 | `overrides` | A business rule or Customizing setting overrides a default field value | `reason`: from RAP behavior definition comment; `consequence`: manual authoring |
 | `demonstrates` | A verified query provides a working example of a business rule in action | Manual authoring |
 
-For `guards` and `demonstrates`, stub Reification pages with `REQUIRES MANUAL AUTHORING` placeholders are created on import. A domain expert must complete these before the edge is considered verified.
+For `demonstrates`, stub Reification pages with `REQUIRES MANUAL AUTHORING` placeholders are created on import. A domain expert must complete these before the edge is considered verified.
 
 ---
 

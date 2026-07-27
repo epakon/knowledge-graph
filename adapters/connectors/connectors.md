@@ -7,7 +7,7 @@ Large systems like SAP S/4HANA, Salesforce, or Workday encode enormous amounts o
 The connector is a **specification document**, not a technical connector. It describes:
 
 - Which business concepts in the source system correspond to `Subject`, `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`, and `VerifiedQuery` nodes.
-- Which relationships between those concepts correspond to KG edge kinds — including reified edges (`mandatory`, `requires`, `guards`) that carry business `reason` and `consequence`.
+- Which relationships between those concepts correspond to KG edge kinds — including reified edges (`mandatory`, `requires`) that carry business `reason` and `consequence`.
 - Where in the source system the business meaning lives: in user-facing labels, process documentation, configuration, or calculation logic.
 - What cannot be derived automatically and must be authored by a domain expert.
 

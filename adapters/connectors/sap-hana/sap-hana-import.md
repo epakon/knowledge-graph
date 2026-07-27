@@ -238,7 +238,7 @@ Objects whose source schema changed but that are not in the current seed list ar
 | `table_kind` | `Table` (ambiguous naming) | No `@Analytics.dataCategory` equivalent |
 | `kind` | `Measure` | HANA does not annotate measure vs. attribute columns structurally |
 | `definition_sql` | `BusinessRule` | Graphical CV calculation nodes do not expose SQL text |
-| `reason` on `guards` / `demonstrates` | `Reification` | No structural signal |
+| `reason` on `demonstrates` | `Reification` | No structural signal |
 
 ---
 

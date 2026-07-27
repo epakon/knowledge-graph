@@ -89,7 +89,7 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 | `joinedTo` | `JOINED_TO` | Symmetric; join key stored as property `on` |
 | `disambiguate` | `DISAMBIGUATES` | Subject → Disambiguation |
 | `apply` | `APPLIES_TO` | BusinessRule → Table, Measure |
-| `contain` | `CONTAINS` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule |
+| `contain` | `CONTAINS` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation |
 
 ### Reified edge kinds → relationship types with properties
 
@@ -99,7 +99,6 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 |---|---|---|---|---|
 | `mandatory` | `MANDATORY_FOR` | Filter | Table | `reason`, `consequence` |
 | `requires` | `REQUIRES` | Measure | Filter | `reason`, `consequence` |
-| `guards` | `GUARDS` | Filter | Measure | `reason`, `consequence` |
 | `overrides` | `OVERRIDES` | BusinessRule | Attribute | `reason`, `consequence` |
 | `demonstrates` | `DEMONSTRATES` | VerifiedQuery | BusinessRule | `reason`, `consequence` |
 

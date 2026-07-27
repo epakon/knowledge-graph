@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.5.1](#1.5.1) | 2026-07-27 | Removed reified edge kind `guards` (no derivation path or worked example anywhere in the spec, unlike `requires`); added missing `Domain -->|contain|` edges to `Attribute` and `Disambiguation`, closing an ownership gap where both were per-domain-scoped but had no domain-owning edge |
 | [1.5.0](#1.5.0) | 2026-07-23 | Consumption layer added: `Agent` node type (`ai/`), `uses` edge kind, overlap/deduplication mechanism, `spec/consumption-layer.md` |
 | [1.4.1](#1.4.1) | 2026-07-14 | `Relationship` node type renamed to `Reification` repo-wide (page prefix, container folder, section headers, diagram shapes); no new concept introduced, terminology-only |
 | [1.4.0](#1.4.0) | 2026-07-09 | Conceptual/logical layer split; `Concept` and `Process` node types activated; four new conceptual edge kinds; `spec/conceptual-layer.md` added; `spec/data-model.md` renamed to `spec/logical-layer.md` |
@@ -33,6 +34,16 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.5.1] — 2026-07-27
+
+### Removed
+- **Reified edge kind `guards`** (`Filter -> Measure`) — removed from `spec/schema.yaml`, `spec/logical-layer.md` §2.2, `SPEC.md`'s glossary and schema diagram, `spec/page-templates.md`'s Reification template, `spec/link-format.md`, `adapters/engine/neo4j/neo4j-adapter.md`, and all four connector docs (dbt, SAP HANA, SAP S/4HANA). Every connector document listed `guards` as "not derivable automatically" / "no structural signal," and no worked example of it existed anywhere in the spec — unlike `requires` (`Measure -> Filter`), which has a real derivation path from source `filter` metadata and a concrete example (`Reification: REVENUE requires ACTIVE_CUSTOMERS` in `spec/space-structure.md`). The two kinds connected the same `Measure`/`Filter` node pair in opposite directions without a distinct real-world story differentiating `guards` from `requires`. Reified edge kinds are now `mandatory`, `requires`, `overrides`, `demonstrates` (four, not five). **Breaking**: any existing `Reification: ... guards ...` page must be re-evaluated — most likely re-expressed as `requires` in the correct direction, or moved to a `BusinessRule` page if it doesn't fit `requires`'s pattern.
+
+### Fixed
+- **`contain` edge missing two valid targets.** `spec/space-structure.md` §"Cross-domain linking via the conceptual layer" states ownership is defined by the `contain` edge ("a node is owned by exactly one domain — the domain with the `contain ->` edge to it") and explicitly treats `Attribute` the same as `Measure` for this purpose. But `Attribute` and `Disambiguation` are both stored per-domain (their own folder under each domain, per `space-structure.md`'s directory tree) while missing from `contain`'s valid-target list — meaning neither had a domain-owning edge, despite `governance.md` assigning correctness/verification responsibility via that same ownership chain. Added `Domain -->|contain| Attribute` and `Domain -->|contain| Disambiguation` in `spec/schema.yaml`, `spec/logical-layer.md` §2.1, `SPEC.md`'s schema diagram, `spec/link-format.md` (edge table + node/edge quick reference), `adapters/engine/neo4j/neo4j-adapter.md`, and `adapters/connectors/dbt/dbt-technical.md`. **Additive, non-breaking** — existing pages are unaffected; new `contain ->`/`contain <-` links should be added to existing `Attribute`/`Disambiguation` pages and their domain's index page going forward.
 
 ---
 

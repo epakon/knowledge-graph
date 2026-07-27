@@ -63,7 +63,7 @@ Every edge starts as a hyperlink. Promote it to a Reification page when it gains
 
 ### Properties are defined per kind, not per mechanism
 
-Promotion does not attach one spec-wide property set. Each reified kind defines its own schema — `requires` and `mandatory` are free to end up with different fields as the model matures. The current catalog (see [logical-layer.md §2.2](logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties)) happens to give all five existing kinds the same two fields, `reason` and `consequence` — that's a fact about what's been modeled so far, not a constraint of the promotion mechanism itself.
+Promotion does not attach one spec-wide property set. Each reified kind defines its own schema — `requires` and `mandatory` are free to end up with different fields as the model matures. The current catalog (see [logical-layer.md §2.2](logical-layer.md#22-reified-edge-kinds-reification-pages--typed-relationships-with-properties)) happens to give all four existing kinds the same two fields, `reason` and `consequence` — that's a fact about what's been modeled so far, not a constraint of the promotion mechanism itself.
 
 ### When individual pages are warranted
 
@@ -100,7 +100,7 @@ This is the most important distinction in the data model. Two kinds of edges exi
 | `joinedTo` | Table → Table | Symmetric |
 | `disambiguate` | Subject → Disambiguation | |
 | `apply` | BusinessRule → Table, Measure | |
-| `contain` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule | |
+| `contain` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | |
 
 ---
 
@@ -220,12 +220,12 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 | Node type | Header fields | Typical `## Links` edges | `## Reifications`? |
 |---|---|---|---|
 | `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
-| `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule | No |
+| `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | No |
 | `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table · `calculate ->` Attribute · `calculate ->` Measure | Yes |
-| `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
-| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
-| `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
-| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement ->` Measure · `relatedTo ->/<-` Filter, Rule | Yes (demonstrates) |
-| `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject | No |
-| `Disambiguation` | Type, Domain | `disambiguate <-` Subject | No |
+| `Measure` | Type, Domain, Kind, Synonyms, Status | `contain <-` Domain · `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
+| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `contain <-` Domain · `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
+| `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `contain <-` Domain · `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
+| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `contain <-` Domain · `implement ->` Measure · `relatedTo ->/<-` Filter, Rule | Yes (demonstrates) |
+| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject | No |
+| `Disambiguation` | Type, Domain | `contain <-` Domain · `disambiguate <-` Subject | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

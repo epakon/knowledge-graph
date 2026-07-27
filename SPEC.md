@@ -41,7 +41,7 @@
 | **Owning side** | The page that declares the edge (source → target direction). |
 | **Back-reference** | A convenience link on the target page pointing back to the source. Navigation only — not a separate semantic edge. |
 | **Reification page** | A reified edge: a dedicated page for an edge that carries a `Reason` and `Consequence if Ignored`. Encoded as a page rather than a bare link. |
-| **Reified edge kind** | An edge kind that requires a Reification page: `mandatory`, `requires`, `guards`, `overrides`, `demonstrates`. |
+| **Reified edge kind** | An edge kind that requires a Reification page: `mandatory`, `requires`, `overrides`, `demonstrates`. |
 | **Domain** | A scoped collection of nodes tied to specific data tables and SQL expressions. |
 | **Subject** | A global node (shared across all domains) that holds the business definition of a concept. |
 | **Identity key** | The field whose value uniquely identifies a node within its type (always `name`). |
@@ -99,6 +99,8 @@ graph LR
     Domain -->|contain| Filter
     Domain -->|contain| VerifiedQuery
     Domain -->|contain| BusinessRule
+    Domain -->|contain| Attribute
+    Domain -->|contain| Disambiguation
 
     Table -->|calculate| Attribute
     Table -->|calculate| Measure
@@ -109,9 +111,6 @@ graph LR
 
     Measure --- requires{requires}
     Filter --- requires
-
-    Filter --- guards{guards}
-    Measure --- guards
 
     BusinessRule --- overrides{overrides}
     Attribute --- overrides

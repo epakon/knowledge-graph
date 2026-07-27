@@ -328,7 +328,7 @@ The following fields are set to `REQUIRES MANUAL AUTHORING` on import and must b
 |---|---|---|
 | `consequence_if_violated` | `BusinessRule` | Describe the business impact of violating this constraint in production |
 | `consequence` on reified edges | `Reification` | Describe what goes wrong in a query or report if the dependency is ignored |
-| `reason` on `guards` / `demonstrates` / `overrides` edges | `Reification` | Explain why the dependency exists |
+| `reason` on `demonstrates` / `overrides` edges | `Reification` | Explain why the dependency exists |
 | `question` | `VerifiedQuery` | Formulate the natural-language business question this consumer answers |
 | `sql` | `VerifiedQuery` | Provide the actual SQL used by the downstream consumer |
 | `always_ask` | `Disambiguation` | Write the clarifying question to present to a query agent |

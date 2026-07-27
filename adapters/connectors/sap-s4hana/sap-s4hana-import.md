@@ -173,7 +173,7 @@ These are flagged as `REQUIRES MANUAL AUTHORING` — the `always_ask` text canno
 | Element derived from association path | Source table calculates measure/attribute | `calculate` |
 | `PARAMETERS` binding on view | Filter is mandatory for table | `mandatory` (reified candidate) |
 
-Reified edge candidates (`mandatory`, `requires`, `guards`) are created as stub Reification pages with `REQUIRES MANUAL AUTHORING` on `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
+Reified edge candidates (`mandatory`, `requires`) are created as stub Reification pages with `REQUIRES MANUAL AUTHORING` on `reason` and `consequence`. They are not considered verified until a domain expert completes both fields.
 
 ---
 
@@ -232,7 +232,7 @@ The following always require domain expert authoring after import:
 | `question` | `VerifiedQuery` | Natural-language question requires human formulation |
 | `table_kind` | `Table` (DDIC fallback) | No `@Analytics.dataCategory` — heuristic only |
 | `business_definition` | `Subject` | `@EndUserText` is technical; business meaning requires BRD |
-| `reason` on `guards` / `demonstrates` edges | `Reification` | Cannot be derived from structural metadata |
+| `reason` on `demonstrates` edges | `Reification` | Cannot be derived from structural metadata |
 
 ---
 

@@ -192,7 +192,6 @@ HANA has no lifecycle contract system. Stability is inferred from:
 |---|---|---|
 | `mandatory` | A CV input parameter with no default that must be supplied for the query to execute | `reason`: derive from parameter name and bound column; `consequence`: manual authoring — query fails or returns full-scan result without it |
 | `requires` | A measure's aggregation scope depends on a filter parameter | `reason`: from CV parameter binding; `consequence`: incorrect aggregation if omitted — always manual |
-| `guards` | A filter restricts valid rows for a measure | Manual authoring — no structural signal |
 | `demonstrates` | A verified query exemplifies a business rule | Manual authoring |
 
 ---

@@ -398,7 +398,7 @@ Short by design. Reason and consequence are one sentence each. This page is a **
 # Reification: <From> <kind> <To>
 
 **Type:** Reification
-**Kind:** requires | guards | mandatory | overrides | demonstrates
+**Kind:** requires | mandatory | overrides | demonstrates
 **From:** [<NodeType>: <Name>](path)
 **To:** [<NodeType>: <Name>](path)
 

@@ -1,9 +1,9 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.5.0
+# Version: 1.5.1
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 
-spec_version: "1.5.0"
+spec_version: "1.5.1"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -284,7 +284,7 @@ node_types:
     properties:
       - name: kind
         type: enum
-        values: [mandatory, requires, guards, overrides, demonstrates]
+        values: [mandatory, requires, overrides, demonstrates]
         required: true
       - name: from
         type: string
@@ -392,7 +392,7 @@ hyperlink_edge_kinds:
   - kind: contain
     relationship_type: CONTAINS
     valid_sources: [Domain]
-    valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule]
+    valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation]
 
 # ---------------------------------------------------------------------------
 # Consumption layer edge (ai/ -> vocabulary/ | <domain>/)
@@ -430,18 +430,6 @@ reified_edge_kinds:
     relationship_type: REQUIRES
     valid_source: Measure
     valid_target: Filter
-    properties:
-      - name: reason
-        type: string
-        required: true
-      - name: consequence
-        type: string
-        required: true
-
-  - kind: guards
-    relationship_type: GUARDS
-    valid_source: Filter
-    valid_target: Measure
     properties:
       - name: reason
         type: string

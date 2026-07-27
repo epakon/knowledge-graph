@@ -227,7 +227,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 
 | KG edge kind | dbt source relationship | How to detect | Cardinality | Notes |
 |---|---|---|---|---|
-| `contain` | Domain → model / measure / filter / rule | All non-staging model nodes belong to their domain by folder or project | 1:N | |
+| `contain` | Domain → model / measure / filter / rule / attribute / disambiguation | All non-staging model nodes belong to their domain by folder or project | 1:N | |
 | `joinedTo` | Model → model (direct lineage) | `manifest.json` `depends_on.nodes` — one hop only | N:M | Transitive deps not imported as `joinedTo`; only direct `ref()` calls |
 | `joinedTo` | Model → source | `depends_on.nodes` referencing a source node | N:M | |
 | `calculate` | Table → Measure | Semantic model `model:` field links a measure to its source model | 1:N | |
@@ -243,7 +243,6 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 |---|---|---|---|
 | `mandatory` | A semantic model filter that applies to a table unconditionally | Partially: from measure `filter` or `description` | `REQUIRES MANUAL AUTHORING` |
 | `requires` | A measure whose `filter` scopes its population | Partially: from measure `filter` expression | `REQUIRES MANUAL AUTHORING` |
-| `guards` | Not derivable automatically | `REQUIRES MANUAL AUTHORING` | `REQUIRES MANUAL AUTHORING` |
 | `overrides` | Not derivable automatically | `REQUIRES MANUAL AUTHORING` | `REQUIRES MANUAL AUTHORING` |
 | `demonstrates` | Not derivable automatically | `REQUIRES MANUAL AUTHORING` | `REQUIRES MANUAL AUTHORING` |
 
@@ -294,7 +293,7 @@ Stub Reification pages are created for `mandatory` and `requires` edges where th
 | `sql` | `VerifiedQuery` | dbt does not know the consumer's query |
 | `business_definition` | `Subject` | No cross-project stable concept — all Vocabulary nodes are manual |
 | `table_kind` | `Table` | When model name has no recognized prefix and `meta.table_kind` is absent |
-| `reason` on `guards` / `demonstrates` / `overrides` | `Reification` | No dbt structural signal for these edge kinds |
+| `reason` on `demonstrates` / `overrides` | `Reification` | No dbt structural signal for these edge kinds |
 
 ---
 
