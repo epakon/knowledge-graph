@@ -11,6 +11,8 @@ The connector is a **specification document**, not a technical connector. It des
 - Where in the source system the business meaning lives: in user-facing labels, process documentation, configuration, or calculation logic.
 - What cannot be derived automatically and must be authored by a domain expert.
 
+> Each connector document's edge-mapping tables restate the KG-side valid source/target for readability alongside the source-specific detection logic — [`spec/schema.yaml`](../../spec/schema.yaml) is the authoritative definition of valid sources/targets/properties for every kind. If a kind's valid targets change there, check every connector doc's edge-mapping table for the same kind before considering the change complete.
+
 ---
 
 ## What the connector is not

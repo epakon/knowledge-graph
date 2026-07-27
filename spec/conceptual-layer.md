@@ -2,6 +2,7 @@
 
 > Part of the [Knowledge Graph Specification](../SPEC.md).
 > For the logical layer (Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery node types) see [logical-layer.md](logical-layer.md).
+> **[`spec/schema.yaml`](schema.yaml) is the authoritative source for every node type's properties and every edge kind's valid sources/targets/properties.** The tables below restate only what's needed for the surrounding prose — if this document and `schema.yaml` ever disagree, `schema.yaml` wins.
 
 ---
 
@@ -50,11 +51,7 @@ A Process node earns its place only when its description contains company-specif
 
 ### Full schema
 
-| Node type | Node label | Identity key | Core properties | Scope |
-|---|---|---|---|---|
-| `Subject` | `Subject` | `name` | `business_definition`, `scope` | global (`vocabulary/subjects/`) |
-| `Concept` | `Concept` | `name` | `definition` | global (`vocabulary/concepts/`) |
-| `Process` | `Process` | `name` | `description` | global (`vocabulary/processes/`) |
+> See `schema.yaml`'s `node_types` section for the complete list of properties per node type. Identity key is always `name`; all three node types in this layer are global (`vocabulary/subjects|concepts|processes/`).
 
 ### Uniqueness constraints
 
@@ -74,12 +71,7 @@ Two groups of edges: hyperlink edges within the conceptual layer, and the single
 
 ### 3.1 Hyperlink edge kinds — within the conceptual layer
 
-| Kind | Reification type | Valid source labels | Valid target labels | Notes |
-|---|---|---|---|---|
-| `comprises` | `COMPRISES` | Concept | Subject | The Concept groups this Subject. Owning side: Concept page. |
-| `produces` | `PRODUCES` | Process | Subject | The Process generates this Subject's data as an output. |
-| `consumes` | `CONSUMES` | Process | Subject | The Process requires this Subject's data as an input. |
-| `governs` | `GOVERNS` | Process | Subject | The Process defines the rules that constrain this Subject. |
+> See `schema.yaml`'s `hyperlink_edge_kinds` section for the complete definitions of `comprises`, `produces`, `consumes`, and `governs` (all four are `Concept`/`Process` → `Subject`, single-direction, no properties). The distinctions between them are prose, not schema, so that guidance lives below.
 
 **`comprises` is a thematic grouping, not a strict classification.** It groups Subjects under a shared theme — it does not mean "is a kind of." A rule, property, or constraint that applies to a Concept does not automatically apply to the Subjects it comprises: `Concept: Liquidity` comprising `Subject: DSO` says only "these belong to the same theme," not "DSO is a kind of Liquidity" or "whatever holds for Liquidity holds for DSO." Don't chain `comprises` edges to infer indirect grouping either — each edge is a direct, independently-authored assertion.
 
@@ -94,11 +86,7 @@ When in doubt between `produces` and `governs`: if the process *creates* the val
 
 ### 3.2 Bridge edge kind — into the logical layer
 
-The only edge kind that crosses from the conceptual layer into the logical layer is `implement`:
-
-| Kind | Reification type | Valid source labels | Valid target labels | Notes |
-|---|---|---|---|---|
-| `implement` | `IMPLEMENTS` | Subject | Measure, Filter, BusinessRule, VerifiedQuery | Defined in [logical-layer.md](logical-layer.md). Subject is the owning side. |
+The only edge kind that crosses from the conceptual layer into the logical layer is `implement` (`IMPLEMENTS`) — full definition, including its `Measure`/`BusinessRule`/`Filter` → `VerifiedQuery` extension, in [`spec/schema.yaml`](schema.yaml) and [logical-layer.md §2.1](logical-layer.md#21-hyperlink-edge-kinds-no-properties). Subject is the owning side.
 
 `Concept` and `Process` do **not** link directly to domain nodes. They reach domain implementations only via `Subject`. This keeps the conceptual layer decoupled from the logical layer: renaming a Measure does not require updating any Concept or Process page.
 

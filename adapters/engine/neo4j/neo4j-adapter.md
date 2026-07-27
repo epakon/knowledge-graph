@@ -1,6 +1,7 @@
 # Neo4j Adapter
 
 > Implementation guide for the [Knowledge Graph Specification](../../SPEC.md) on Neo4j Community Edition.
+> **[`spec/schema.yaml`](../../../spec/schema.yaml) is the authoritative source for node type definitions, properties, and valid edge combinations.** The tables below show only the Neo4j translation layer.
 
 This document maps the Graph DB adapter contract to Neo4j-specific constructs: node/edge representation, deployment, import procedure, programmatic access, and sync strategy.
 
@@ -56,8 +57,6 @@ The mapping from spec terms to Neo4j constructs is direct:
 
 **Domain nodes** can be imported as nodes or treated as a property (`domain: "Sales"`) on other nodes — decision deferred to implementation.
 
-> For the authoritative node type definitions, properties, and valid edge combinations see [`spec/schema.yaml`](../../../spec/schema.yaml). The tables below show only the Neo4j translation layer.
-
 ### What the structural projection contains — per node type
 
 Each node is projected from its content storage page into a Neo4j node with a small set of structural properties. Everything else — the full knowledge content — stays in the page and is accessed via `page_id`.
@@ -93,14 +92,7 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 
 ### Reified edge kinds → relationship types with properties
 
-`Reification` pages are flattened into typed relationships. The `reason` and `consequence` fields from the page body become relationship properties.
-
-| Edge kind | Reification type | Source | Target | Properties |
-|---|---|---|---|---|
-| `mandatory` | `MANDATORY_FOR` | Filter | Table | `reason`, `consequence` |
-| `requires` | `REQUIRES` | Measure | Filter | `reason`, `consequence` |
-| `overrides` | `OVERRIDES` | BusinessRule | Attribute | `reason`, `consequence` |
-| `demonstrates` | `DEMONSTRATES` | VerifiedQuery | BusinessRule | `reason`, `consequence` |
+`Reification` pages are flattened into typed relationships. The `reason` and `consequence` fields from the page body become relationship properties on every one of the four kinds: `mandatory` → `MANDATORY_FOR`, `requires` → `REQUIRES`, `overrides` → `OVERRIDES`, `demonstrates` → `DEMONSTRATES`.
 
 ### Edge conflict rule
 

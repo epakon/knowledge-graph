@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.5.2](#1.5.2) | 2026-07-27 | Declared `spec/schema.yaml` the single normative source for node/edge schema facts; replaced duplicate node-type and edge-kind tables in `logical-layer.md`/`conceptual-layer.md`/`consumption-layer.md` with pointers, added non-normative disclaimers to `link-format.md`/`neo4j-adapter.md`/connector docs, and added a `governance.md` drift-check |
 | [1.5.1](#1.5.1) | 2026-07-27 | Removed reified edge kind `guards` (no derivation path or worked example anywhere in the spec, unlike `requires`); added missing `Domain -->|contain|` edges to `Attribute` and `Disambiguation`, closing an ownership gap where both were per-domain-scoped but had no domain-owning edge |
 | [1.5.0](#1.5.0) | 2026-07-23 | Consumption layer added: `Agent` node type (`ai/`), `uses` edge kind, overlap/deduplication mechanism, `spec/consumption-layer.md` |
 | [1.4.1](#1.4.1) | 2026-07-14 | `Relationship` node type renamed to `Reification` repo-wide (page prefix, container folder, section headers, diagram shapes); no new concept introduced, terminology-only |
@@ -37,7 +38,21 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
-## [1.5.1] — 2026-07-27
+## [1.5.2] — 2026-07-27
+
+### Changed
+- **`spec/schema.yaml` declared the single normative source** for node type properties and edge kind valid sources/targets/properties, via a new header comment. Prompted by finding the same schema facts hand-maintained in up to 6 places (`schema.yaml`, `logical-layer.md`, `conceptual-layer.md`, `link-format.md`, `neo4j-adapter.md`, per-connector docs) with no declared tie-breaker — which is exactly what made the `guards` removal (v1.5.1) a 16-file edit with no single place to check for completeness, and what let `schema.yaml`'s own header comment drift one version behind its `spec_version` field undetected.
+- **`spec/logical-layer.md`** §2 — node-type "Full schema" table and both edge-kind tables (§2.1 hyperlink, §2.2 reified) replaced with a pointer to `schema.yaml` plus 1–2 illustrative examples; all prose (promotion criteria, the closed-reified-list rationale, edge conflict rule) is unchanged.
+- **`spec/conceptual-layer.md`** §2, §3 — same treatment for its node-type table and the `comprises`/`produces`/`consumes`/`governs`/`implement` edge tables; the `produces` vs `consumes` vs `governs` distinguishing guidance (prose, not schema) is unchanged.
+- **`spec/consumption-layer.md`** §3.1 — single-row `uses` table replaced with a pointer + inline restatement, for consistency with the other two layers.
+- **`spec/link-format.md`** — added a single "authoritative source: `schema.yaml`" note near the top of the document, covering both the "Edge kind reference" and "Node/edge kind quick reference" tables below it (rather than repeating the note above each table); both tables are kept in full (they serve a different audience — page authors who need a quick lookup without opening YAML — rather than duplicating for its own sake).
+- **Follow-up correction** — the disclaimer originally appeared once per section (3 times in `logical-layer.md`, 2 times in `conceptual-layer.md`, 2 times in `link-format.md`), which was itself repetitive. Consolidated to exactly one prominent note near the top of each document (`logical-layer.md`, `conceptual-layer.md`, `consumption-layer.md`, `link-format.md`, `neo4j-adapter.md`); the per-section mentions now read as plain pointers ("see `schema.yaml`'s `X` section") without restating the authority claim each time.
+- **`adapters/engine/neo4j/neo4j-adapter.md`** — reified edge kinds table (which fully repeated `schema.yaml`'s source/target/properties columns) collapsed to a one-line summary + pointer; the node-type table already carried an equivalent disclaimer from an earlier revision.
+- **`adapters/connectors/connectors.md`** — added a note that every connector doc's edge-mapping tables restate the KG-side valid source/target alongside source-specific detection logic, and that `schema.yaml` is authoritative for the former.
+- **`spec/governance.md`** §3a, §6 — added "check `schema.yaml`'s dependent docs" to the review-required checklist for node-type/edge-kind changes, and a new monitoring check ("Spec doc drift from `schema.yaml`") to `governance.md`'s Monitoring table.
+
+### Notes
+- Non-breaking: no node type, edge kind, property, or valid source/target changed. This release only changes where the same facts are documented, not what they are.
 
 ### Removed
 - **Reified edge kind `guards`** (`Filter -> Measure`) — removed from `spec/schema.yaml`, `spec/logical-layer.md` §2.2, `SPEC.md`'s glossary and schema diagram, `spec/page-templates.md`'s Reification template, `spec/link-format.md`, `adapters/engine/neo4j/neo4j-adapter.md`, and all four connector docs (dbt, SAP HANA, SAP S/4HANA). Every connector document listed `guards` as "not derivable automatically" / "no structural signal," and no worked example of it existed anywhere in the spec — unlike `requires` (`Measure -> Filter`), which has a real derivation path from source `filter` metadata and a concrete example (`Reification: REVENUE requires ACTIVE_CUSTOMERS` in `spec/space-structure.md`). The two kinds connected the same `Measure`/`Filter` node pair in opposite directions without a distinct real-world story differentiating `guards` from `requires`. Reified edge kinds are now `mandatory`, `requires`, `overrides`, `demonstrates` (four, not five). **Breaking**: any existing `Reification: ... guards ...` page must be re-evaluated — most likely re-expressed as `requires` in the correct direction, or moved to a `BusinessRule` page if it doesn't fit `requires`'s pattern.

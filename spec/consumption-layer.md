@@ -3,6 +3,7 @@
 > Part of the [Knowledge Graph Specification](../SPEC.md).
 > For the conceptual layer (Concept, Subject, Process) see [conceptual-layer.md](conceptual-layer.md).
 > For the logical layer (Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Disambiguation) see [logical-layer.md](logical-layer.md).
+> **[`spec/schema.yaml`](schema.yaml) is the authoritative source for every node type's properties and every edge kind's valid sources/targets/properties.** The tables below restate only what's needed for the surrounding prose — if this document and `schema.yaml` ever disagree, `schema.yaml` wins.
 
 > **Draft** — this document is work in progress and has not been formally reviewed.
 
@@ -55,9 +56,7 @@ CREATE CONSTRAINT FOR (n:Agent) REQUIRE n.name IS UNIQUE;
 
 ### 3.1 `uses` — the only edge kind in this layer
 
-| Kind | Reification type | Valid source labels | Valid target labels | Notes |
-|---|---|---|---|---|
-| `uses` | `USES` | Agent | Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain | Owning side: `Agent` page. Plain hyperlink — not reified. |
+`uses` (`USES`) is `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain` — see `schema.yaml`'s `hyperlink_edge_kinds` section for the full definition. Owning side: `Agent` page. Plain hyperlink — not reified.
 
 **Why plain hyperlink, not reified.** `uses` is navigational/traceability, the same tier as `contain` or `calculate` — it answers "which agents depend on this node," not "what breaks if this dependency is violated." There is no reason/consequence story to tell for the fact that an agent reads a table, so promoting it to a Reification page would produce an empty page (see [logical-layer.md §3](logical-layer.md#why-this-list-is-closed-for-now) for the general rule).
 

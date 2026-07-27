@@ -2,6 +2,7 @@
 
 > Part of the [Knowledge Graph Specification](../SPEC.md).
 > For the conceptual layer (Concept, Subject, Process node types and the bridge to this layer) see [conceptual-layer.md](conceptual-layer.md).
+> **[`spec/schema.yaml`](schema.yaml) is the authoritative source for every node type's properties and every edge kind's valid sources/targets/properties.** The tables below restate only what's needed for the surrounding prose — if this document and `schema.yaml` ever disagree, `schema.yaml` wins.
 
 ---
 
@@ -43,17 +44,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 
 ### Full schema
 
-| Node type | Node label | Identity key | Core properties | Scope |
-|---|---|---|---|---|
-| `Subject` | `Subject` | `name` | `business_definition`, `scope` | global (`vocabulary/subjects/`) |
-| `Domain` | `Domain` | `name` | `owner` | per-domain |
-| `Table` | `Table` | `name` | `table_kind`, `source`, `description` | per-domain |
-| `Measure` | `Measure` | `name` | `kind`, `synonyms`, `status`, `definition_sql` | per-domain |
-| `Attribute` | `Attribute` | `name` | `kind`, `synonyms`, `access_modifier`, `expression_sql` | per-domain |
-| `Filter` | `Filter` | `name` | `mandatory`, `synonyms`, `predicate_sql` | per-domain |
-| `VerifiedQuery` | `VerifiedQuery` | `name` | `onboarding_question`, `verified_by`, `verified_at`, `status`, `question`, `sql` | per-domain |
-| `BusinessRule` | `BusinessRule` | `name` | `definition`, `rule_modality`, `consequence_if_violated` | per-domain |
-| `Disambiguation` | `Disambiguation` | `name` | `always_ask` | per-domain |
+> See `schema.yaml`'s `node_types` section for the complete list of properties per node type (required vs. optional, types, allowed enum values, container path). Identity key is always `name` for every node type.
 
 > **`Reification` pages are not nodes in the target graph database.** They are flattened into typed relationships with properties (see §2.2). They remain pages for human readability but are not registered as nodes.
 
@@ -84,26 +75,13 @@ Two classes of edges in the knowledge base map to two classes of graph relations
 Seven kinds, all single-verb. These become relationships with type only — no properties.
 Back-references on pages are navigation shortcuts and are **not** imported into the graph.
 
-| Kind | Reification type | Valid source labels | Valid target labels | Notes |
-|---|---|---|---|---|
-| `implement` | `IMPLEMENTS` | Subject, Measure, BusinessRule, Filter | Filter, Measure, BusinessRule, VerifiedQuery | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
-| `relatedTo` | `RELATED_TO` | any | any | Symmetric generic cross-link |
-| `calculate` | `CALCULATES` | Table | Attribute, Measure | Table is the source that exposes (Attribute) or computes (Measure) the value |
-| `joinedTo` | `JOINED_TO` | Table | Table | Symmetric; join key stored as property `on` |
-| `disambiguate` | `DISAMBIGUATES` | Subject | Disambiguation | |
-| `apply` | `APPLIES_TO` | BusinessRule | Table, Measure | |
-| `contain` | `CONTAINS` | Domain | Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | Exactly one Domain per node — see `spec/space-structure.md` for ownership rules |
+> See `schema.yaml`'s `hyperlink_edge_kinds` section for the complete list of valid sources/targets and per-kind notes (including validity restrictions like `implement` not being valid between two Subjects). For example, `contain` (`CONTAINS`) is `Domain -> Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation` (exactly one `Domain` per node — see `spec/space-structure.md` for ownership rules).
 
 ### 2.2 Reified edge kinds (Reification pages → typed relationships with properties)
 
 Reification pages are **flattened** into graph relationships with `reason` and `consequence` properties. The page title encodes source, kind, and target; the body provides the semantic payload.
 
-| Kind | Reification type | Source label | Target label | Properties |
-|---|---|---|---|---|
-| `mandatory` | `MANDATORY_FOR` | Filter | Table | `reason`, `consequence` |
-| `requires` | `REQUIRES` | Measure | Filter | `reason`, `consequence` |
-| `overrides` | `OVERRIDES` | BusinessRule | Attribute | `reason`, `consequence` |
-| `demonstrates` | `DEMONSTRATES` | VerifiedQuery | BusinessRule | `reason`, `consequence` |
+> See `schema.yaml`'s `reified_edge_kinds` section for the complete list of the four kinds, their source/target labels, and properties. All four currently carry the same two properties, `reason` and `consequence` for now.
 
 #### Why this list is closed (for now)
 

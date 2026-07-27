@@ -1,9 +1,18 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.5.1
+# Version: 1.5.2
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
+#
+# NORMATIVE SOURCE: this file is the single authoritative definition of node
+# type properties and edge kind valid sources/targets/properties. Other spec
+# documents (logical-layer.md, conceptual-layer.md, consumption-layer.md,
+# link-format.md, adapters/**) restate a subset of this content for human
+# readability (prose rationale, worked examples, vendor-specific mappings) —
+# if any of them ever disagrees with this file, this file wins. See
+# governance.md §"Change procedure" for the review step that must catch a
+# change here before it ships without those documents being checked.
 
-spec_version: "1.5.1"
+spec_version: "1.5.2"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
