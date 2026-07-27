@@ -2,6 +2,8 @@
 
 A standard for building **graph-structured knowledge bases** that are human-readable, agent-consumable, and stored in wiki-style collaborative tools.
 
+![Knowledge graph schema, layers, foundation, and the agent query workflow, animated](extras/agent-workflow-on-schema.gif)
+
 ---
 
 ## What is this?
@@ -87,6 +89,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
     - **dbt/** — dbt connector
       - [dbt-technical.md](adapters/connectors/dbt/dbt-technical.md) — Technical layer: node/field/edge mapping for models, sources, seeds, snapshots, semantic models, metrics, exposures, and tests; extraction protocol based on `manifest.json`
       - [dbt-import.md](adapters/connectors/dbt/dbt-import.md) — Import procedure: manifest parsing, staging exclusion, table kind routing, test-to-BusinessRule conversion, incremental checksum detection, validation
+- **extras/** — Non-normative supporting material (analysis notes, the animated diagram shown above)
 - **examples/** — Illustrative worked examples
   - [domain-layout-example.md](examples/domain-layout-example.md) — Multi-domain space hierarchy with cross-domain Subject linking
   - [node-pages-example.md](examples/node-pages-example.md) — Sample pages for all node types (Sales domain scenario)
