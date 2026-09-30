@@ -1,6 +1,6 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.5.2
+# Version: 1.6.0
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 #
 # NORMATIVE SOURCE: this file is the single authoritative definition of node
@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "1.5.2"
+spec_version: "1.6.0"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -362,6 +362,12 @@ hyperlink_edge_kinds:
       Subject may implement any target type (bridge from conceptual to logical layer).
       Measure, BusinessRule, Filter may only implement VerifiedQuery.
       implement is NOT valid between two Subjects — use relatedTo.
+      Measure/BusinessRule/Filter implement -> VerifiedQuery when the query's SQL
+      applies the source (its definition, predicate or rule), so a breaking change
+      to the source requires re-verifying the query. If the query is only about the
+      same topic and its correctness does not depend on the source, use relatedTo.
+      If a VerifiedQuery demonstrates a BusinessRule (reified), do not also add
+      BusinessRule implement -> VerifiedQuery for the same pair.
 
   # -- Logical layer edges (<domain>/ → <domain>/) --------------------------
 
@@ -442,6 +448,10 @@ reified_edge_kinds:
     relationship_type: REQUIRES
     valid_source: Measure
     valid_target: Filter
+    notes: >
+      Only for a Filter specific to this Measure. A Filter mandatory for a Table
+      already applies to every Measure that Table calculates; do not restate it
+      as requires.
     properties:
       - name: reason
         type: string
@@ -493,6 +503,19 @@ audit_rules:
     description: >
       Edges where the link label contains "<-" are back-references (navigation only).
       They must not be imported into the graph or edge index.
+
+  - id: redundant_requires
+    description: >
+      Flag Measure requires Filter when the Filter is mandatory for a Table that
+      calculates the Measure — the table-level mandatory edge already covers it.
+
+  - id: vq_applies_mandatory_filters
+    description: >
+      Informational, not blocking. For every VerifiedQuery, the Tables it reads are
+      those whose name appears in its SQL. Each Filter mandatory for one of those
+      Tables must implement the VerifiedQuery; report every missing pair for review.
+      The reviewer either adds the filter to the SQL (re-verification) or confirms
+      the omission is intended.
 
   - id: relationship_pages_flattened
     description: >

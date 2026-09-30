@@ -140,7 +140,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 
 ```markdown
 ## Reifications
-- [Reification: REVENUE requires ACTIVE_CUSTOMERS](../reifications/reification-revenue-requires-active-customers.md)
+- [Reification: REVENUE requires -> ACTIVE_CUSTOMERS](../reifications/reification-revenue-requires-active-customers.md)
 ```
 
 ### Important notes

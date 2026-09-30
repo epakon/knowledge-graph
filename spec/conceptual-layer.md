@@ -21,6 +21,8 @@ The conceptual layer holds knowledge that exists independently of any data imple
 
 **What does NOT belong here.** A node that requires a table name, SQL expression, filter predicate, or domain-specific configuration to be meaningful belongs in the logical layer. Governance metadata (ownership, stewardship, classification) belongs as properties on existing nodes — not as new conceptual node types.
 
+**Source-system codes.** A code the business itself speaks in — a document type a finance user names aloud, such as a write-off code — may appear in a Subject definition as a word of business vocabulary. Table names, column names, predicates, and the mapping of a code to a column do not; they live on the Filter, Attribute or BusinessRule the Subject implements. Test: would a business user say it without looking at a database?
+
 ---
 
 ## 2. Node Type Schema

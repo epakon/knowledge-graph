@@ -93,6 +93,10 @@ At the opposite extreme, `relatedTo` is the kind most often promoted — several
 
 Practical implication for agents/authors: before creating a `Reification:` page, check whether the dependency matches one of the four cataloged patterns. If it does, use that kind. If it doesn't fit any pattern but still has genuine business-rule weight, put it on a `BusinessRule` page instead (open-ended prose, linked via the ordinary hyperlink kinds) rather than inventing an ad-hoc sixth reified kind on the spot. Proposing an actual new reified kind is a deliberate spec change, not a per-page decision.
 
+#### `mandatory` vs `requires`
+
+Both say a Filter must be applied; they differ in scope. `Filter mandatory -> Table` applies to every query on the Table, including every Measure the Table calculates. `Measure requires -> Filter` is only for a Filter specific to that one Measure. Do not restate a Table's mandatory Filter as `requires` on each of its Measures: the copies add nothing an agent doesn't already collect through the Table (SPEC.md §8), and they drift when a new Measure is added without them. The `redundant_requires` audit rule flags such copies.
+
 ### Edge conflict rule
 
 A given `(source, target)` pair must have **at most one edge of each type**. When the same pair has both a hyperlink edge and a reified edge covering the same semantic (e.g. `RELATED_TO` and `REQUIRES` between Measure and Filter), the reified edge takes precedence and the weaker `RELATED_TO` should be removed.
@@ -202,6 +206,8 @@ These rules should be validated after every snapshot regeneration:
 | Reified beats hyperlink | If `(source, target)` has both a `RELATED_TO` hyperlink and a reified edge, flag the `RELATED_TO` as redundant |
 | Back-refs not imported | Edges where the label contains `<-` are navigation back-refs — excluded from the edge index |
 | Reification pages flattened | Every Reification page must have a corresponding entry in the edge index with `style: reified` |
+| Redundant `requires` | Flag `Measure requires Filter` when the Filter is `mandatory` for a Table that calculates the Measure |
+| Verified query applies mandatory filters | Informational: for every VerifiedQuery, each Filter `mandatory` for a Table named in its SQL must `implement ->` the query; missing pairs go to review |
 
 ---
 

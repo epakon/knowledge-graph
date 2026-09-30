@@ -41,11 +41,11 @@ The only page type where substantive prose lives. Kept stable — business conce
 - [<Source name>](<URL>) — <one-line description of what this source contributes>
 
 ## Links
-- [Filter: <Name>](path) — Subject: <Name> implement -> Filter: <Name>
-- [Measure: <Name>](path) — Subject: <Name> implement -> Measure: <Name>
-- [Rule: <Name>](path) — Subject: <Name> implement -> Rule: <Name>
-- [Subject: <Name>](path) — Subject: <Name> relatedTo -> Subject: <Name>
-- [Disambiguation: <Term>](path) — Subject: <Name> disambiguate -> Disambiguation: <Term>
+- [Subject: <Name> implement -> Filter: <Name>](path)
+- [Subject: <Name> implement -> Measure: <Name>](path)
+- [Subject: <Name> implement -> Rule: <Name>](path)
+- [Subject: <Name> relatedTo -> Subject: <Name>](path)
+- [Subject: <Name> disambiguate -> Disambiguation: <Term>](path)
 ```
 
 > `## Citations` is optional. Use it to link authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies) that inform the business definition. Do not duplicate the external definition — link to it.
@@ -71,7 +71,7 @@ Abstract thematic grouping of related Subjects. Only create when the grouping ca
 - [<Source name>](<URL>) — <one-line description of what this source contributes>
 
 ## Links
-- [Subject: <Name>](path) — Concept: <Name> comprises -> Subject: <Name>
+- [Concept: <Name> comprises -> Subject: <Name>](path)
 ```
 
 > `## Citations` is optional.
@@ -95,9 +95,9 @@ Named business activity that produces, consumes, or governs data concepts. Only 
 - [<Source name>](<URL>) — <one-line description of what this source contributes>
 
 ## Links
-- [Subject: <Name>](path) — Process: <Name> produces -> Subject: <Name>
-- [Subject: <Name>](path) — Process: <Name> consumes -> Subject: <Name>
-- [Subject: <Name>](path) — Process: <Name> governs -> Subject: <Name>
+- [Process: <Name> produces -> Subject: <Name>](path)
+- [Process: <Name> consumes -> Subject: <Name>](path)
+- [Process: <Name> governs -> Subject: <Name>](path)
 ```
 
 > Use `produces` when the process generates this Subject's data as an output, `consumes` when it needs the data as input, `governs` when it defines the rules that constrain the Subject. A single Process may use all three kinds. `## Citations` is optional.
@@ -172,17 +172,17 @@ The domain page is also the parent container for all type sub-folders. It is the
 | <col>  | dimension \| fact \| time_dimension | <syn> | <note> | — |
 
 ## Reifications
-- [Reification: <Name>](../../reifications/<Name>)
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Joins
-- [Table: <Name>](path) — Table: <TableName> joinedTo -> Table: <Name> on <left_col> = <right_col>
+- [Table: <TableName> joinedTo -> Table: <Name> on <left_col> = <right_col>](path)
 
 ## Caveats
 - <sign conventions, date format, point-in-time vs current-state, etc.>
 
 ## Links
-- [Attribute: <Name>](path) — Table: <TableName> calculate -> Attribute: <Name>
-- [Measure: <Name>](path) — Table: <TableName> calculate -> Measure: <Name>
+- [Table: <TableName> calculate -> Attribute: <Name>](path)
+- [Table: <TableName> calculate -> Measure: <Name>](path)
 ```
 
 > **Note on `## Links` on Table pages:** Only list Attributes and Measures that are **not** already in the `Calculated` column of `## Semantic annotations`. Listing them in both places is a duplicate.
@@ -206,14 +206,14 @@ Promoted computed field. For promotion criteria see [logical-layer.md §8](logic
 <SQL expression or formula>
 
 ## Reifications
-- [Reification: <Name>](../../reifications/<Name>)
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
-- [Table: <Name>](path) — Table: <Name> calculate <- Measure: <Name>
-- [Rule: <Name>](path) — Measure: <Name> relatedTo -> Rule: <Name>
-- [Filter: <Name>](path) — Measure: <Name> relatedTo -> Filter: <Name>
-- [VerifiedQuery: <Name>](path) — Measure: <Name> implement -> VerifiedQuery: <Name>
-- [Subject: <Name>](path) — Subject: <Name> implement <- Measure: <Name>
+- [Table: <Name> calculate <- Measure: <Name>](path)
+- [Measure: <Name> relatedTo -> Rule: <Name>](path)
+- [Measure: <Name> relatedTo -> Filter: <Name>](path)
+- [Measure: <Name> implement -> VerifiedQuery: <Name>](path)
+- [Subject: <Name> implement <- Measure: <Name>](path)
 ```
 
 ---
@@ -240,10 +240,10 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 <What this attribute means semantically. One paragraph.>
 
 ## Links
-- [Table: <Name>](path) — Table: <Name> calculate <- Attribute: <Name>
-- [Rule: <Name>](path) — Attribute: <Name> relatedTo -> Rule: <Name>
-- [Filter: <Name>](path) — Attribute: <Name> relatedTo -> Filter: <Name>
-- [Subject: <Name>](path) — Attribute: <Name> relatedTo -> Subject: <Name>
+- [Table: <Name> calculate <- Attribute: <Name>](path)
+- [Attribute: <Name> relatedTo -> Rule: <Name>](path)
+- [Attribute: <Name> relatedTo -> Filter: <Name>](path)
+- [Attribute: <Name> relatedTo -> Subject: <Name>](path)
 ```
 
 ---
@@ -265,11 +265,11 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ```
 
 ## Reifications
-- [Reification: <Name>](../../reifications/<Name>)
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
-- [Subject: <Name>](path) — Subject: <Name> implement <- Filter: <Name>
-- [VerifiedQuery: <Name>](path) — Filter: <Name> implement -> VerifiedQuery: <Name>
+- [Subject: <Name> implement <- Filter: <Name>](path)
+- [Filter: <Name> implement -> VerifiedQuery: <Name>](path)
 ```
 
 ---
@@ -290,12 +290,12 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 <Exact natural-language question this SQL answers.>
 
 ## Reifications
-- [Reification: <Name>](../../reifications/<Name>)
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
-- [Measure: <Name>](path) — VerifiedQuery: <Name> implement -> Measure: <Name>
-- [Filter: <Name>](path) — VerifiedQuery: <Name> relatedTo -> Filter: <Name>
-- [Rule: <Name>](path) — VerifiedQuery: <Name> relatedTo -> Rule: <Name>
+- [Measure: <Name> implement <- VerifiedQuery: <Name>](path)
+- [Filter: <Name> implement <- VerifiedQuery: <Name>](path)
+- [Rule: <Name> implement <- VerifiedQuery: <Name>](path)
 
 ## SQL
 ```sql
@@ -320,11 +320,11 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 <One sentence — quantify if possible.>
 
 ## Links
-- [Table: <Name>](path) — Rule: <Name> apply -> Table: <Name>
-- [Measure: <Name>](path) — Rule: <Name> apply -> Measure: <Name>
-- [Subject: <Name>](path) — Subject: <Name> implement <- Rule: <Name>
-- [Filter: <Name>](path) — Rule: <Name> relatedTo -> Filter: <Name>
-- [VerifiedQuery: <Name>](path) — Rule: <Name> implement -> VerifiedQuery: <Name>
+- [Rule: <Name> apply -> Table: <Name>](path)
+- [Rule: <Name> apply -> Measure: <Name>](path)
+- [Subject: <Name> implement <- Rule: <Name>](path)
+- [Rule: <Name> relatedTo -> Filter: <Name>](path)
+- [Rule: <Name> implement -> VerifiedQuery: <Name>](path)
 ```
 
 ---
@@ -346,8 +346,8 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Option B: <interpretation label>
 → [<Filter or Rule>: <Name>](path)
 
-## Related
-- [Subject: <Name>](path) — Subject: <Name> disambiguate <- Disambiguation: <Term>
+## Links
+- [Subject: <Name> disambiguate <- Disambiguation: <Term>](path)
 ```
 
 ---
@@ -379,15 +379,15 @@ Represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an
 <Only required if a `uses`-overlap review (consumption-layer.md §8) flagged this agent against another Active agent. One or two sentences: which of the reasonable-overlap axes (audience, orchestration, scope shape) distinguishes them. Omit this section entirely if no overlap was flagged.>
 
 ## Links
-- [Table: <Name>](path) — Agent: <Name> uses -> Table: <Name>
-- [Measure: <Name>](path) — Agent: <Name> uses -> Measure: <Name>
-- [Attribute: <Name>](path) — Agent: <Name> uses -> Attribute: <Name>
-- [Filter: <Name>](path) — Agent: <Name> uses -> Filter: <Name>
-- [Rule: <Name>](path) — Agent: <Name> uses -> Rule: <Name>
-- [VerifiedQuery: <Name>](path) — Agent: <Name> uses -> VerifiedQuery: <Name>
-- [Subject: <Name>](path) — Agent: <Name> uses -> Subject: <Name>
-- [Domain: <Name>](path) — Agent: <Name> uses -> Domain: <Name>
-- [Agent: <surviving>](path) — Agent: <Name> relatedTo -> Agent: <surviving>   ← only if Status: Deprecated, per consumption-layer.md §8.4
+- [Agent: <Name> uses -> Table: <Name>](path)
+- [Agent: <Name> uses -> Measure: <Name>](path)
+- [Agent: <Name> uses -> Attribute: <Name>](path)
+- [Agent: <Name> uses -> Filter: <Name>](path)
+- [Agent: <Name> uses -> Rule: <Name>](path)
+- [Agent: <Name> uses -> VerifiedQuery: <Name>](path)
+- [Agent: <Name> uses -> Subject: <Name>](path)
+- [Agent: <Name> uses -> Domain: <Name>](path)
+- [Agent: <Name> relatedTo -> Agent: <surviving>](path)   ← only if Status: Deprecated, per consumption-layer.md §8.4
 ```
 
 > **Never restate what a `uses` target already says.** If the agent needs a synonym, a join caveat, or a calculation rule to answer correctly, that content lives on the `Attribute`, `BusinessRule`, or `Measure` page it links to — not copied onto this page. See [consumption-layer.md §5](consumption-layer.md#5-relationship-to-existing-content--never-a-second-authored-copy).

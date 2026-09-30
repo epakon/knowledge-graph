@@ -191,11 +191,10 @@ Agent nodes follow [spec/consumption-layer.md](../../spec/consumption-layer.md).
 4. **Present the lineage** as a structured list showing node type, name, and edge kind:
    ```
    Measure: REVENUE
-     --[mandatory]--> Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS
-       --[to]-->      Filter: ACTIVE_CUSTOMERS
-     --[requires]--> Reification: REVENUE requires ACTIVE_CUSTOMERS
-       --[to]-->      Filter: ACTIVE_CUSTOMERS
-     --[implement <-]- VerifiedQuery: REVENUE_BY_REGION
+     --[calculate <-]- Table: ORDERS
+       --[mandatory <-]- Filter: ACTIVE_CUSTOMERS      (Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS)
+     --[requires]-->   Filter: EXCLUDE_TEST_ORDERS     (Reification: REVENUE requires -> EXCLUDE_TEST_ORDERS)
+     --[implement]-->  VerifiedQuery: REVENUE_BY_REGION
      --[implement <-]- Subject: Revenue
    ```
 

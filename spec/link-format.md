@@ -94,7 +94,7 @@ This is the most important distinction in the data model. Two kinds of edges exi
 
 | Kind | Typical source → target | Notes |
 |---|---|---|
-| `implement` | Subject → Filter, Measure, BusinessRule, VerifiedQuery · Measure, BusinessRule, Filter → VerifiedQuery | Not valid between two Subjects |
+| `implement` | Subject → Filter, Measure, BusinessRule, VerifiedQuery · Measure, BusinessRule, Filter → VerifiedQuery | Not valid between two Subjects. To a VerifiedQuery only when the query's SQL applies the source; otherwise `relatedTo` |
 | `relatedTo` | any → any | Generic symmetric cross-link |
 | `calculate` | Table → Attribute, Measure | |
 | `joinedTo` | Table → Table | Symmetric |
@@ -225,7 +225,7 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 | `Measure` | Type, Domain, Kind, Synonyms, Status | `contain <-` Domain · `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
 | `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `contain <-` Domain · `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
 | `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `contain <-` Domain · `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
-| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `contain <-` Domain · `implement ->` Measure · `relatedTo ->/<-` Filter, Rule | Yes (demonstrates) |
-| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject | No |
+| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `contain <-` Domain · `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
+| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | No |
 | `Disambiguation` | Type, Domain | `contain <-` Domain · `disambiguate <-` Subject | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

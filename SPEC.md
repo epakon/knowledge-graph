@@ -225,7 +225,7 @@ This specification uses [Semantic Versioning](https://semver.org):
 Agents must query the knowledge base **before writing any SQL** and **before answering any business question**. The graph encodes the correct SQL construction pattern:
 
 1. **Start at the Measure.** Read its SQL definition — this is the aggregate expression.
-2. **Follow reified edges** (`requires`, `mandatory`) to find Filter pages. Every mandatory filter must appear in the `WHERE` clause.
+2. **Collect the Filters to apply:** the `mandatory` Filters of every Table the Measure is calculated from, plus the Measure's own `requires` Filters. Every one of them must appear in the `WHERE` clause.
 3. **Follow `relatedTo`** to find BusinessRule pages. Each rule specifies additional `WHERE` conditions or computation patterns.
 4. **Check for Disambiguation** if the question contains an ambiguous term. Present the clarifying question to the user before generating SQL.
 5. **Use VerifiedQuery pages** as reference implementations. If an exact match exists, return or adapt the verified SQL rather than generating from scratch.

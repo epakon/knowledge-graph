@@ -71,9 +71,9 @@ Reporting view that combines original FI-CA document items (DFKKOP) with their c
 <!-- TODO: Add Reification pages once mandatory filters and business rules are identified by a domain expert. -->
 
 ## Joins
-- [Table: fact_document_item_base](../fact_document_item_base) — Table: fact_document_items_with_clearing joinedTo -> Table: fact_document_item_base on ClearingDocumentNumber = header_DocumentNumber (cleared CTE only; INNER JOIN)
-- [Table: dim_document_header](../dim_document_header) — Table: fact_document_items_with_clearing joinedTo -> Table: dim_document_header on ClearingDocumentNumber = header_DocumentNumber (INNER JOIN, cleared CTE only; rows with empty ClearingDocumentNumber excluded by WHERE filter)
-- [Table: dim_customer](../dim_customer) — Table: fact_document_items_with_clearing joinedTo -> Table: dim_customer on BusinessPartner = customer_PartnerNumber (LEFT JOIN on final union)
+- [Table: fact_document_items_with_clearing joinedTo -> Table: fact_document_item_base on ClearingDocumentNumber = header_DocumentNumber (cleared CTE only; INNER JOIN)](../fact_document_item_base)
+- [Table: fact_document_items_with_clearing joinedTo -> Table: dim_document_header on ClearingDocumentNumber = header_DocumentNumber (INNER JOIN, cleared CTE only; rows with empty ClearingDocumentNumber excluded by WHERE filter)](../dim_document_header)
+- [Table: fact_document_items_with_clearing joinedTo -> Table: dim_customer on BusinessPartner = customer_PartnerNumber (LEFT JOIN on final union)](../dim_customer)
 
 ## Caveats
 - **Dual-row pattern:** Every cleared document item appears twice — once as the original row (amounts as-is, `ClearedDoc` = `''`) and once as the clearing mirror row (amounts negated, `ClearedDoc` = original `DocumentNumber`). Summing amounts without filtering will double-count unless this pattern is explicitly accounted for.

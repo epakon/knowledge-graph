@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.6.0](#1.6.0) | 2026-09-30 | `requires` limited to measure-specific filters; `implement -> VerifiedQuery` defined; two audit rules; stale-query check; source-system codes in Subjects; templates use edge-statement link text |
 | [1.5.3](#1.5.3) | 2026-09-30 | Consumption-layer clarifications (Goal, §5.1, `sample_questions`); `Concept`/`Process`/`Agent` added to engine adapters and agent skills |
 | [1.5.2](#1.5.2) | 2026-07-27 | Declared `spec/schema.yaml` the single normative source for node/edge schema facts; replaced duplicate node-type and edge-kind tables in `logical-layer.md`/`conceptual-layer.md`/`consumption-layer.md` with pointers, added non-normative disclaimers to `link-format.md`/`neo4j-adapter.md`/connector docs, and added a `governance.md` drift-check |
 | [1.5.1](#1.5.1) | 2026-07-27 | Removed reified edge kind `guards` (no derivation path or worked example anywhere in the spec, unlike `requires`); added missing `Domain -->|contain|` edges to `Attribute` and `Disambiguation`, closing an ownership gap where both were per-domain-scoped but had no domain-owning edge |
@@ -36,6 +37,23 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.6.0] — 2026-09-30
+
+### Changed
+- **`requires` vs `mandatory`** (`logical-layer.md` §2.2, `schema.yaml`, SPEC.md §8 step 2) — `requires` only for a filter specific to one measure; a table's `mandatory` filters already apply to every measure it calculates, and agents collect them through the table.
+- **`implement -> VerifiedQuery`** (`schema.yaml`, `link-format.md`) — used when the query's SQL applies the Measure, Filter or Rule; otherwise `relatedTo`. `demonstrates` replaces it for the same Rule–query pair. `versioning.md` step 3 reviews the queries a changed node implements.
+- **Source-system codes** (`conceptual-layer.md` §1) — codes the business speaks in may appear in a Subject; table and column names, predicates and code-to-column mappings may not.
+- **`page-templates.md`** — link text is the full edge statement, per `link-format.md`; VerifiedQuery links are `implement <-` back-references; Disambiguation `## Related` → `## Links`; Reification links use their edge label. Examples updated to match.
+
+### Added
+- **Audit rules** `redundant_requires` and `vq_applies_mandatory_filters` (informational) in `schema.yaml` and `logical-layer.md` §6.
+- **Stale verified queries** check in `governance.md` §6.
+
+### Notes
+- Non-breaking for the schema. Live pages that use `VerifiedQuery relatedTo -> Filter/Rule` or restate table-level filters as `requires` should be migrated.
 
 ---
 

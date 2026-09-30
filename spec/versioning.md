@@ -80,7 +80,7 @@ When a change is marked `Breaking: yes`:
 
 1. **Update dependent Reification pages** — check `## Consequence if Ignored` for accuracy.
 2. **Notify downstream consumers** — annotate the version comment with `BREAKING CHANGE:` prefix if the backend supports full-text search indexing of version comments.
-3. **Review VerifiedQuery pages** that reference the changed node — their SQL may need updating.
+3. **Review VerifiedQuery pages** that the changed node `implement ->`s — their SQL applies it and may need updating. Re-verify them (new `verified_by`/`verified_at`) or mark them `Superseded`.
 
 ---
 
