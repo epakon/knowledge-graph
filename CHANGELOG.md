@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.6.1](#1.6.1) | 2026-09-30 | `calculate` and `joinedTo` edges on Table pages readable by snapshot pipelines; missing template sections; `uses` may target `Disambiguation` |
 | [1.6.0](#1.6.0) | 2026-09-30 | `requires` limited to measure-specific filters; `implement -> VerifiedQuery` defined; two audit rules; stale-query check; source-system codes in Subjects; templates use edge-statement link text |
 | [1.5.3](#1.5.3) | 2026-09-30 | Consumption-layer clarifications (Goal, §5.1, `sample_questions`); `Concept`/`Process`/`Agent` added to engine adapters and agent skills |
 | [1.5.2](#1.5.2) | 2026-07-27 | Declared `spec/schema.yaml` the single normative source for node/edge schema facts; replaced duplicate node-type and edge-kind tables in `logical-layer.md`/`conceptual-layer.md`/`consumption-layer.md` with pointers, added non-normative disclaimers to `link-format.md`/`neo4j-adapter.md`/connector docs, and added a `governance.md` drift-check |
@@ -37,6 +38,20 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [1.6.1] — 2026-09-30
+
+### Fixed
+- **Table edges lost in snapshots** — the owning `calculate` edge in the `Calculated` column was a plain link and `joinedTo` lived in `## Joins`, which the Markdown pipeline never read. Both pipelines now read both. `joinedTo` links in `## Joins` are edge statements; a `Calculated` cell keeps its short target link (`[Measure: X](path)`), and the column header defines the `calculate` edge, the one documented exception to edge-statement link text (`link-format.md`, SPEC.md §4 and §6, `logical-layer.md` §8, `page-templates.md`, snapshot pipelines, `markdown-adapter.md`).
+- **Missing template sections** — `## Reifications` on Attribute and BusinessRule (for `overrides`), `## Attributes` on Domain (since 1.5.1's `contain -> Attribute`), optional `## Why It Matters` on Disambiguation.
+
+### Added
+- **`uses -> Disambiguation`** (`schema.yaml`, `consumption-layer.md`, Agent template) — agents that ask a Disambiguation's question depend on it.
+
+### Notes
+- Non-breaking. Live Table pages should rewrite `Calculated` links as edge statements.
 
 ---
 

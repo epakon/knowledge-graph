@@ -6,7 +6,7 @@
 
 ## Overview
 
-Every edge between two nodes is encoded as a **self-contained edge statement** embedded as the readable label of a hyperlink in the page body. The entire label is the clickable text — no trailing plain text after the link.
+Every edge between two nodes is encoded as a **self-contained edge statement** embedded as the readable label of a hyperlink in the page body. The entire label is the clickable text — no trailing plain text after the link. The one exception is the `Calculated` column on Table pages, where the column header defines the edge (see the rules below).
 
 This design makes edges human-readable, searchable by semantic search tools, and parseable by scripts without any metadata sidecar.
 
@@ -31,7 +31,8 @@ Reification page link (same label on both From and To pages):
 - The link navigates to the **other** page — never the current page.
 - `->` = owning side (I point to the target). `<-` = back-reference (someone points to me).
 - Reification page links always show `->` regardless of which side they appear on.
-- All hyperlink edges live in a `## Links` section.
+- All hyperlink edges live in a `## Links` section. On Table pages, owning `calculate` edges live in the `Calculated` column of `### Semantic annotations`, and `joinedTo` edges in `## Joins` as edge statements.
+- **Column-defined edge (the one exception to edge-statement link text).** A link in a Table page's `Calculated` column carries only the target label: `[Attribute: X](path)` or `[Measure: X](path)`. The column header defines the edge, so it reads as `Table: <this page> calculate -> <target>`. The back-reference on the target page is still a full edge statement: `[Table: T calculate <- Attribute: X](path)`.
 - Reification page links live in a separate `## Reifications` section.
 
 ---
@@ -221,11 +222,11 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 |---|---|---|---|
 | `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
 | `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | No |
-| `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table · `calculate ->` Attribute · `calculate ->` Measure | Yes |
+| `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table (in `## Joins`) · `calculate ->` Attribute, Measure (in the `Calculated` column) | Yes |
 | `Measure` | Type, Domain, Kind, Synonyms, Status | `contain <-` Domain · `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
-| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `contain <-` Domain · `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | No |
+| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `contain <-` Domain · `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | Yes (overrides) |
 | `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `contain <-` Domain · `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
 | `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `contain <-` Domain · `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
-| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | No |
-| `Disambiguation` | Type, Domain | `contain <-` Domain · `disambiguate <-` Subject | No |
+| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | Yes (overrides) |
+| `Disambiguation` | Type, Domain | `contain <-` Domain · `disambiguate <-` Subject · `uses <-` Agent | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

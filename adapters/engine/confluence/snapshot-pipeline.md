@@ -78,7 +78,8 @@ The edge kind is taken from the link label context:
 |---|---|
 | `## Links` section | Edge kind extracted from the `<ac:link-body>` label |
 | `## Reifications` section | `reifications` (link to a Reification page) |
-| `## Joins` section | `joins` |
+| `## Joins` section | Edge kind extracted from the `<ac:link-body>` label (`joinedTo`) |
+| `Calculated` column of `### Semantic annotations` | Edge kind from the column header: each link emits `Table: <this page> calculate -> <target>`; the `<ac:link-body>` label carries only the target |
 | Other header fields | Field name as-is |
 
 Links to pages outside the scoped node set (e.g. Domain pages) are ignored.

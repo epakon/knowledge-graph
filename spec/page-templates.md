@@ -120,6 +120,9 @@ The domain page is also the parent container for all type sub-folders. It is the
 ## Measures
 - [Measure: <Name>](measures/<Name>)
 
+## Attributes
+- [Attribute: <Name>](attributes/<Name>)
+
 ## Filters
 **Mandatory:**
 - [Filter: <Name>](filters/<Name>)
@@ -185,7 +188,7 @@ The domain page is also the parent container for all type sub-folders. It is the
 - [Table: <TableName> calculate -> Measure: <Name>](path)
 ```
 
-> **Note on `## Links` on Table pages:** Only list Attributes and Measures that are **not** already in the `Calculated` column of `## Semantic annotations`. Listing them in both places is a duplicate.
+> **Note on `## Links` on Table pages:** Only list `calculate` edges to Attributes and Measures that are **not** already in the `Calculated` column of `## Semantic annotations`. Listing them in both places is a duplicate. Snapshot pipelines read edges from `## Links`, the `Calculated` column and `## Joins`. A `Calculated` cell holds only the target label; the column header supplies `Table: <TableName> calculate ->`.
 
 ---
 
@@ -238,6 +241,9 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 
 ## Business Definition
 <What this attribute means semantically. One paragraph.>
+
+## Reifications
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
 - [Table: <Name> calculate <- Attribute: <Name>](path)
@@ -319,6 +325,9 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Consequence if Violated
 <One sentence — quantify if possible.>
 
+## Reifications
+- [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
+
 ## Links
 - [Rule: <Name> apply -> Table: <Name>](path)
 - [Rule: <Name> apply -> Measure: <Name>](path)
@@ -346,9 +355,14 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Option B: <interpretation label>
 → [<Filter or Rule>: <Name>](path)
 
+## Why It Matters
+<Optional. How the interpretations differ and what mixing them does to the answer. Prose.>
+
 ## Links
 - [Subject: <Name> disambiguate <- Disambiguation: <Term>](path)
 ```
+
+> `## Why It Matters` is optional. `## Reifications` on Attribute and BusinessRule pages holds `overrides` edges (BusinessRule → Attribute); leave it empty otherwise.
 
 ---
 
@@ -387,6 +401,7 @@ Represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an
 - [Agent: <Name> uses -> VerifiedQuery: <Name>](path)
 - [Agent: <Name> uses -> Subject: <Name>](path)
 - [Agent: <Name> uses -> Domain: <Name>](path)
+- [Agent: <Name> uses -> Disambiguation: <Term>](path)
 - [Agent: <Name> relatedTo -> Agent: <surviving>](path)   ← only if Status: Deprecated, per consumption-layer.md §8.4
 ```
 

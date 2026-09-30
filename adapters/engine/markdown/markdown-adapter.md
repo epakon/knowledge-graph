@@ -149,7 +149,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 - Use ASCII `->` and `<-` in link text, exactly as specified in [spec/link-format.md](../../../spec/link-format.md).
 - Use relative paths. Never use absolute paths or URLs — the repo may be cloned in different locations.
 - Back-references use `<-` in the link text and point back to the source file.
-- All hyperlink edges live in `## Links`; Reification page links live in `## Reifications`. Do not mix them.
+- All hyperlink edges live in `## Links` (on Table files, also the `Calculated` column and `## Joins`); Reification page links live in `## Reifications`. Do not mix them.
 
 ---
 

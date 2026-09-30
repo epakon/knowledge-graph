@@ -228,7 +228,7 @@ For the full migration procedure, node/edge mapping tables, import examples, and
 
 **Default is inline.** A column that has only a description and no derived expression, rule link, access restriction, or cross-domain usage stays in the Table's `## Fields / Physical columns` section. Promotion to an Attribute or Measure page is the exception, not the rule.
 
-The Table page carries a `### Semantic annotations` section with a `Calculated` column. That column is a **link slot**: when a column has been promoted to its own node, the link to that node goes here. "Calculated" means "this column's semantic payload lives on a separate page" — it is not a criterion for promotion; it is the result of the promotion decision.
+The Table page carries a `### Semantic annotations` section with a `Calculated` column. That column is a **link slot**: when a column has been promoted to its own node, the Table's owning `calculate` edge to that node goes here, as a short link to the target (`[Attribute: X](path)`); the column header defines the edge kind (see `link-format.md`). "Calculated" means "this column's semantic payload lives on a separate page" — it is not a criterion for promotion; it is the result of the promotion decision.
 
 #### Attribute promotion criteria
 
@@ -251,6 +251,6 @@ A simple aggregate over a single column — `SUM(revenue)`, `COUNT(order_id)` �
 
 #### Deduplication rule
 
-Once a column has its own Attribute or Measure page, list it in the `Calculated` column of `## Semantic annotations`. Do **not** also add it to `## Links` — that is a duplicate link.
+Once a column has its own Attribute or Measure page, put the `calculate` edge in the `Calculated` column of `## Semantic annotations`. Do **not** also add it to `## Links` — that is a duplicate edge.
 
 > For how the same concept is linked across multiple domains via the conceptual layer, see [space-structure.md — Cross-domain linking via the conceptual layer](space-structure.md#cross-domain-linking-via-the-conceptual-layer).

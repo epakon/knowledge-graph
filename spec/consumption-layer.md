@@ -64,7 +64,7 @@ CREATE CONSTRAINT FOR (n:Agent) REQUIRE n.name IS UNIQUE;
 
 ### 3.1 `uses` — the only edge kind in this layer
 
-`uses` (`USES`) is `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain` — see `schema.yaml`'s `hyperlink_edge_kinds` section for the full definition. Owning side: `Agent` page. Plain hyperlink — not reified.
+`uses` (`USES`) is `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain, Disambiguation` — see `schema.yaml`'s `hyperlink_edge_kinds` section for the full definition. Owning side: `Agent` page. Plain hyperlink — not reified.
 
 **Why plain hyperlink, not reified.** `uses` is navigational/traceability, the same tier as `contain` or `calculate` — it answers "which agents depend on this node," not "what breaks if this dependency is violated." There is no reason/consequence story to tell for the fact that an agent reads a table, so promoting it to a Reification page would produce an empty page (see [logical-layer.md §3](logical-layer.md#why-this-list-is-closed-for-now) for the general rule).
 

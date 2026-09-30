@@ -135,6 +135,7 @@ graph LR
     Agent -->|uses| VerifiedQuery
     Agent -->|uses| Subject
     Agent -->|uses| Domain
+    Agent -->|uses| Disambiguation
 ```
 
 > Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
@@ -145,7 +146,7 @@ graph LR
 
 Full reference: [spec/link-format.md](spec/link-format.md)
 
-Every edge is encoded as a **self-contained edge statement** embedded as the clickable label of a link in the page body:
+Every edge is encoded as a **self-contained edge statement** embedded as the clickable label of a link in the page body (the `Calculated` column on Table pages is the one exception; see §6):
 
 ```
 Owning side (source page):
@@ -160,7 +161,7 @@ Reification page link (same label on both From and To pages):
 
 Rules:
 - Use ASCII `->` and `<-` — not unicode arrows.
-- All hyperlink edges live in a `## Links` section.
+- All hyperlink edges live in a `## Links` section. On Table pages, owning `calculate` edges live in the `Calculated` column of `### Semantic annotations`, and `joinedTo` edges in `## Joins` as edge statements.
 - Reification page links live in a separate `## Reifications` section.
 - Back-references are navigation shortcuts only — not separate semantic edges.
 
@@ -188,7 +189,7 @@ Each node type has a canonical template defining required header fields, section
 
 - **Prose belongs only on Subject and Disambiguation pages.** All other pages use structured header fields and a predicate/definition block — no explanatory paragraphs.
 - **Keep all fields even if empty** — empty fields are valid; missing fields are not.
-- **Semantic annotations on Table pages** use a `Calculated` column to link to Attribute or Measure pages. A node in the `Calculated` column must not also appear in `## Links` (duplicate).
+- **Semantic annotations on Table pages** use a `Calculated` column for the Table's owning `calculate` edge to a promoted Attribute or Measure, written as a short link to the target (`[Attribute: X](path)`). The column header supplies the rest of the edge statement: the page's Table `calculate ->` the target. The same edge must not also appear in `## Links` (duplicate).
 
 ---
 

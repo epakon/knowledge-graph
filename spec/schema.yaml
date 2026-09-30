@@ -1,6 +1,6 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.6.0
+# Version: 1.6.1
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 #
 # NORMATIVE SOURCE: this file is the single authoritative definition of node
@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "1.6.0"
+spec_version: "1.6.1"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -421,7 +421,7 @@ hyperlink_edge_kinds:
   - kind: uses
     relationship_type: USES
     valid_sources: [Agent]
-    valid_targets: [Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain]
+    valid_targets: [Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain, Disambiguation]
     notes: >
       An Agent reads this node's content to answer questions or generate SQL
       correctly. Owning side: Agent page. Back-reference on the target page:

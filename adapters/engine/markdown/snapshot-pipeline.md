@@ -76,7 +76,7 @@ Two sources of edges:
 
 #### 1. Hyperlinks in `## Links` sections
 
-Every Markdown link in a `## Links` section whose link text is a self-contained edge statement and whose target resolves to a known node file is an edge.
+Every Markdown link in a `## Links` section whose link text is a self-contained edge statement and whose target resolves to a known node file is an edge. On Table files, edge-statement links in `## Joins` are read the same way. Links in the `Calculated` column of `### Semantic annotations` carry only the target label (`[Measure: X](path)`); the pipeline emits `Table: <this file> calculate -> <target>` for each.
 
 The edge kind is extracted from the link text:
 
