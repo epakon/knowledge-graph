@@ -55,11 +55,13 @@ Reification pages live under the domain's `reifications/` container and are disc
 
 A page becomes a **node** when its title matches a known node-type prefix:
 
-- `Subject:`, `Table:`, `Measure:`, `Attribute:`, `Filter:`, `Rule:`
+- `Concept:`, `Subject:`, `Process:`
+- `Table:`, `Measure:`, `Attribute:`, `Filter:`, `Rule:`
 - `Reification:`, `Disambiguation:`, `VerifiedQuery:`
+- `Agent:` — required so `uses` edges reach the edge index, which `agent_overlap_review` and breaking-change propagation read
 
 **Excluded** (not nodes, treated as structural containers):
-- Index/container pages: `subjects`, `tables`, `measures`, `attributes`, `filters`, `rules`, `reifications`, `verified-queries`, `disambiguations`, `vocabulary`
+- Index/container pages: `vocabulary`, `concepts`, `subjects`, `processes`, `ai`, `tables`, `measures`, `attributes`, `filters`, `rules`, `reifications`, `verified-queries`, `disambiguations`
 - Domain pages (`Domain: <Name>`) — excluded by default: Domain pages are navigational containers. Their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning.
 
 ### Edges
@@ -162,7 +164,10 @@ Open `knowledge_graph_graph.ipynb` and run all cells.
 
 | Type | Shape | Color |
 |---|---|---|
+| Concept | Rounded rectangle | `#0052CC` |
 | Subject | Rounded rectangle | `#4C9AFF` |
+| Process | Rounded rectangle | `#57D9A3` |
+| Agent | Rounded rectangle | `#253858` |
 | Table | Rounded rectangle | `#36B37E` |
 | Filter | Rounded rectangle | `#FFAB00` |
 | Measure | Rounded rectangle | `#6554C0` |

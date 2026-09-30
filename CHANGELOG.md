@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.5.3](#1.5.3) | 2026-09-30 | Consumption-layer clarifications (Goal, §5.1, `sample_questions`); `Concept`/`Process`/`Agent` added to engine adapters and agent skills |
 | [1.5.2](#1.5.2) | 2026-07-27 | Declared `spec/schema.yaml` the single normative source for node/edge schema facts; replaced duplicate node-type and edge-kind tables in `logical-layer.md`/`conceptual-layer.md`/`consumption-layer.md` with pointers, added non-normative disclaimers to `link-format.md`/`neo4j-adapter.md`/connector docs, and added a `governance.md` drift-check |
 | [1.5.1](#1.5.1) | 2026-07-27 | Removed reified edge kind `guards` (no derivation path or worked example anywhere in the spec, unlike `requires`); added missing `Domain -->|contain|` edges to `Attribute` and `Disambiguation`, closing an ownership gap where both were per-domain-scoped but had no domain-owning edge |
 | [1.5.0](#1.5.0) | 2026-07-23 | Consumption layer added: `Agent` node type (`ai/`), `uses` edge kind, overlap/deduplication mechanism, `spec/consumption-layer.md` |
@@ -38,6 +39,20 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ---
 
+## [1.5.3] — 2026-09-30
+
+### Changed
+- **`spec/consumption-layer.md`** — Goal paragraph in §1, with every agent (existing ones included, even if overlapping or wrong) recorded as an `Agent` page; new §5.1 (boundary with SPEC.md §8); overlap check never blocks recording an existing agent (§8.3); `sample_questions` limited to questions without a `VerifiedQuery`; §7 interim deployment mapping kept in the knowledge base README.
+- **Engine adapters** — `Concept`, `Process` and `Agent` added wherever node types, containers or colors are listed (snapshot pipelines, Markdown graph API and file layout, Confluence page hierarchy).
+- **Agent skills** — Agent workflow per `consumption-layer.md` §8.3; stale "relationship" and "Related" wording fixed.
+- **`spec/page-templates.md`** — placement test added to General rules for every page type.
+- **`uses` targets** in the SPEC diagram and Agent template aligned with `schema.yaml`.
+
+### Notes
+- Non-breaking; `schema.yaml` unchanged apart from the `sample_questions` description.
+
+---
+
 ## [1.5.2] — 2026-07-27
 
 ### Changed
@@ -53,6 +68,10 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ### Notes
 - Non-breaking: no node type, edge kind, property, or valid source/target changed. This release only changes where the same facts are documented, not what they are.
+
+---
+
+## [1.5.1] — 2026-07-27
 
 ### Removed
 - **Reified edge kind `guards`** (`Filter -> Measure`) — removed from `spec/schema.yaml`, `spec/logical-layer.md` §2.2, `SPEC.md`'s glossary and schema diagram, `spec/page-templates.md`'s Reification template, `spec/link-format.md`, `adapters/engine/neo4j/neo4j-adapter.md`, and all four connector docs (dbt, SAP HANA, SAP S/4HANA). Every connector document listed `guards` as "not derivable automatically" / "no structural signal," and no worked example of it existed anywhere in the spec — unlike `requires` (`Measure -> Filter`), which has a real derivation path from source `filter` metadata and a concrete example (`Reification: REVENUE requires ACTIVE_CUSTOMERS` in `spec/space-structure.md`). The two kinds connected the same `Measure`/`Filter` node pair in opposite directions without a distinct real-world story differentiating `guards` from `requires`. Reified edge kinds are now `mandatory`, `requires`, `overrides`, `demonstrates` (four, not five). **Breaking**: any existing `Reification: ... guards ...` page must be re-evaluated — most likely re-expressed as `requires` in the correct direction, or moved to a `BusinessRule` page if it doesn't fit `requires`'s pattern.

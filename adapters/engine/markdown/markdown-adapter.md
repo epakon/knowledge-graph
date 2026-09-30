@@ -27,7 +27,10 @@ Each file is named `<lowercase-type>-<kebab-name>.md`:
 
 | Node type | Filename pattern | Example |
 |---|---|---|
+| `Concept` | `concept-<name>.md` | `concept-liquidity.md` |
 | `Subject` | `subject-<name>.md` | `subject-write-off.md` |
+| `Process` | `process-<name>.md` | `process-period-close.md` |
+| `Agent` | `agent-<name>.md` | `agent-sales-assistant.md` |
 | `Domain` | `domain-<name>.md` | `domain-sales.md` |
 | `Table` | `table-<name>.md` | `table-orders.md` |
 | `Measure` | `measure-<name>.md` | `measure-revenue.md` |
@@ -50,8 +53,15 @@ Mirrors the canonical hierarchy from [spec/space-structure.md](../../spec/space-
 <repo-root>/knowledge-graph/
 │
 ├── vocabulary/
-│   └── subjects/
-│       └── subject-<name>.md
+│   ├── concepts/
+│   │   └── concept-<name>.md
+│   ├── subjects/
+│   │   └── subject-<name>.md
+│   └── processes/
+│       └── process-<name>.md
+│
+├── ai/
+│   └── agent-<name>.md
 │
 └── <domain>/
     ├── domain-<name>.md          (domain index file)

@@ -130,9 +130,12 @@ graph LR
 
     Agent -->|uses| Table
     Agent -->|uses| Measure
+    Agent -->|uses| Attribute
+    Agent -->|uses| Filter
     Agent -->|uses| BusinessRule
     Agent -->|uses| VerifiedQuery
     Agent -->|uses| Subject
+    Agent -->|uses| Domain
 ```
 
 > Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
@@ -216,7 +219,7 @@ This specification uses [Semantic Versioning](https://semver.org):
 
 ## 8. Agent Integration
 
-> **Terminology note.** "Agent" in this section means any AI system reading the knowledge base — the generic sense used throughout this spec. `Agent` the node type (capitalized, [spec/consumption-layer.md](spec/consumption-layer.md)) is a specific, narrower thing: a page representing one named consumption surface (a Cortex Agent, a Claude/Cursor Skill) and what it's for. Every agent in the generic sense should follow the workflow below; only some of them will also have a corresponding `Agent` page.
+> **Terminology note.** "Agent" in this section means any AI system reading the knowledge base — the generic sense used throughout this spec. `Agent` the node type (capitalized, [spec/consumption-layer.md](spec/consumption-layer.md)) is a specific, narrower thing: a page representing one named consumption surface (a Cortex Agent, a Claude/Cursor Skill) and what it's for. Every agent in the generic sense should follow the workflow below; each named consumption surface among them also has an `Agent` page ([spec/consumption-layer.md §1](spec/consumption-layer.md)), while an ad-hoc session reading the graph does not.
 
 ### How agents consume the knowledge base
 

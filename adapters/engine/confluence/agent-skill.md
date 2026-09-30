@@ -16,13 +16,16 @@ This table maps natural-language user requests to the workflow that handles them
 | "What does `<term>` mean?" | Search → Subject or Disambiguation page → answer from Business Definition | A — Read |
 | "What is the `<measure>` formula?" | Search → Measure page → return Definition + `## Links` (Table sources) | A — Read |
 | "Which filters are mandatory for table T?" | Search → Reification pages where kind=`mandatory` and To=T | A — Read |
-| "Show lineage for measure X" | Fetch Measure page → follow Reification + Related links to Filters, Rules, Tables | D — Navigate |
+| "Show lineage for measure X" | Fetch Measure page → follow `## Reifications` and `## Links` to Filters, Rules, Tables | D — Navigate |
 | "What depends on filter F?" | Search for pages referencing `Filter: F` → traverse downstream | D — Navigate |
+| "Which agents use `<node>`?" | Fetch the node's page → read the `uses <-` back-references in `## Links` | D — Navigate |
 | "Show me verified SQL for question Q" | Search → VerifiedQuery page matching Q → return SQL | A — Read |
 | "What are the onboarding questions for domain D?" | Search VerifiedQuery pages with `Onboarding question: Yes` in domain D | A — Read |
 | "Update `<measure>` — change `<field>` to `<value>`" | Fetch page → confirm change → update with version comment | C — Update |
 | "Add a new `<node type>` for `<name>`" | Draft page using template → confirm → create → update parent | B — Write |
 | "Add this SQL as a verified query" | Create VerifiedQuery page → link from Measure + Domain pages | B — Write |
+| "Add an agent for `<purpose>`" | Run the `uses`-overlap check → draft Agent page → confirm → create under `ai/` | B — Write |
+| "Record the existing agent `<name>`" | Draft Agent page from the deployed agent as it is → run the `uses`-overlap check, report findings without blocking → confirm → create under `ai/` | B — Write |
 | "Create a new domain for `<Domain>`" | Create domain index + scaffold all type container pages | B — Write |
 | "What changed in `<page>` last month?" | Fetch version history → parse version comments → summarize | E — Version history |
 | "Roll back `<page>` to before `<date>`" | Fetch version history → retrieve target version → apply via Workflow C | E → C |
@@ -69,6 +72,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - Concept meaning → **Subject** page first.
    - Specific filter/measure/rule → that node's page directly.
    - Verified SQL → **VerifiedQuery** page.
+   - Which agent answers a question, or what an agent reads → **Agent** page, then its `uses` links.
 
 3. **Fetch the page** with `confluence_get_page`.
 
@@ -80,7 +84,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 ## Workflow B — Write: add a new page
 
-**Trigger:** user asks to add a new measure, filter, rule, verified query, subject, relationship, or disambiguation page — single or batch.
+**Trigger:** user asks to add a new concept, subject, process, table, measure, attribute, filter, rule, verified query, reification, disambiguation, or agent page — single or batch.
 
 ### Steps
 
@@ -117,6 +121,15 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - Fetch the parent, add the link under the correct section.
    - Native version comment: `Summary: Added link to <new page>. Changed: <section>. Reason: New page created. Breaking: no`
 
+### Additional steps for Agent pages
+
+Agent pages follow [spec/consumption-layer.md](../../spec/consumption-layer.md). Before step 4:
+
+1. **Every agent gets an Agent page** (consumption-layer §1), including agents already deployed. For a new agent, do not build one that duplicates an existing agent or reads the wrong nodes. For an existing agent, record it as it is, even if it overlaps or is wrong: the page is what makes its impact visible.
+2. **Run the overlap check** (§8.3). List the nodes the agent will `uses`, then compare that set with the `uses` set of every `Active` Agent page (Jaccard similarity). For each high-overlap pair, walk through the reasonable-overlap test (§8.2) with the user. A true duplicate means extending the existing agent instead; otherwise record the answer in the new page's `## Differentiation` section. When recording an existing agent, the check never blocks: record the findings and hand them to review (§8.2, §8.4).
+3. **Keep the page to the agent's own behavior** (§5, §5.1): purpose, the response and orchestration instructions that differ for this agent, and sample questions that have no VerifiedQuery yet. Rules, synonyms and join caveats go on the nodes the agent uses. No vendor syntax (§2.1); record the deployed artifact in the knowledge base's repository README (§7). When recording an existing agent, do not copy rules its deployed instructions restate; link the nodes via `uses`, and report any place where the deployed text contradicts a node as a finding for review.
+4. **Place it under `ai/`** and add the `uses <-` back-reference to the `## Links` of every target page in the same batch.
+
 ---
 
 ## Workflow C — Update: edit an existing page
@@ -150,7 +163,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - `body`: updated content
    - Version comment in the required format (see [spec/versioning.md](../../spec/versioning.md))
 
-6. **If breaking:** check Reification pages referencing this node — update `## Consequence if Ignored` if needed.
+6. **If breaking:** check Reification pages referencing this node — update `## Consequence if Ignored` if needed. Also list the Agent pages that use this node (the `uses <-` back-references in its `## Links`) in the change summary, so their owners see the breaking change.
 
 ### Steps for bulk updates (6+ pages)
 

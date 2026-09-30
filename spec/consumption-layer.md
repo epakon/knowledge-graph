@@ -13,6 +13,14 @@
 
 The consumption layer holds knowledge about **who reads the graph and how they should behave when they do** — as opposed to the conceptual layer (what the business means) or the logical layer (how it's implemented in SQL). It is the only layer whose nodes are not, themselves, business or technical facts about the data warehouse — they are facts about a consumer of the graph.
 
+**Goal.** Recording each agent and the nodes it `uses` lets the graph itself answer three questions, each detailed in its own section:
+
+1. **Impact** — which agents answer differently when a Table, Measure, or Rule changes? Answered by `uses <-` back-references and the existing breaking-change propagation (§3, §5).
+2. **One definition, many deployments** — what is this agent for and how must it behave? Answered once, vendor-neutral, on the `Agent` page, and rendered by consumer adapters without restating what the agent reads (§5, §7).
+3. **Sprawl** — does an agent for this already exist? Answered by comparing `uses` sets across active agents (§8).
+
+These answers are only as complete as the set of recorded agents, so **every agent that reads the graph gets an `Agent` page** — including agents already deployed that overlap another agent or read the wrong nodes. An unrecorded agent is invisible to impact analysis and overlap review; recording a flawed agent as it is makes its flaws visible, and fixing or merging it follows §8. What the spec discourages is *building* a new agent that duplicates an existing one or reads the wrong nodes, not recording one that exists.
+
 **The stability test.** A node belongs in this layer if it would still be meaningful after swapping the underlying delivery technology — an LLM agent replaced by a different agent framework, a Snowflake Cortex Agent replaced by a Claude/Cursor Skill, this year's orchestration model replaced by next year's. "This agent answers questions about order and revenue data and must always disclose which semantic view it used" survives that swap. "Set `orchestration.budget.seconds` to 120" does not — that is a Cortex-specific deployment detail and belongs in a consumer adapter, never on the node itself.
 
 | Property | Value |
@@ -39,7 +47,7 @@ An `Agent` is a defined AI consumption surface — a Snowflake Cortex Agent, a C
 | `purpose` | string | Yes | One sentence — what this agent answers questions about. No SQL, no vendor syntax. |
 | `response_instructions` | string | No | Vendor-neutral rules for how the agent should format or present answers (e.g. always disclose which node was used, never substitute an inaccessible view). |
 | `orchestration_instructions` | string | No | Vendor-neutral rules for choosing between multiple tools/views and routing a question to the right one. |
-| `sample_questions` | list[string] | No | Representative questions this agent is expected to answer. |
+| `sample_questions` | list[string] | No | Representative in-scope questions that have no `VerifiedQuery` yet. A question with verified SQL is a `VerifiedQuery` node linked via `uses`, not repeated here. |
 | `status` | enum (`Active`, `Deprecated`) | Yes | `Deprecated` means this agent has been merged into or superseded by another — see §8. A consumer adapter must treat `Deprecated` as "do not render or keep deployed," not merely a note. |
 
 Everything vendor-specific — Cortex's `orchestration.budget.seconds`, a Claude Skill's `allowed-tools`, Snowflake's requirement that `skills: []` stay empty — is a rendering detail owned by the relevant consumer adapter (§7), never a property on this node. If a property only makes sense for one vendor's syntax, it fails this layer's stability test (§1) and does not belong here.
@@ -98,6 +106,14 @@ Because `Agent` participates in ordinary graph edges, it automatically inherits 
 - **Staleness monitoring** (`governance.md` §6) — the existing "stale rule" check (a dependency edited more recently than the page that depends on it) applies to `Agent` pages the same way it applies to any other dependent page.
 - **Review-required classification** (`governance.md` §3a) — an edit to `Agent.response_instructions` or `orchestration_instructions` that changes what SQL gets generated is review-required, the same tier as editing a `BusinessRule.definition`.
 
+### 5.1 Boundary with the generic agent workflow
+
+[SPEC.md §8](../SPEC.md#8-agent-integration) defines the reading protocol every agent follows, with or without an `Agent` page: start at the Measure, apply mandatory filters, ask the Disambiguation question first, prefer VerifiedQuery SQL. That protocol is not restated in `orchestration_instructions` or `response_instructions`; those fields hold only what differs for this one agent (its audience, its tools, its routing).
+
+This is the general placement test ([page-templates.md — General rules](page-templates.md#general-rules)) applied to `Agent` pages: a sentence true of every agent belongs in SPEC.md §8, a sentence true of a node no matter which agent reads it belongs on that node, and only the rest stays on the `Agent` page.
+
+The same rule applies to `sample_questions`: a question that already has verified SQL is a `VerifiedQuery` linked via `uses`, not a sample question (§2.1).
+
 ---
 
 ## 6. Why only one node type today
@@ -110,7 +126,7 @@ If a second consumption-layer node type is ever proposed (a scheduled job, a non
 
 ## 7. Rendering — consumer adapters
 
-Compiling an `Agent` node plus its `uses` targets into a specific vendor's format (Cortex Agent DDL, a Claude/Cursor `SKILL.md`, an MCP tool definition) is the job of a **consumer adapter** — a new adapter category alongside the existing `adapters/engine/` (content storage) and `adapters/connectors/` (source systems): `adapters/consumers/`. Each consumer adapter documents its own mapping from `Agent` + `uses` targets to that vendor's syntax, the same four-document contract shape the engine adapters already use. No consumer adapter exists yet in this repository; this section reserves the category for when one is authored.
+Compiling an `Agent` node plus its `uses` targets into a specific vendor's format (Cortex Agent DDL, a Claude/Cursor `SKILL.md`, an MCP tool definition) is the job of a **consumer adapter** — a new adapter category alongside the existing `adapters/engine/` (content storage) and `adapters/connectors/` (source systems): `adapters/consumers/`. Each consumer adapter documents its own mapping from `Agent` + `uses` targets to that vendor's syntax, the same four-document contract shape the engine adapters already use. No consumer adapter exists yet in this repository; this section reserves the category for when one is authored. Until one does, record the mapping from `Agent` node to deployed artifact (agent name, semantic view, skill path) in the knowledge base's repository README or equivalent — outside any node, so the node still passes the stability test.
 
 A consumer adapter **must** check `Agent.status` before rendering or deploying anything: `Deprecated` means do not render, and if a previously-deployed artifact exists for this agent, decommission or redirect it. This is what makes §8's merge procedure actually reach the user instead of stopping at the graph page.
 
@@ -137,6 +153,7 @@ If none of these differ — same `uses` set, same audience, same routing, differ
 ### 8.3 Where the check runs
 
 - **At creation** — the duplicate-check step every new page already goes through (`agent-skill.md` Workflow B) is extended for `Agent` specifically: run the `uses`-overlap check against existing `Active` agents before creating a new one. Non-blocking — if the author has a real answer against §8.2, they proceed, but must record it once on the new page as a `## Differentiation` section (see the page template) so the next overlap review doesn't re-raise a question that was already answered.
+- **At registration of an existing agent** — the same check runs when an already-deployed agent is recorded (§1), but its result never blocks recording. A high-overlap or incorrect agent is recorded as it is, and the finding goes to review (§8.2, §8.4).
 - **On a schedule** — two agents built independently by different teams can converge over time as their `uses` sets grow, with neither author aware of the other. Add `agent_overlap_review` (see `schema.yaml`) to `governance.md` §6's recurring monitoring rather than treating this as a creation-time-only check.
 
 ### 8.4 Merge procedure

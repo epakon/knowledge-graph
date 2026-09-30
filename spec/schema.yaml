@@ -101,7 +101,10 @@ node_types:
       - name: sample_questions
         type: list[string]
         required: false
-        description: Representative questions this agent is expected to answer.
+        description: >
+          Representative in-scope questions that have no VerifiedQuery yet.
+          A question with verified SQL is a VerifiedQuery node linked via
+          "uses", not repeated here.
       - name: status
         type: enum
         values: [Active, Deprecated]

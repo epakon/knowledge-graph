@@ -14,13 +14,16 @@
 | "What does `<term>` mean?" | Search → Subject or Disambiguation file → answer from Business Definition | A — Read |
 | "What is the `<measure>` formula?" | Search → Measure file → return Definition + `## Links` (Table sources) | A — Read |
 | "Which filters are mandatory for table T?" | Search Reification files where kind=`mandatory` and To=T | A — Read |
-| "Show lineage for measure X" | Fetch Measure file → follow Reification + Related links to Filters, Rules, Tables | D — Navigate |
+| "Show lineage for measure X" | Fetch Measure file → follow `## Reifications` and `## Links` to Filters, Rules, Tables | D — Navigate |
 | "What depends on filter F?" | Search for files referencing `Filter: F` → traverse downstream | D — Navigate |
+| "Which agents use `<node>`?" | Fetch the node's file → read the `uses <-` back-references in `## Links` | D — Navigate |
 | "Show me verified SQL for question Q" | Search → VerifiedQuery file matching Q → return SQL | A — Read |
 | "What are the onboarding questions for domain D?" | Search VerifiedQuery files with `onboarding_question: true` in domain D | A — Read |
 | "Update `<measure>` — change `<field>` to `<value>`" | Read file → confirm change → write file → commit with version comment | C — Update |
 | "Add a new `<node type>` for `<name>`" | Draft file using template → confirm → write file → update domain index → commit | B — Write |
 | "Add this SQL as a verified query" | Create VerifiedQuery file → add link from Measure + Domain files → commit | B — Write |
+| "Add an agent for `<purpose>`" | Run the `uses`-overlap check → draft Agent file → confirm → write file under `ai/` → commit | B — Write |
+| "Record the existing agent `<name>`" | Draft Agent file from the deployed agent as it is → run the `uses`-overlap check, report findings without blocking → confirm → write file under `ai/` → commit | B — Write |
 | "Create a new domain for `<Domain>`" | Create domain directory scaffold + domain index file | B — Write |
 | "What changed in `<file>` last month?" | `git log` on the file → parse version comments from commit messages → summarize | E — Version history |
 | "Roll back `<file>` to before `<date>`" | `git log` → find target commit → retrieve that version → apply via Workflow C | E → C |
@@ -69,6 +72,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
    - Concept meaning → **Subject** file first.
    - Specific filter/measure/rule → that node's file directly.
    - Verified SQL → **VerifiedQuery** file.
+   - Which agent answers a question, or what an agent reads → **Agent** file, then its `uses` links.
 
 3. **Read the file.**
 
@@ -80,7 +84,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 ## Workflow B — Write: add a new file
 
-**Trigger:** user asks to add a new measure, filter, rule, verified query, subject, relationship, or disambiguation — single or batch.
+**Trigger:** user asks to add a new concept, subject, process, table, measure, attribute, filter, rule, verified query, reification, disambiguation, or agent — single or batch.
 
 ### Steps
 
@@ -112,8 +116,18 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 6. **Draft and write each file.** Show the draft to the user before writing.
 
 7. **After each file is created**, update the domain index file (`domain-<name>.md`) to add a link to the new file under the correct section. Commit message: `Summary: Added link to <new file>. Changed: <section>. Reason: New file created. Breaking: no`
+   Global nodes (Concept, Subject and Process under `vocabulary/`, Agent under `ai/`) have no domain index; skip this step for them.
 
 8. **Commit** all new files and domain index updates together with a structured version comment.
+
+### Additional steps for Agent files
+
+Agent files follow [spec/consumption-layer.md](../../spec/consumption-layer.md). Before step 4:
+
+1. **Every agent gets an Agent file** (consumption-layer §1), including agents already deployed. For a new agent, do not build one that duplicates an existing agent or reads the wrong nodes. For an existing agent, record it as it is, even if it overlaps or is wrong: the file is what makes its impact visible.
+2. **Run the overlap check** (§8.3). List the nodes the agent will `uses`, then compare that set with the `uses` set of every `Active` Agent file (Jaccard similarity). For each high-overlap pair, walk through the reasonable-overlap test (§8.2) with the user. A true duplicate means extending the existing agent instead; otherwise record the answer in the new file's `## Differentiation` section. When recording an existing agent, the check never blocks: record the findings and hand them to review (§8.2, §8.4).
+3. **Keep the file to the agent's own behavior** (§5, §5.1): purpose, the response and orchestration instructions that differ for this agent, and sample questions that have no VerifiedQuery yet. Rules, synonyms and join caveats go on the nodes the agent uses. No vendor syntax (§2.1); record the deployed artifact in the knowledge base's repository README (§7). When recording an existing agent, do not copy rules its deployed instructions restate; link the nodes via `uses`, and report any place where the deployed text contradicts a node as a finding for review.
+4. **Place it under `ai/`** and add the `uses <-` back-reference to the `## Links` of every target file in the same commit.
 
 ---
 
@@ -145,7 +159,7 @@ See [graph-api.md](graph-api.md) for Knowledge Graph API patterns.
 
 5. **Write the updated file** and commit with a structured version comment (see [spec/versioning.md](../../spec/versioning.md)).
 
-6. **If breaking:** find Reification files referencing this node — update `## Consequence if Ignored` if needed.
+6. **If breaking:** find Reification files referencing this node — update `## Consequence if Ignored` if needed. Also list the Agent files that use this node (the `uses <-` back-references in its `## Links`) in the change summary, so their owners see the breaking change.
 
 ### Steps for bulk updates (6+ files)
 

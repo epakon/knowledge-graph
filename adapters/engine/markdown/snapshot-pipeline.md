@@ -61,8 +61,10 @@ python kg_snapshot_markdown.py \
 
 A `.md` file becomes a **node** when its `type` frontmatter field matches a known node type:
 
-- `Subject`, `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`
+- `Concept`, `Subject`, `Process`
+- `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`
 - `Reification`, `Disambiguation`, `VerifiedQuery`
+- `Agent` — required so `uses` edges reach the edge index, which `agent_overlap_review` and breaking-change propagation read
 
 **Excluded** (not nodes, treated as structural containers):
 - Files with no `type` frontmatter field (index files, READMEs)

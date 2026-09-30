@@ -11,6 +11,7 @@
 - **Prose belongs only on Subject and Disambiguation pages.** All other pages use structured header fields and a predicate/definition block — no explanatory paragraphs.
 - **Keep all template fields even if empty** — empty fields are valid; omitting fields breaks schema compliance.
 - **Do not add non-template sections** unless the node type explicitly allows it.
+- **Write each statement where it is true** (placement test). If it would be true of every node of a type, or of every agent reading the graph, it belongs in the spec (the node type's definition, or the reading protocol in [SPEC.md §8](../SPEC.md#8-agent-integration)), not on a page. If it is true of one node no matter which page or agent refers to it, it belongs on that node's page, and other pages link to it instead of restating it. Only what remains stays on the current page.
 - For link syntax, see [link-format.md](link-format.md).
 
 ### Header fields vs ## Links — one-to-many rule
@@ -371,7 +372,7 @@ Represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an
 <Vendor-neutral rules for choosing between tools/views and routing a question.>
 
 ## Sample Questions
-- <question>
+- <in-scope question with no VerifiedQuery yet — questions with verified SQL are linked below via `uses`>
 - <question>
 
 ## Differentiation
@@ -380,9 +381,12 @@ Represents one AI consumption surface (a Cortex Agent, a Claude/Cursor Skill, an
 ## Links
 - [Table: <Name>](path) — Agent: <Name> uses -> Table: <Name>
 - [Measure: <Name>](path) — Agent: <Name> uses -> Measure: <Name>
-- [BusinessRule: <Name>](path) — Agent: <Name> uses -> Rule: <Name>
+- [Attribute: <Name>](path) — Agent: <Name> uses -> Attribute: <Name>
+- [Filter: <Name>](path) — Agent: <Name> uses -> Filter: <Name>
+- [Rule: <Name>](path) — Agent: <Name> uses -> Rule: <Name>
 - [VerifiedQuery: <Name>](path) — Agent: <Name> uses -> VerifiedQuery: <Name>
 - [Subject: <Name>](path) — Agent: <Name> uses -> Subject: <Name>
+- [Domain: <Name>](path) — Agent: <Name> uses -> Domain: <Name>
 - [Agent: <surviving>](path) — Agent: <Name> relatedTo -> Agent: <surviving>   ← only if Status: Deprecated, per consumption-layer.md §8.4
 ```
 

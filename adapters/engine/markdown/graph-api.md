@@ -76,8 +76,8 @@ BFS walk of the entire KG directory tree, filtered to files that have a recognis
 
 ```python
 KG_NODE_TYPES = {
-    "Subject", "Domain", "Table", "Measure", "Attribute",
-    "Filter", "VerifiedQuery", "BusinessRule", "Reification", "Disambiguation"
+    "Concept", "Subject", "Process", "Domain", "Table", "Measure", "Attribute",
+    "Filter", "VerifiedQuery", "BusinessRule", "Reification", "Disambiguation", "Agent"
 }
 
 def collect_kg_pages(root: Path) -> list[dict]:
@@ -113,7 +113,10 @@ Derives the canonical file path for a node from its type and name. Use this to r
 ```python
 def name_to_path(root: Path, node_type: str, name: str) -> Path:
     TYPE_DIRS = {
+        "Concept": "vocabulary/concepts",
         "Subject": "vocabulary/subjects",
+        "Process": "vocabulary/processes",
+        "Agent": "ai",
         "Table": "{domain}/tables",
         "Measure": "{domain}/measures",
         "Attribute": "{domain}/attributes",
