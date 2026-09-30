@@ -57,14 +57,15 @@ Agent builds correct SQL / answers / instructions without hallucinating business
   - [adapters.md](adapters/adapters.md) — Adapter taxonomy: engine adapters, connectors, addons
   - **engine/** — Graph engine and content storage adapters
     - [engine.md](adapters/engine/engine.md) — Engine adapter contract: content storage capability requirements, four-document contract, graph DB category
+    - [agent-skill.md](adapters/engine/agent-skill.md) — Core agent workflows (engine-neutral): Read, Write, Update, Navigate, Version history
     - **confluence/** — Confluence content storage adapter
       - [confluence-adapter.md](adapters/engine/confluence/confluence-adapter.md) — Storage format, MCP tools, link encoding, Glean/Cortex integration
-      - [agent-skill.md](adapters/engine/confluence/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
+      - [agent-skill.md](adapters/engine/confluence/agent-skill.md) — Confluence tooling for the core agent workflows
       - [graph-api.md](adapters/engine/confluence/graph-api.md) — Knowledge Graph API for programmatic graph operations
       - [snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) — Confluence → JSON snapshot → graph visualization pipeline
     - **markdown/** — Markdown files in git content storage adapter
       - [markdown-adapter.md](adapters/engine/markdown/markdown-adapter.md) — File format, YAML frontmatter, directory structure, link encoding, git versioning, auto-generation guidance
-      - [agent-skill.md](adapters/engine/markdown/agent-skill.md) — Agent workflows: Read, Write, Update, Navigate, Version history
+      - [agent-skill.md](adapters/engine/markdown/agent-skill.md) — Markdown tooling for the core agent workflows
       - [graph-api.md](adapters/engine/markdown/graph-api.md) — Knowledge Graph API for programmatic file operations
       - [snapshot-pipeline.md](adapters/engine/markdown/snapshot-pipeline.md) — Markdown file tree → JSON snapshot → graph visualization pipeline; multi-backend index merge
       - **addons/**

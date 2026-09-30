@@ -44,8 +44,9 @@ Versioning follows [Semantic Versioning](https://semver.org):
 ### Changed
 - **`spec/consumption-layer.md`** — Goal paragraph in §1, with every agent (existing ones included, even if overlapping or wrong) recorded as an `Agent` page; new §5.1 (boundary with SPEC.md §8); overlap check never blocks recording an existing agent (§8.3); `sample_questions` limited to questions without a `VerifiedQuery`; §7 interim deployment mapping kept in the knowledge base README.
 - **Engine adapters** — `Concept`, `Process` and `Agent` added wherever node types, containers or colors are listed (snapshot pipelines, Markdown graph API and file layout, Confluence page hierarchy).
-- **Agent skills** — Agent workflow per `consumption-layer.md` §8.3; stale "relationship" and "Related" wording fixed.
+- **Agent skills** — workflows, intents and common constraints moved to one engine-neutral [`adapters/engine/agent-skill.md`](adapters/engine/agent-skill.md); backend skills reduced to a tooling map (`engine.md` §2 updated). Agent workflow per `consumption-layer.md` §8.3; stale "relationship" and "Related" wording fixed.
 - **`spec/page-templates.md`** — placement test added to General rules for every page type.
+- **`SPEC.md`** — incomplete, Confluence-only §9 Tooling merged into Adapters (now §9, Version History §10); §8 terminology note aligned with consumption-layer §1.
 - **`uses` targets** in the SPEC diagram and Agent template aligned with `schema.yaml`.
 
 ### Notes

@@ -14,9 +14,8 @@
 6. [Page Templates](#6-page-templates)
 7. [Versioning](#7-versioning)
 8. [Agent Integration](#8-agent-integration)
-9. [Tooling](#9-tooling)
-10. [Backend Adapters](#10-backend-adapters)
-11. [Version History](#11-version-history)
+9. [Adapters](#9-adapters)
+10. [Version History](#10-version-history)
 
 ---
 
@@ -264,24 +263,12 @@ When search returns multiple results, prefer the page whose title prefix matches
 
 ---
 
-## 9. Tooling
+## 9. Adapters
 
-Reference implementations and tooling design are documented in `adapters/`:
-
-| Document | Purpose |
-|---|---|
-| [adapters/engine/confluence/snapshot-pipeline.md](adapters/engine/confluence/snapshot-pipeline.md) | Crawl pages → JSON snapshot → interactive graph visualization |
-| [adapters/engine/confluence/graph-api.md](adapters/engine/confluence/graph-api.md) | Knowledge Graph API for programmatic graph operations (bulk updates, migration, graph DB import) |
-| [adapters/engine/confluence/agent-skill.md](adapters/engine/confluence/agent-skill.md) | Agent operational spec: five workflows with step-by-step instructions |
+The spec is backend-agnostic. Adapters connect the Knowledge Graph to storage systems, graph databases, and source systems. The full adapter taxonomy — engine adapters, connectors, and addons — is defined in [`adapters/adapters.md`](adapters/adapters.md). Every content storage adapter provides the four documents listed in [`adapters/engine/engine.md`](adapters/engine/engine.md) (backend mapping, agent tooling map, Knowledge Graph API, snapshot pipeline); the engine-neutral agent workflows are in the [core agent skill](adapters/engine/agent-skill.md).
 
 ---
 
-## 10. Adapters
-
-The spec is backend-agnostic. Adapters connect the Knowledge Graph to storage systems, graph databases, and source systems. The full adapter taxonomy — engine adapters, connectors, and addons — is defined in [`adapters/adapters.md`](adapters/adapters.md).
-
----
-
-## 11. Version History
+## 10. Version History
 
 See [CHANGELOG.md](CHANGELOG.md) for the full release history.

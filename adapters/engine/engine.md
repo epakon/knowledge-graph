@@ -46,9 +46,9 @@ Maps each spec concept to the backend-specific construct:
 
 Also covers: naming conventions, common pitfalls, backend-specific constraints.
 
-**2. `agent-skill.md` — Agent operational spec**
+**2. `agent-skill.md` — Agent tooling map**
 
-Must cover five workflows:
+The workflows, supported intents and common constraints are engine-neutral and defined once in the [core agent skill](agent-skill.md), which covers five workflows:
 
 | Workflow | Trigger |
 |---|---|
@@ -58,7 +58,7 @@ Must cover five workflows:
 | D — Navigate | User asks for lineage, dependencies, or graph traversal |
 | E — Version history | User asks what changed, who changed it, or wants to roll back |
 
-For each workflow: step-by-step instructions using backend-specific tooling, threshold for switching from direct operations to the Knowledge Graph API (default: ≤5 nodes → direct, 6+ → API), and always-apply constraints.
+The backend's `agent-skill.md` does not restate them. It covers only what differs per backend: prerequisites (access, location), a mapping of every core backend operation (find by name, find references, read, create, update, index update, record version, history, restore) to backend tooling, further cases that call for the Knowledge Graph API, and backend-specific constraints.
 
 **3. `graph-api.md` — Knowledge Graph API**
 
