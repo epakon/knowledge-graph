@@ -1,6 +1,6 @@
 # Confluence Adapter
 
-> Implementation guide for the [Knowledge Graph Specification](../../SPEC.md) on Atlassian Confluence.
+> Implementation guide for the [Knowledge Graph Specification](../../../SPEC.md) on Atlassian Confluence.
 
 This document describes how the backend-agnostic spec maps to Confluence-specific constructs: the storage format, MCP tools, page hierarchy, and link encoding.
 
@@ -21,7 +21,7 @@ This document describes how the backend-agnostic spec maps to Confluence-specifi
 
 ## Joins vs. Reification pages — naming disambiguation
 
-See [spec/link-format.md — Structural edges vs. semantic edges](../../spec/link-format.md#structural-edges-vs-semantic-edges) for the full conceptual distinction.
+See [spec/link-format.md — Structural edges vs. semantic edges](../../../spec/link-format.md#structural-edges-vs-semantic-edges) for the full conceptual distinction.
 
 In Confluence specifically:
 
@@ -36,7 +36,7 @@ In Confluence specifically:
 
 ## Link encoding in Confluence storage format
 
-The edge statement label from [spec/link-format.md](../../spec/link-format.md) is stored as `<ac:link-body>` in Confluence storage-format HTML:
+The edge statement label from [spec/link-format.md](../../../spec/link-format.md) is stored as `<ac:link-body>` in Confluence storage-format HTML:
 
 ```xml
 <!-- Owning side (source page): -->
@@ -145,7 +145,7 @@ Fields that contain a link (e.g. Domain, Disambiguation) use a bare `<ac:link>` 
 
 ## Version comment
 
-Set on every `confluence_update_page` call as the `versionComment` parameter — this is Confluence's native version history mechanism, not a block written into the page body. Must follow the format from [spec/versioning.md](../../spec/versioning.md):
+Set on every `confluence_update_page` call as the `versionComment` parameter — this is Confluence's native version history mechanism, not a block written into the page body. Must follow the format from [spec/versioning.md](../../../spec/versioning.md):
 
 ```
 Summary: <one sentence>. Changed: <field>. Reason: <why>. Breaking: yes/no
@@ -163,7 +163,7 @@ Summary: <one sentence>. Changed: <field>. Reason: <why>. Breaking: yes/no
 
 Glean indexes Confluence continuously — no export pipeline or manual re-index is needed. The Glean MCP connector exposes the same semantic search used by Snowflake Cortex Agents.
 
-Use natural-language phrases as search queries (see [SPEC.md §8](../../SPEC.md#8-agent-integration)):
+Use natural-language phrases as search queries (see [SPEC.md §8](../../../SPEC.md#8-agent-integration)):
 
 ```
 "mandatory filters for <table name>"

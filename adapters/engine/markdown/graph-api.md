@@ -240,7 +240,7 @@ def ensure_back_reference(body: str, back_ref_line: str) -> tuple[str, bool]:
     return body + f"\n## Links\n{back_ref_line}\n", True
 ```
 
-Back-reference injection rules (same as [spec/link-format.md](../../spec/link-format.md#back-reference-constraints)):
+Back-reference injection rules (same as [spec/link-format.md](../../../spec/link-format.md#back-reference-constraints)):
 
 | Constraint | Symptom | Fix |
 |---|---|---|

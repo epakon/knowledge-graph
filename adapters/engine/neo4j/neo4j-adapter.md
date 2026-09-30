@@ -1,6 +1,6 @@
 # Neo4j Adapter
 
-> Implementation guide for the [Knowledge Graph Specification](../../SPEC.md) on Neo4j Community Edition.
+> Implementation guide for the [Knowledge Graph Specification](../../../SPEC.md) on Neo4j Community Edition.
 > **[`spec/schema.yaml`](../../../spec/schema.yaml) is the authoritative source for node type definitions, properties, and valid edge combinations.** The tables below show only the Neo4j translation layer.
 
 This document maps the Graph DB adapter contract to Neo4j-specific constructs: node/edge representation, deployment, import procedure, programmatic access, and sync strategy.

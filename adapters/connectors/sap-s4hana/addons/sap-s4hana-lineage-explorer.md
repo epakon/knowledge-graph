@@ -25,7 +25,7 @@ The Lineage Explorer is a **read-only, ephemeral map** of the S/4HANA technical 
 - Navigate the full CDS view hierarchy from any starting point
 - Answer "what depends on `I_AccountingDocumentItem`?" or "what is between this consumption view and table `BSEG`?"
 - Identify candidate objects for the KG import seed list
-- Provide the dependency walk input for [Step 2 of the import procedure](sap-s4hana-import.md#step-2--discover-dependency-walk)
+- Provide the dependency walk input for [Step 2 of the import procedure](../sap-s4hana-import.md#step-2--discover-dependency-walk)
 
 **What it is not:**
 - A replacement for the Knowledge Graph — it carries no business meaning, no rules, no verified queries
@@ -87,7 +87,7 @@ Edge kinds are open-ended: when a new `DEPTYPE` value appears in the index, it i
 
 ## Snapshot format
 
-The explorer snapshot reuses the same JSON format as the Knowledge Graph snapshot pipeline ([`snapshot-pipeline.md`](../../engine/confluence/snapshot-pipeline.md)), making it directly renderable by the existing `knowledge_graph_graph.ipynb` visualization notebook with a different node color scheme.
+The explorer snapshot reuses the same JSON format as the Knowledge Graph snapshot pipeline ([`snapshot-pipeline.md`](../../../engine/confluence/snapshot-pipeline.md)), making it directly renderable by the existing `knowledge_graph_graph.ipynb` visualization notebook with a different node color scheme.
 
 ```json
 {

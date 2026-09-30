@@ -1,6 +1,6 @@
 # Markdown Adapter
 
-> Implementation guide for the [Knowledge Graph Specification](../../SPEC.md) on Markdown files in a git repository.
+> Implementation guide for the [Knowledge Graph Specification](../../../SPEC.md) on Markdown files in a git repository.
 
 This document describes how the backend-agnostic spec maps to Markdown-specific constructs: the file format, directory hierarchy, link encoding, and version history.
 
@@ -47,7 +47,7 @@ The page title (`# Type: Name`) inside the file is the canonical node identity �
 
 ## Directory structure
 
-Mirrors the canonical hierarchy from [spec/space-structure.md](../../spec/space-structure.md) directly as a directory tree:
+Mirrors the canonical hierarchy from [spec/space-structure.md](../../../spec/space-structure.md) directly as a directory tree:
 
 ```
 <repo-root>/knowledge-graph/
@@ -100,7 +100,7 @@ status: active | deprecated
 ---
 ```
 
-Additional type-specific fields follow the same names as in [spec/page-templates.md](../../spec/page-templates.md):
+Additional type-specific fields follow the same names as in [spec/page-templates.md](../../../spec/page-templates.md):
 
 ```yaml
 ---
@@ -130,7 +130,7 @@ The `type` and `name` fields are required on every file. All other fields follow
 
 ## Link encoding
 
-Edge statements use standard Markdown links. The link text is the self-contained edge statement label from [spec/link-format.md](../../spec/link-format.md); the href is the relative path to the target file.
+Edge statements use standard Markdown links. The link text is the self-contained edge statement label from [spec/link-format.md](../../../spec/link-format.md); the href is the relative path to the target file.
 
 ```markdown
 ## Links
@@ -146,7 +146,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 ### Important notes
 
 - The link text is the complete edge statement — do not add trailing prose after the link.
-- Use ASCII `->` and `<-` in link text, exactly as specified in [spec/link-format.md](../../spec/link-format.md).
+- Use ASCII `->` and `<-` in link text, exactly as specified in [spec/link-format.md](../../../spec/link-format.md).
 - Use relative paths. Never use absolute paths or URLs — the repo may be cloned in different locations.
 - Back-references use `<-` in the link text and point back to the source file.
 - All hyperlink edges live in `## Links`; Reification page links live in `## Reifications`. Do not mix them.
@@ -155,7 +155,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 
 ## Version comment (git commit message)
 
-Every commit that modifies a KG node file must set the git commit message body — git already records the commit hash, date, and author natively — to a structured summary, following the format from [spec/versioning.md](../../spec/versioning.md):
+Every commit that modifies a KG node file must set the git commit message body — git already records the commit hash, date, and author natively — to a structured summary, following the format from [spec/versioning.md](../../../spec/versioning.md):
 
 ```
 Summary: <one sentence>
@@ -191,7 +191,7 @@ rg "REVENUE" knowledge-graph/ --include="*.md" -l
 
 Always add a `type:` frontmatter guard when matching by node type to exclude false positives from link labels and prose.
 
-For semantic (natural-language) search across a large corpus, index the Markdown files with an embedding pipeline (e.g. a local RAG store) and query it with natural-language phrases. The query patterns from [SPEC.md §8](../../SPEC.md#8-agent-integration) apply unchanged.
+For semantic (natural-language) search across a large corpus, index the Markdown files with an embedding pipeline (e.g. a local RAG store) and query it with natural-language phrases. The query patterns from [SPEC.md §8](../../../SPEC.md#8-agent-integration) apply unchanged.
 
 ---
 
