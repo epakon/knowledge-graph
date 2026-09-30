@@ -13,7 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
-| [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain` |
+| [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain`, carry node properties, and no longer copy reason/consequence prose |
 | [1.6.1](#1.6.1) | 2026-09-30 | `calculate` and `joinedTo` edges on Table pages readable by snapshot pipelines; missing template sections; `uses` may target `Disambiguation` |
 | [1.6.0](#1.6.0) | 2026-09-30 | `requires` limited to measure-specific filters; `implement -> VerifiedQuery` defined; two audit rules; stale-query check; source-system codes in Subjects; templates use edge-statement link text |
 | [1.5.3](#1.5.3) | 2026-09-30 | Consumption-layer clarifications (Goal, §5.1, `sample_questions`); `Concept`/`Process`/`Agent` added to engine adapters and agent skills |
@@ -46,6 +46,8 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 ### Fixed
 - **Domain `contain` edges described two ways** — the Domain template listed members as short links under type sections, while the `link-format.md` quick reference expected `contain ->` edge statements and a `contain <-` back-reference on every owned page. The type sections now define the edge, like the Table `Calculated` column: `link-format.md` lists both heading-defined exceptions and drops the `contain <-` back-references, and `SPEC.md` §4, `page-templates.md` (Domain note), the `contain` notes in `schema.yaml`, and the dbt import mapping follow. Snapshot pipelines still leave Domain pages out of the diagram by default but always emit `contain` edges into the node and edge indexes. `examples/s4hana-nodes-example.md` no longer puts `contain` links on owned pages.
+- **Indexes copied prose** — the edge index carried each reified edge's `reason` and `consequence`, although `engine.md` and the Neo4j adapter describe the indexes as a structural extract without page bodies. The edge index now keeps only `via` (the Reification page) plus short edge properties (`joinedTo`'s `on`), and the Neo4j import sets `r.via` instead of copying the prose. The node index gained a `properties` object for short-valued node properties and no longer lists Reification pages (`logical-layer.md` §2.2, §4, §5; `engine.md`; `neo4j-adapter.md`).
+- **Filter `Disambiguation` header field** — the Filter template carried a `**Disambiguation:**` header link that `schema.yaml` does not define and no pipeline reads, so the relationship never reached the edge index, and "keep all template fields" left an empty field on every Filter. The header-field rule in `page-templates.md` now keeps only the node's own properties and the Domain link in the header; a Filter that needs a clarification carries an optional `Filter relatedTo -> Disambiguation` edge in `## Links` (`page-templates.md`, `link-format.md` quick reference, `examples/node-pages-example.md`).
 
 ## [1.6.1] — 2026-09-30
 

@@ -226,8 +226,8 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 | `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table (in `## Joins`) · `calculate ->` Attribute, Measure (in the `Calculated` column) | Yes |
 | `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
 | `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | Yes (overrides) |
-| `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
+| `Filter` | Type, Domain, Mandatory, Synonyms | `implement <-` Subject · `implement ->` VerifiedQuery · `relatedTo ->` Disambiguation (optional) | Yes |
 | `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
 | `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | Yes (overrides) |
-| `Disambiguation` | Type, Domain | `disambiguate <-` Subject · `uses <-` Agent | No |
+| `Disambiguation` | Type, Domain | `disambiguate <-` Subject · `relatedTo <-` Filter, BusinessRule · `uses <-` Agent | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

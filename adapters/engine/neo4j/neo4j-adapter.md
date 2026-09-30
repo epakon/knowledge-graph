@@ -50,10 +50,10 @@ The mapping from spec terms to Neo4j constructs is direct:
 | Identity key (`name`) | Uniqueness constraint on the label |
 | Node properties | Node properties |
 | Hyperlink edge | Reification type (no properties) |
-| Reified edge (Reification page) | Reification type with properties (`reason`, `consequence`) |
+| Reified edge (Reification page) | Relationship type with a `via` property naming the Reification page |
 | Edge kind | Reification type name |
 
-**Reification pages** are not nodes in Neo4j. They are flattened into typed relationships with properties during import. Their wiki pages remain in the content storage for human readability.
+**Reification pages** are not nodes in Neo4j. They are flattened into typed relationships during import. Their pages remain in the content storage and are the only place `reason` and `consequence` live.
 
 **Domain nodes** can be imported as nodes or treated as a property (`domain: "Sales"`) on other nodes — decision deferred to implementation.
 
@@ -72,7 +72,7 @@ Each node is projected from its content storage page into a Neo4j node with a sm
 | `VerifiedQuery` | `name`, `domain`, `status`, `verified_by`, `verified_at`, `onboarding_question`, `page_id` | `question` text, `sql` |
 | `BusinessRule` | `name`, `domain`, `status`, `page_id` | `definition` text, `consequence_if_violated` text |
 | `Disambiguation` | `name`, `domain`, `status`, `page_id` | `always_ask` text |
-| `Reification` | *(not a node)* flattened into a typed relationship with `reason` + `consequence` | Reification page body — full prose context |
+| `Reification` | *(not a node)* flattened into a typed relationship with `via` | Reification page body — `reason`, `consequence` and full prose context |
 
 **Rule of thumb:** if a property is needed to traverse, filter, or deduplicate the graph, it is projected. If it is needed to understand the meaning, it stays in the content storage.
 
@@ -92,7 +92,7 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 
 ### Reified edge kinds → relationship types with properties
 
-`Reification` pages are flattened into typed relationships. The `reason` and `consequence` fields from the page body become relationship properties on every one of the four kinds: `mandatory` → `MANDATORY_FOR`, `requires` → `REQUIRES`, `overrides` → `OVERRIDES`, `demonstrates` → `DEMONSTRATES`.
+`Reification` pages are flattened into typed relationships carrying `via`, the Reification page title. The `reason` and `consequence` stay on the page; follow `via` to read them. The four kinds map as `mandatory` → `MANDATORY_FOR`, `requires` → `REQUIRES`, `overrides` → `OVERRIDES`, `demonstrates` → `DEMONSTRATES`.
 
 ### Edge conflict rule
 
@@ -129,6 +129,7 @@ The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are 
 | `page_id` | Content storage page ID — retained for lineage and traceability back to the source page. |
 | `domain` | Domain scope (`global` for Subjects, domain name for all others). |
 | `status` | `active` or `deprecated`. |
+| `properties` | Short-valued node properties; import only those in the projection table above. |
 
 ### Edge index fields
 
@@ -137,16 +138,16 @@ The node index (`kg-node-index.json`) and edge index (`kg-edge-index.json`) are 
 | `source` | Full title of the source node (e.g. `Measure: Revenue`). |
 | `target` | Full title of the target node. |
 | `relationship_type` | Neo4j relationship type (from mapping tables above, e.g. `REQUIRES`). |
-| `style` | `hyperlink` (no properties) or `reified` (has `reason` + `consequence`). |
+| `style` | `hyperlink` or `reified`. |
 | `via` | For reified edges: the Reification page title. `null` for hyperlinks. |
-| `properties` | For reified edges: `{ "reason": "...", "consequence": "..." }`. Empty object for hyperlinks. |
+| `properties` | Short edge properties (`joinedTo`'s `on`). Empty object otherwise. |
 
 ### Import steps
 
 1. **Import nodes** from the node index — upsert by `(label, name)` and set all properties.
 2. **Import edges** from the edge index — hyperlinks first, then reified edges (they may reference the same node pairs).
 3. **Skip back-references** — edges where the label contains `<-` are navigation artifacts, not graph edges.
-4. **Reification pages** are already flattened into the edge index as reified edges; their content storage pages can be archived post-migration.
+4. **Reification pages** are already flattened into the edge index as reified edges. Keep their content storage pages: `reason` and `consequence` live only there.
 5. **Retain `page_id`** on every node for traceability back to the source page.
 
 ### Node import (Cypher example)
@@ -168,8 +169,7 @@ MERGE (a)-[r:IMPLEMENTS]->(b)
 // Reified edge
 MATCH (a {name: $source}), (b {name: $target})
 MERGE (a)-[r:REQUIRES]->(b)
-SET r.reason    = $reason,
-    r.consequence = $consequence
+SET r.via = $via
 ```
 
 ---

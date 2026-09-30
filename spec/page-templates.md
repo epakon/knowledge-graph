@@ -14,13 +14,9 @@
 - **Write each statement where it is true** (placement test). If it would be true of every node of a type, or of every agent reading the graph, it belongs in the spec (the node type's definition, or the reading protocol in [SPEC.md §8](../SPEC.md#8-agent-integration)), not on a page. If it is true of one node no matter which page or agent refers to it, it belongs on that node's page, and other pages link to it instead of restating it. Only what remains stays on the current page.
 - For link syntax, see [link-format.md](link-format.md).
 
-### Header fields vs ## Links — one-to-many rule
+### Header fields vs ## Links
 
-When a node has a relationship to exactly one other node of a given type, the link may appear as a **header field** (e.g. `**Disambiguation:** [Disambiguation: X]` on a Filter page). This keeps the most important structural metadata visible at the top without requiring a section.
-
-When a node may have **multiple** links of the same type — or when the relationship is a traversal edge rather than classification metadata — the link belongs in `## Links` as a typed edge statement.
-
-If a header field relationship grows to multiple targets, move all instances to `## Links`.
+Header fields hold the node's own properties (`**Mandatory:**`, `**Synonyms:**`, ...) and the `**Domain:**` navigation link. A relationship to another node is always an edge statement in `## Links`, even when there is only one target, so snapshot pipelines and indexes see it. Optional edges are written only where they hold; a node without one has no line for it, not an empty field.
 
 ---
 
@@ -265,7 +261,6 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 **Domain:** [Domain: <Name>](../domain)
 **Mandatory:** Yes | No
 **Synonyms:** <comma-separated>
-**Disambiguation:** [Disambiguation: <Term>](../disambiguations/<Term>)
 
 ## Predicate
 ```sql
@@ -278,6 +273,7 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Links
 - [Subject: <Name> implement <- Filter: <Name>](path)
 - [Filter: <Name> implement -> VerifiedQuery: <Name>](path)
+- [Filter: <Name> relatedTo -> Disambiguation: <Term>](path)   (only when the filter's term needs clarification)
 ```
 
 ---
@@ -362,6 +358,7 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 
 ## Links
 - [Subject: <Name> disambiguate <- Disambiguation: <Term>](path)
+- [Filter: <Name> relatedTo <- Disambiguation: <Term>](path)
 ```
 
 > `## Why It Matters` is optional. `## Reifications` on Attribute and BusinessRule pages holds `overrides` edges (BusinessRule → Attribute); leave it empty otherwise.

@@ -113,8 +113,8 @@ It is derived from the content storage via the snapshot pipeline (JSON indexes �
 
 A structural projection extracts only what is needed to represent the graph's topology, identity, and classification — not its meaning:
 
-- **Projected:** node labels, identity keys (`name`), classification properties (`domain`, `kind`, `status`, `mandatory`), relationship types, edge properties (`reason`, `consequence`), and `page_id` for traceability
-- **Not projected:** the full knowledge content — business definitions, SQL expressions, synonyms, description prose, `always_ask` questions, full rule text
+- **Projected:** node labels, identity keys (`name`), classification properties (`domain`, `kind`, `status`, `mandatory`), relationship types, short edge properties (`joinedTo`'s `on`), `via` for reified edges, and `page_id` for traceability
+- **Not projected:** the full knowledge content — business definitions, SQL expressions, synonyms, description prose, `always_ask` questions, full rule text, and the reason and consequence of reified edges (read them from the Reification page named by `via`)
 
 The result is a graph you can traverse, query, and deduplicate efficiently. To read the full meaning of any node, follow `page_id` back to the source page in the content storage. Each backend adapter's `<backend>-adapter.md` shows exactly which properties are projected per node type.
 

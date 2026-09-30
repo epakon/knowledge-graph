@@ -172,7 +172,6 @@ categories: active, inactive, and pending.
 **Domain:** [Domain: Sales](../domain)
 **Mandatory:** Yes
 **Synonyms:** active, non-cancelled, valid orders
-**Disambiguation:** [Disambiguation: order-status](../disambiguations/Disambiguation: order-status)
 
 ## Predicate
 ```sql
@@ -185,6 +184,7 @@ ORDER_STATUS IN ('confirmed', 'shipped', 'delivered')
 ## Links
 - [Subject: Revenue implement <- Filter: ACTIVE_ORDERS](path)
 - [Filter: ACTIVE_ORDERS implement -> VerifiedQuery: REVENUE_BY_REGION_MONTHLY](path)
+- [Filter: ACTIVE_ORDERS relatedTo -> Disambiguation: order-status](../disambiguations/Disambiguation: order-status)
 ```
 
 ---

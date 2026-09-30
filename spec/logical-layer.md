@@ -79,7 +79,7 @@ Back-references on pages are navigation shortcuts and are **not** imported into 
 
 ### 2.2 Reified edge kinds (Reification pages → typed relationships with properties)
 
-Reification pages are **flattened** into graph relationships with `reason` and `consequence` properties. The page title encodes source, kind, and target; the body provides the semantic payload.
+Reification pages are **flattened** into typed graph relationships whose `via` points back to the page. The page title encodes source, kind, and target; the body carries `reason` and `consequence`, which stay on the page and are not copied into the indexes or the graph DB.
 
 > See `schema.yaml`'s `reified_edge_kinds` section for the complete list of the four kinds, their source/target labels, and properties. All four currently carry the same two properties, `reason` and `consequence` for now.
 
@@ -105,7 +105,9 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 
 ## 4. Node Index
 
-**Purpose:** uniqueness registry and graph database import input. Before creating a new page, check this index to prevent duplicate nodes.
+**Purpose:** uniqueness registry and graph database import input. Before creating a new page, check this index to prevent duplicate nodes. Reification pages are edges, not nodes, so they are listed only in the edge index.
+
+Both indexes are **structural extracts**: identity, classification attributes and relationships. Prose (definitions, SQL, instructions, reason and consequence) stays on the pages and is reached through `page_id` or `via`.
 
 ### Schema
 
@@ -123,7 +125,8 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
       "page_id": "<backend page ID>",
       "page_url": "<URL>",
       "domain": "<domain name or 'global'>",
-      "status": "active | deprecated"
+      "status": "active | deprecated",
+      "properties": { "<property>": "<value>" }
     }
   ]
 }
@@ -140,6 +143,7 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 | `page_url` | Direct link to the page. |
 | `domain` | Domain scope (e.g. `Sales`, or `global` for Subjects). |
 | `status` | `active` or `deprecated`. |
+| `properties` | The node's other short-valued properties from `schema.yaml` (e.g. `table_kind`, `mandatory`, `synonyms`, `rule_modality`, `verified_at`). Prose properties (definitions, SQL, instructions) are excluded. Empty object when the node has none. |
 
 ---
 
@@ -163,19 +167,16 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
       "kind": "requires",
       "style": "reified",
       "via": "Reification: <From> requires <To>",
-      "properties": {
-        "reason": "<one sentence>",
-        "consequence": "<one sentence>"
-      }
+      "properties": {}
     },
     {
       "source": "<NodeType>: <Name>",
       "target": "<NodeType>: <Name>",
-      "relationship_type": "APPLIES_TO",
-      "kind": "apply",
+      "relationship_type": "JOINED_TO",
+      "kind": "joinedTo",
       "style": "hyperlink",
       "via": null,
-      "properties": {}
+      "properties": { "on": "<LEFT.col = RIGHT.col>" }
     }
   ]
 }
@@ -189,9 +190,9 @@ A given `(source, target)` pair must have **at most one edge of each type**. Whe
 | `target` | Full page title of the target node. |
 | `relationship_type` | Graph relationship type (from §2 schema). |
 | `kind` | Edge kind (`apply`, `requires`, etc.). |
-| `style` | `hyperlink` (no properties) or `reified` (has Reason + Consequence). |
-| `via` | For reified edges: the Reification page title. `null` for hyperlinks. |
-| `properties` | For reified edges: `reason` and `consequence` strings. Empty object for hyperlinks. |
+| `style` | `hyperlink` or `reified` (defined by a Reification page). |
+| `via` | For reified edges: the Reification page title, where `reason` and `consequence` live. `null` for hyperlinks. |
+| `properties` | The edge kind's short-valued properties from `schema.yaml` (today only `joinedTo`'s `on`). Reified edges' `reason` and `consequence` are prose and are not copied. Empty object otherwise. |
 
 ---
 
