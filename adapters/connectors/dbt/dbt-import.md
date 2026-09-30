@@ -234,7 +234,7 @@ Link statements are written per [`spec/link-format.md`](../../../spec/link-forma
 
 | Edge | Owning page | Statement |
 |---|---|---|
-| `Domain contain -> Table` | Domain page | `[Domain: <name> contain -> Table: <name>]` |
+| `Domain contain -> Table` | Domain page, `## Tables` section | `[Table: <name>]` (the section defines `contain`; no back-reference) |
 | `Table joinedTo -> Table` | Model page (higher in lineage) | `[Table: <A> joinedTo -> Table: <B>]` |
 | `Table calculate -> Measure` | Table page | `[Table: <name> calculate -> Measure: <name>]` |
 | `Table calculate -> Attribute` | Table page | `[Table: <name> calculate -> Attribute: <name>]` |

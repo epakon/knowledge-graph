@@ -62,7 +62,7 @@ A page becomes a **node** when its title matches a known node-type prefix:
 
 **Excluded** (not nodes, treated as structural containers):
 - Index/container pages: `vocabulary`, `concepts`, `subjects`, `processes`, `ai`, `tables`, `measures`, `attributes`, `filters`, `rules`, `reifications`, `verified-queries`, `disambiguations`
-- Domain pages (`Domain: <Name>`) — excluded by default: Domain pages are navigational containers. Their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning.
+- Domain pages (`Domain: <Name>`) — excluded from the snapshot diagram by default: Domain pages are navigational containers, and their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning. The node and edge indexes always include them: each link under a Domain page's type section emits `Domain: <this page> contain -> <target>`.
 
 ### Edges
 

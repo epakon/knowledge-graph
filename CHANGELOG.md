@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain` |
 | [1.6.1](#1.6.1) | 2026-09-30 | `calculate` and `joinedTo` edges on Table pages readable by snapshot pipelines; missing template sections; `uses` may target `Disambiguation` |
 | [1.6.0](#1.6.0) | 2026-09-30 | `requires` limited to measure-specific filters; `implement -> VerifiedQuery` defined; two audit rules; stale-query check; source-system codes in Subjects; templates use edge-statement link text |
 | [1.5.3](#1.5.3) | 2026-09-30 | Consumption-layer clarifications (Goal, §5.1, `sample_questions`); `Concept`/`Process`/`Agent` added to engine adapters and agent skills |
@@ -40,6 +41,11 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
 
 ---
+
+## [1.6.2] — 2026-09-30
+
+### Fixed
+- **Domain `contain` edges described two ways** — the Domain template listed members as short links under type sections, while the `link-format.md` quick reference expected `contain ->` edge statements and a `contain <-` back-reference on every owned page. The type sections now define the edge, like the Table `Calculated` column: `link-format.md` lists both heading-defined exceptions and drops the `contain <-` back-references, and `SPEC.md` §4, `page-templates.md` (Domain note), the `contain` notes in `schema.yaml`, and the dbt import mapping follow. Snapshot pipelines still leave Domain pages out of the diagram by default but always emit `contain` edges into the node and edge indexes. `examples/s4hana-nodes-example.md` no longer puts `contain` links on owned pages.
 
 ## [1.6.1] — 2026-09-30
 

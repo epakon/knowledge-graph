@@ -6,7 +6,7 @@
 
 ## Overview
 
-Every edge between two nodes is encoded as a **self-contained edge statement** embedded as the readable label of a hyperlink in the page body. The entire label is the clickable text — no trailing plain text after the link. The one exception is the `Calculated` column on Table pages, where the column header defines the edge (see the rules below).
+Every edge between two nodes is encoded as a **self-contained edge statement** embedded as the readable label of a hyperlink in the page body. The entire label is the clickable text — no trailing plain text after the link. There are two exceptions, where a heading defines the edge and the link carries only the target label: the `Calculated` column on Table pages and the type sections on the Domain page (see the rules below).
 
 This design makes edges human-readable, searchable by semantic search tools, and parseable by scripts without any metadata sidecar.
 
@@ -32,7 +32,8 @@ Reification page link (same label on both From and To pages):
 - `->` = owning side (I point to the target). `<-` = back-reference (someone points to me).
 - Reification page links always show `->` regardless of which side they appear on.
 - All hyperlink edges live in a `## Links` section. On Table pages, owning `calculate` edges live in the `Calculated` column of `### Semantic annotations`, and `joinedTo` edges in `## Joins` as edge statements.
-- **Column-defined edge (the one exception to edge-statement link text).** A link in a Table page's `Calculated` column carries only the target label: `[Attribute: X](path)` or `[Measure: X](path)`. The column header defines the edge, so it reads as `Table: <this page> calculate -> <target>`. The back-reference on the target page is still a full edge statement: `[Table: T calculate <- Attribute: X](path)`.
+- **Column-defined edge (heading-defined, exception 1 of 2).** A link in a Table page's `Calculated` column carries only the target label: `[Attribute: X](path)` or `[Measure: X](path)`. The column header defines the edge, so it reads as `Table: <this page> calculate -> <target>`. The back-reference on the target page is still a full edge statement: `[Table: T calculate <- Attribute: X](path)`.
+- **Section-defined edge (heading-defined, exception 2 of 2).** A link under a type section of a Domain page (`## Tables`, `## Measures`, `## Attributes`, `## Filters`, `## Verified Queries`, `## Rules`, `## Disambiguations`) carries only the target label: `[Table: X](path)`. The page defines the edge, so it reads as `Domain: <this page> contain -> <target>`. Owned pages carry **no** `contain <-` back-reference: the `domain` property already names the owner.
 - Reification page links live in a separate `## Reifications` section.
 
 ---
@@ -221,12 +222,12 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 | Node type | Header fields | Typical `## Links` edges | `## Reifications`? |
 |---|---|---|---|
 | `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
-| `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | No |
+| `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation (in the type sections) | No |
 | `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table (in `## Joins`) · `calculate ->` Attribute, Measure (in the `Calculated` column) | Yes |
-| `Measure` | Type, Domain, Kind, Synonyms, Status | `contain <-` Domain · `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
-| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `contain <-` Domain · `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | Yes (overrides) |
-| `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `contain <-` Domain · `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
-| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `contain <-` Domain · `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
-| `BusinessRule` | Type, Domain | `contain <-` Domain · `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | Yes (overrides) |
-| `Disambiguation` | Type, Domain | `contain <-` Domain · `disambiguate <-` Subject · `uses <-` Agent | No |
+| `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
+| `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | Yes (overrides) |
+| `Filter` | Type, Domain, Mandatory, Synonyms, Disambiguation | `implement <-` Subject · `implement ->` VerifiedQuery | Yes |
+| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
+| `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | Yes (overrides) |
+| `Disambiguation` | Type, Domain | `disambiguate <-` Subject · `uses <-` Agent | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

@@ -68,7 +68,7 @@ A `.md` file becomes a **node** when its `type` frontmatter field matches a know
 
 **Excluded** (not nodes, treated as structural containers):
 - Files with no `type` frontmatter field (index files, READMEs)
-- `Domain` pages — excluded by default: Domain pages are navigational containers. Their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning.
+- `Domain` pages — excluded from the snapshot diagram by default: Domain pages are navigational containers, and their `contain →` edges add noise without contributing to lineage or SQL-construction reasoning. The node and edge indexes always include them: each link under a Domain page's type section emits `Domain: <this file> contain -> <target>`.
 
 ### Edges
 

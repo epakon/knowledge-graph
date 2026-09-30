@@ -146,7 +146,7 @@ graph LR
 
 Full reference: [spec/link-format.md](spec/link-format.md)
 
-Every edge is encoded as a **self-contained edge statement** embedded as the clickable label of a link in the page body (the `Calculated` column on Table pages is the one exception; see §6):
+Every edge is encoded as a **self-contained edge statement** embedded as the clickable label of a link in the page body (the `Calculated` column on Table pages and the type sections on the Domain page are the two exceptions, where the heading defines the edge; see §6):
 
 ```
 Owning side (source page):

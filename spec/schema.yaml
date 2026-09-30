@@ -1,6 +1,6 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.6.1
+# Version: 1.6.2
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 #
 # NORMATIVE SOURCE: this file is the single authoritative definition of node
@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "1.6.1"
+spec_version: "1.6.2"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -411,6 +411,9 @@ hyperlink_edge_kinds:
     relationship_type: CONTAINS
     valid_sources: [Domain]
     valid_targets: [Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation]
+    notes: >
+      Section-defined: a link under a Domain page's type section is the edge; its text is only
+      the target label. No back-reference on the owned page; its domain property names the owner.
 
 # ---------------------------------------------------------------------------
 # Consumption layer edge (ai/ -> vocabulary/ | <domain>/)

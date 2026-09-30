@@ -140,7 +140,6 @@ Fact view exposing open (unpaid) Accounts Receivable line items. Each row repres
 
 ## Links
 
-- [Domain: FI-AR contain -> Table: Customer Open Item]
 - [Filter: Company Code mandatory -> Table: Customer Open Item]
 - [Filter: Fiscal Year mandatory -> Table: Customer Open Item]
 
@@ -188,7 +187,6 @@ Currency: `CompanyCodeCurrency` (local currency of the company code).
 ## Links
 
 - [Table: Customer Open Item calculate -> Measure: Open Receivables Amount]
-- [Domain: FI-AR contain -> Measure: Open Receivables Amount]
 - [Subject: Customer implement -> Measure: Open Receivables Amount]
 
 ---
@@ -241,7 +239,6 @@ JOIN _SYS_BIC."sap.s4.beh.sd.v1/C_BILLINGDOCUMENTSRV" bi
 
 ## Links
 
-- [Domain: FI-AR contain -> Measure: Days Sales Outstanding]
 - [Measure: Days Sales Outstanding relatedTo -> Measure: Open Receivables Amount]
 
 ---
@@ -274,7 +271,6 @@ WHERE CompanyCode = '<P_CompanyCode>'
 
 ## Links
 
-- [Domain: FI-AR contain -> Filter: Company Code]
 - [Subject: Company Code implement -> Filter: Company Code]
 
 ---
@@ -307,7 +303,6 @@ Including statistical postings inflates the Open Receivables Amount by non-cash 
 
 - [Rule: Exclude Statistical Postings from Receivables apply -> Table: Customer Open Item]
 - [Rule: Exclude Statistical Postings from Receivables apply -> Measure: Open Receivables Amount]
-- [Domain: FI-AR contain -> Rule: Exclude Statistical Postings from Receivables]
 
 ---
 
@@ -388,7 +383,6 @@ ORDER BY
 
 ## Links
 
-- [Domain: FI-AR contain -> VerifiedQuery: Open Receivables by Customer and Company Code]
 - [Measure: Open Receivables Amount implement -> VerifiedQuery: Open Receivables by Customer and Company Code]
 
 ---

@@ -144,6 +144,8 @@ The domain page is also the parent container for all type sub-folders. It is the
 - [Disambiguation: <Term>](disambiguations/<Term>)
 ```
 
+> **Note on Domain links:** Each link under a type section is a `contain ->` edge from this Domain; the page defines the edge, so the link text is only the target label. Owned pages carry no `contain <-` back-reference; their `domain` property names the owner. See `link-format.md`.
+
 ---
 
 ## Table
