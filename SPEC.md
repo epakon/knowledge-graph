@@ -175,7 +175,7 @@ Rules:
 
 1. **No symmetric duplicates.** If page A already owns `X edgeKind -> Y`, page A must **not** also carry `X edgeKind <- Y`.
 2. **Back-reference edge kind must match the forward edge.** Derive the `<-` label by flipping the arrow in the owning label — never infer the kind from node types.
-3. **`implement` is not valid between two Subjects.** Use `relatedTo` for Subject-to-Subject links.
+3. **`implement` never starts on a conceptual page.** It goes from a logical node up to a Subject or Policy; use `relatedTo` between conceptual nodes.
 
 ---
 
