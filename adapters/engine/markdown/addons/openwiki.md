@@ -50,7 +50,7 @@ All generated files open with `<!-- status: draft -->`.
 - `**Domain:**` link — requires knowing which KG domain this table belongs to
 - `## Reifications` — reified edges (`reason`, `consequence`) require domain judgment
 - `## Links` — Attribute and Measure links depend on what gets promoted
-- `business_definition` and the `implement -> Policy` link on any Rule nodes
+- `business_definition`, the `implement -> Policy` link and `consequence_if_violated` on any Rule nodes
 - `Verified by`, `Verified at` on any VerifiedQuery nodes
 
 See [openwiki-kg-example.md](../../../../examples/openwiki-kg-example.md) for a complete example of a generated draft Table node.

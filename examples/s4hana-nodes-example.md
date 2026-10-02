@@ -291,9 +291,13 @@ StatisticalIndicator = ' '
 AND PostingKey NOT IN ('09', '19')
 ```
 
-`StatisticalIndicator = 'X'` marks a posting as statistical only (used for reporting, does not affect balance). Posting keys 09 and 19 are internal SAP statistical entries. Including them inflates the Open Receivables Amount by non-cash items, overstating AR balance by up to 15% in environments that use cross-company intercompany netting.
+`StatisticalIndicator = 'X'` marks a posting as statistical only (used for reporting, does not affect balance). Posting keys 09 and 19 are internal SAP statistical entries.
 
-> This rule implements no `Policy`: it is a structural fact about how S/4HANA stores postings, so its modality is necessity and it has no separate consequence field.
+> This rule implements no `Policy`: it is a structural fact about how S/4HANA stores postings, so it is treated as necessity and keeps its own consequence.
+
+## Consequence if Violated
+
+Including statistical postings inflates the Open Receivables Amount by non-cash items, overstating AR balance by up to 15% in environments that use cross-company intercompany netting.
 
 ## Links
 

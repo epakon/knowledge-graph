@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [2.2.0](#2.2.0) | 2026-10-02 | `rule_modality` defines agent behaviour (`necessity` \| `obligation`); Policy consequence always required; BusinessRule keeps a consequence when it implements no Policy |
 | [2.1.0](#2.1.0) | 2026-10-02 | Feedback connector: evaluates pages against agent sessions and opens review proposals |
 | [2.0.0](#2.0.0) | 2026-10-01 | `Policy` node type (conceptual business rule); bridge edges `implement`/`disambiguate` owned by the logical side; conceptual pages carry no cross-layer links; `rule_modality`/`consequence_if_violated` moved from BusinessRule to Policy |
 | [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain`, carry node properties, and no longer copy reason/consequence prose |
@@ -41,6 +42,21 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [2.2.0] — 2026-10-02
+
+### Changed
+- **`rule_modality` defines agent behaviour** (`schema.yaml`, `conceptual-layer.md` §2.4, SPEC.md §8 step 3) — `necessity` (the default) is always applied; a question that seems to need an exception goes to a Disambiguation. `obligation` is a default for an ambiguous question, applied unless the user explicitly asks otherwise and always stated in the answer. `prohibition` removed: no real rule needed it once rules phrased as "never …" were classified by meaning. `governance.md` §3b example rewritten: `rule_modality` is review-required, `consequence_if_violated` alone is self-serve.
+- **`Policy.consequence_if_violated` always required** — the "optional for necessity" exception is removed; real necessity rules carry the most useful consequences (magnitudes, silent wrong results).
+
+### Added
+- **`BusinessRule.consequence_if_violated`** (optional) — only for a rule that implements no Policy (a table-local structural fact); otherwise the Policy's consequence applies. Template section and connector mapping rows restored.
+
+### Notes
+- Policy pages only exist since 2.0.0. When moving existing BusinessRules to Policies, classify modality by meaning, not wording: a rule that makes the answer wrong when broken is `necessity`, even if written as "never …".
+- `examples/node-pages-example.md`: `Policy: Revenue counts valid orders only` is `necessity`.
 
 ---
 

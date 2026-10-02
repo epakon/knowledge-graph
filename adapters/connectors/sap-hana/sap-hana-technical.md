@@ -169,6 +169,7 @@ HANA has no lifecycle contract system. Stability is inferred from:
 | `name` | Descriptive rule name | Manual; derive from column name and CASE condition | |
 | `definition` | CASE/IF expression from CV definition | Exact SQL expression | `REQUIRES MANUAL AUTHORING` if CV is graphical |
 | `implement -> Policy` | Business rule the CASE logic applies | Link to an existing `Policy`; the consequence lives there | Always manual |
+| `consequence_if_violated` | Business impact | One sentence; only when the rule implements no Policy | Always manual |
 
 ---
 

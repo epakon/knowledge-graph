@@ -63,7 +63,9 @@ A Policy states the rule once. Logical `Filter`, `BusinessRule` and `Measure` no
 
 A Policy passes the stability test: "net revenue excludes intercompany transactions" is meaningful with no database. The mapping of "intercompany" to a column is not, and lives on the implementing logical node.
 
-A logical `BusinessRule` that implements no Policy is a table-local structural fact (a sign convention, a deduplication key) and is treated as `necessity`. Any rule the business would state as an obligation or prohibition belongs in a Policy.
+`rule_modality` tells agents how strictly to apply the rule. A `necessity` defines a concept: breaking it makes the answer wrong ("revenue excludes cancelled orders"), so agents always apply it. An `obligation` is a default for an ambiguous question ("a year without qualifier means the calendar year"): agents apply it unless the user explicitly asks otherwise, and state it in the answer. Test: if someone breaks the rule, is the result wrong (necessity) or a different but legitimate reading (obligation)?
+
+A logical `BusinessRule` that implements no Policy is a table-local structural fact (a sign convention, a date format) and is treated as `necessity`; it carries its own `consequence_if_violated`. Any rule the business would state as a default belongs in a Policy.
 
 ### Full schema
 

@@ -29,7 +29,7 @@ before any deductions for returns, write-offs, or discounts.
 
 **Type:** Policy
 **Scope:** global
-**Rule modality:** obligation
+**Rule modality:** necessity
 
 ## Statement
 Revenue figures include only orders that were placed and not cancelled or returned.

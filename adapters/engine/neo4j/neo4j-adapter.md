@@ -71,7 +71,7 @@ Each node is projected from its content storage page into a Neo4j node with a sm
 | `Attribute` | `name`, `domain`, `kind`, `access_modifier`, `status`, `page_id` | `expression_sql`, `synonyms` |
 | `Filter` | `name`, `domain`, `mandatory`, `status`, `page_id` | `predicate_sql`, `synonyms` |
 | `VerifiedQuery` | `name`, `domain`, `status`, `verified_by`, `verified_at`, `onboarding_question`, `page_id` | `question` text, `sql` |
-| `BusinessRule` | `name`, `domain`, `status`, `page_id` | `definition` text |
+| `BusinessRule` | `name`, `domain`, `status`, `page_id` | `definition` text, `consequence_if_violated` text |
 | `Disambiguation` | `name`, `domain`, `status`, `page_id` | `always_ask` text |
 | `Reification` | *(not a node)* flattened into a typed relationship with `via` | Reification page body — `reason`, `consequence` and full prose context |
 

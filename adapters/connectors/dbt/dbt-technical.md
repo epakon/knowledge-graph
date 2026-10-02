@@ -198,6 +198,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 | `name` | Derived: `<model_name> — <column_name> <test_name>` | Title-case | e.g. `Dim Customer — Status accepted values` |
 | `definition` | Test type + parameters rendered as SQL | `accepted_values`: `column IN ('a', 'b')`; `not_null`: `column IS NOT NULL`; `foreign_key`: `column IN (SELECT pk FROM ref_table)` | Custom SQL tests: use the `predicate` or `query` parameter directly |
 | `implement -> Policy` | — | `REQUIRES MANUAL AUTHORING` | Tests document what is checked; the business rule and its impact are not encoded |
+| `consequence_if_violated` | — | `REQUIRES MANUAL AUTHORING` | Only when the rule implements no Policy |
 
 ### BusinessRule ← snapshot SCD2 definition
 
@@ -206,6 +207,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 | `name` | Derived: `<snapshot_name> — SCD2 versioning` | Title-case | |
 | `definition` | `strategy`, `unique_key`, `updated_at` rendered as prose + SQL | e.g. `unique_key = entity_id; new version opened when updated_at changes` | |
 | `implement -> Policy` | — | `REQUIRES MANUAL AUTHORING` | |
+| `consequence_if_violated` | — | `REQUIRES MANUAL AUTHORING` | Only when the rule implements no Policy |
 
 ### VerifiedQuery ← exposure
 

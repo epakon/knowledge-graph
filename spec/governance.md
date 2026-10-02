@@ -82,7 +82,7 @@ Both lists in §3a are meant to grow. When a new node type, edge kind, or proper
 1. Is a bad value on this property something another page's correctness silently depends on (→ review-required), or is it purely descriptive/navigational (→ self-serve)?
 2. Does this property or edge ever cross a domain boundary or a node-type boundary (→ review-required), or is it always contained within one author's accountable scope (→ self-serve)?
 
-Record the classification in the CHANGELOG entry that introduces the property — e.g. `Policy.rule_modality` changes which fields are required (`consequence_if_violated` becomes optional when `necessity`) but does not itself change SQL construction, so an edit to it alone is self-serve; but if it is edited *alongside* `consequence_if_violated` or `definition`, the combined change is judged by those fields' review-required status, not by `rule_modality` in isolation.
+Record the classification in the CHANGELOG entry that introduces the property — e.g. `Policy.consequence_if_violated` explains the impact of a rule but changes neither SQL nor agent behaviour, so an edit to it alone is self-serve; `Policy.rule_modality` decides whether an agent may set the rule aside when the user asks, so it is review-required. A combined edit is judged by its strictest field.
 
 ---
 

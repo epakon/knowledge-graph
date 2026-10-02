@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "2.1.0"
+spec_version: "2.2.0"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -88,19 +88,19 @@ node_types:
           Must pass the conceptual-layer stability test.
       - name: rule_modality
         type: enum
-        values: [necessity, obligation, prohibition]
+        values: [necessity, obligation]
         required: false
         description: >
-          SBVR-style modality. necessity = definitional, true by construction
-          (violating it means the query is wrong, not risky).
-          obligation/prohibition = a violable business policy. Defaults to
-          treating consequence_if_violated as required when unset.
+          SBVR-style modality; necessity when unset. necessity = definitional:
+          breaking it makes the answer wrong, so agents always apply it; a
+          question that seems to need an exception is about a different
+          concept and goes to a Disambiguation. obligation = a default for an
+          ambiguous question: agents apply it unless the user explicitly asks
+          otherwise, and always state it in the answer.
       - name: consequence_if_violated
         type: string
         required: true
-        description: >
-          One sentence — quantify if possible. Required unless
-          rule_modality is necessity, in which case it is optional.
+        description: One sentence — quantify if possible.
     page_title_prefix: "Policy:"
     container_path: "vocabulary/policies/"
 
@@ -296,6 +296,12 @@ node_types:
         type: string
         required: true
         description: Exact column names, values, and filter expressions. No prose.
+      - name: consequence_if_violated
+        type: string
+        required: false
+        description: >
+          One sentence — quantify if possible. Only for a rule that implements
+          no Policy; otherwise the Policy's consequence applies.
     page_title_prefix: "Rule:"
     container_path: "<domain>/rules/"
 

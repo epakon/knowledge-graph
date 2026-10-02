@@ -106,13 +106,13 @@ A business rule in business language. "Policy" means a business rule here — no
 
 **Type:** Policy
 **Scope:** global
-**Rule modality:** necessity | obligation | prohibition
+**Rule modality:** necessity | obligation
 
 ## Statement
 <The rule in business language. One paragraph. No SQL, no table or column names.>
 
 ## Consequence if Violated
-<One sentence — quantify if possible. Optional when modality is necessity.>
+<One sentence — quantify if possible.>
 
 ## Citations
 - [<Source name>](<URL>) — <one-line description of what this source contributes>
@@ -347,6 +347,9 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Definition
 <Exact column names, values, filter expressions. One block. No prose introduction.>
 
+## Consequence if Violated
+<One sentence — quantify if possible. Only when the rule implements no Policy.>
+
 ## Reifications
 - [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
@@ -359,7 +362,7 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 - [Rule: <Name> implement -> VerifiedQuery: <Name>](path)
 ```
 
-> Modality and consequence live on the implemented Policy. A rule with no `implement -> Policy` is a table-local structural fact and is treated as `necessity`.
+> A rule that implements a Policy takes its modality and consequence from it and omits `## Consequence if Violated`. A rule with no `implement -> Policy` is a table-local structural fact, treated as `necessity`, and keeps its own consequence.
 
 ---
 
