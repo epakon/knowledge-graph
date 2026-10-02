@@ -64,13 +64,14 @@ Each node is projected from its content storage page into a Neo4j node with a sm
 | Node type | Projected into Neo4j | Stays in content storage only |
 |---|---|---|
 | `Subject` | `name`, `domain`, `status`, `page_id` | `business_definition`, `scope` text |
+| `Policy` | `name`, `rule_modality`, `status`, `page_id` | `statement`, `consequence_if_violated` text |
 | `Domain` | `name`, `page_id` | `owner` |
 | `Table` | `name`, `domain`, `table_kind`, `status`, `page_id` | `source`, `description`, semantic annotations table, field list |
 | `Measure` | `name`, `domain`, `kind`, `status`, `page_id` | `definition_sql`, `synonyms` |
 | `Attribute` | `name`, `domain`, `kind`, `access_modifier`, `status`, `page_id` | `expression_sql`, `synonyms` |
 | `Filter` | `name`, `domain`, `mandatory`, `status`, `page_id` | `predicate_sql`, `synonyms` |
 | `VerifiedQuery` | `name`, `domain`, `status`, `verified_by`, `verified_at`, `onboarding_question`, `page_id` | `question` text, `sql` |
-| `BusinessRule` | `name`, `domain`, `status`, `page_id` | `definition` text, `consequence_if_violated` text |
+| `BusinessRule` | `name`, `domain`, `status`, `page_id` | `definition` text |
 | `Disambiguation` | `name`, `domain`, `status`, `page_id` | `always_ask` text |
 | `Reification` | *(not a node)* flattened into a typed relationship with `via` | Reification page body — `reason`, `consequence` and full prose context |
 
@@ -82,11 +83,11 @@ Seven edge kinds with no properties. Back-references on content storage pages ar
 
 | Edge kind | Reification type | Notes |
 |---|---|---|
-| `implement` | `IMPLEMENTS` | Subject → any; Measure/BusinessRule/Filter → VerifiedQuery only |
+| `implement` | `IMPLEMENTS` | Measure/BusinessRule/Filter → Subject, Policy, VerifiedQuery |
 | `relatedTo` | `RELATED_TO` | Symmetric generic cross-link |
 | `calculate` | `CALCULATES` | Table → Attribute, Measure — Table is the source exposing the derived column (Attribute) or computing the KPI (Measure) |
 | `joinedTo` | `JOINED_TO` | Symmetric; join key stored as property `on` |
-| `disambiguate` | `DISAMBIGUATES` | Subject → Disambiguation |
+| `disambiguate` | `DISAMBIGUATES` | Disambiguation → Subject |
 | `apply` | `APPLIES_TO` | BusinessRule → Table, Measure |
 | `contain` | `CONTAINS` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation |
 

@@ -63,7 +63,7 @@ The where-used index in S/4HANA is itself a dependency graph. Once extracted, it
 
 - Impact analysis: which KG `Table` nodes are affected if a CDS base view changes?
 - Discovery completeness: are all CDS views reachable from the seed actually imported?
-- Lineage tracing: follow `implement ->` edges from a `Subject` back through the CDS dependency chain to the physical DDIC table
+- Lineage tracing: start from a `Subject`, find its implementing nodes (`implement <-` in the edge index), and continue through the CDS dependency chain to the physical DDIC table
 
 If projected, CDS-to-CDS dependencies are stored as `RELATED_TO` relationships between `Table` nodes, with an additional property `s4_dependency_type` (e.g. `association`, `extend`, `parameter_binding`).
 

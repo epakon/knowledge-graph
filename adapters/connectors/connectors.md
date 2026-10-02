@@ -6,7 +6,7 @@ Large systems like SAP S/4HANA, Salesforce, or Workday encode enormous amounts o
 
 The connector is a **specification document**, not a technical connector. It describes:
 
-- Which business concepts in the source system correspond to `Subject`, `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`, and `VerifiedQuery` nodes.
+- Which business concepts in the source system correspond to `Subject`, `Policy`, `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `BusinessRule`, and `VerifiedQuery` nodes.
 - Which relationships between those concepts correspond to KG edge kinds — including reified edges (`mandatory`, `requires`) that carry business `reason` and `consequence`.
 - Where in the source system the business meaning lives: in user-facing labels, process documentation, configuration, or calculation logic.
 - What cannot be derived automatically and must be authored by a domain expert.
@@ -41,7 +41,7 @@ Technical elements define how things are *implemented*: which CDS view holds the
 
 **The bridge**
 
-`implement ->` edges connect the two layers. A `Subject: Company Code` in the Vocabulary is implemented by a `Filter: Company Code` in the FI domain and a `Table: Company Code Master` in the MM domain. The business concept survives; its implementations may change.
+`implement ->` edges connect the two layers. They are owned by the Domain-layer node and point up: `Filter: Company Code` in the FI domain owns `implement -> Subject: Company Code`. A business rule works the same way — it is stated once as a `Policy`, and each Filter or BusinessRule that applies it owns `implement -> Policy`. The business concept survives; its implementations may change.
 
 This separation is not a strict rule — not every source object maps cleanly into one layer. But it is the natural direction: when translating a source system, ask first *is this a business concept or a technical artifact?* The answer determines the layer.
 
@@ -84,6 +84,7 @@ For each KG node type the source system can populate, provide a mapping table:
 | KG node type | Source object(s) | Key mapping notes |
 |---|---|---|
 | `Subject` | ... | ... |
+| `Policy` | ... | ... |
 | `Domain` | ... | ... |
 | `Table` | ... | ... |
 | `Measure` | ... | ... |

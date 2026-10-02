@@ -195,7 +195,7 @@ Agent nodes follow [spec/consumption-layer.md](../../spec/consumption-layer.md).
        --[mandatory <-]- Filter: ACTIVE_CUSTOMERS      (Reification: ACTIVE_CUSTOMERS mandatory -> ORDERS)
      --[requires]-->   Filter: EXCLUDE_TEST_ORDERS     (Reification: REVENUE requires -> EXCLUDE_TEST_ORDERS)
      --[implement]-->  VerifiedQuery: REVENUE_BY_REGION
-     --[implement <-]- Subject: Revenue
+     --[implement]-->  Subject: Revenue
    ```
 
 5. If the user wants to go deeper on any node, read it and continue.

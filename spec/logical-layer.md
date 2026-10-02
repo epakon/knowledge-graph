@@ -17,7 +17,7 @@ The logical layer holds the technical implementation of business knowledge: tabl
 | **Authored by** | Data engineering |
 | **Changes when** | Data model changes |
 
-The bridge from the conceptual layer into this layer is the `implement ->` edge: a `Subject` in `vocabulary/` points to the domain nodes that embody it (e.g. `Subject: DSO` → `Measure: DSO`, `Rule: dso-annualization`). See [conceptual-layer.md](conceptual-layer.md) for the full bridge definition.
+The bridge between the conceptual layer and this layer is the `implement ->` edge, owned by the domain node and pointing up to the `Subject` or `Policy` it embodies (e.g. `Measure: DSO` → `Subject: DSO`; `Filter: EXCLUDE_INTERCOMPANY` → `Policy: Net revenue scope`). Conceptual pages do not list their implementations. See [conceptual-layer.md §3.2](conceptual-layer.md#32-bridge-edges--from-the-logical-layer) for the full bridge definition.
 
 ---
 
@@ -36,7 +36,7 @@ Each node type maps to a **node label** in a target graph database. The identity
 | `Attribute` | Promoted column with semantic payload: derived expression, rule-linked, or cross-domain column. |
 | `Filter` | Named SQL predicate; mandatory or contextual. |
 | `VerifiedQuery` | Human-approved SQL with verifier name, verification date, and onboarding flag. |
-| `BusinessRule` | Named rule governing query construction or interpretation. |
+| `BusinessRule` | Named rule governing query construction or interpretation, in SQL terms. Implements a `Policy` when the business states the rule; otherwise a table-local structural fact, treated as `necessity`. |
 | `Disambiguation` | Ambiguous term requiring clarification before any query is issued. |
 | `Reification` | Reified semantic edge with Reason + Consequence if Ignored. Has its own page; is not a node in the graph DB. |
 

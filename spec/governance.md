@@ -50,7 +50,9 @@ A change may be applied directly by its author, with no second approver, when **
 
 - **Non-breaking** per `versioning.md`'s breaking-change table (description/synonym edits, new `## Links` edge, verified-by/date updates).
 - **Scoped to a single domain** the author owns (per `Domain.owner`) or a conceptual-layer page they authored per `conceptual-layer.md` §5.
-- **Does not change a property that other pages' correctness depends on** — i.e. not `definition_sql`, `predicate_sql`, `expression_sql`, `mandatory`, `rule_modality`, or a `Reification` page's `reason`/`consequence`.
+- **Does not change a property that other pages' correctness depends on** — i.e. not `definition_sql`, `predicate_sql`, `expression_sql`, `mandatory`, a `Policy`'s `statement` or `rule_modality`, or a `Reification` page's `reason`/`consequence`.
+
+Adding an `implement -> Policy` or `implement -> Subject` edge to a logical page in the author's own domain is self-serve: the edge lives on the logical page, so the conceptual page is not edited.
 
 Self-serve changes still require a version comment (per `versioning.md`) — "no review required" is not "no record."
 
@@ -62,6 +64,7 @@ A change requires a second approver (the domain owner if the author isn't the ow
 - **Crosses domains** — a `relatedTo`, `exactMatch`/`closeMatch`, or conceptual-layer edge that a different domain's pages depend on.
 - **Creates or removes a node type or edge kind** — always a spec change (`schema.yaml` + CHANGELOG), never a page-level decision regardless of how small it looks. `schema.yaml` is the normative source (see its header note); before merging, check whether `logical-layer.md`, `conceptual-layer.md`, `consumption-layer.md`, `link-format.md`, `adapters/engine/*/**-adapter.md`, and the relevant connector docs reference the changed kind/type and need a matching update — grep for the kind/type name across `spec/` and `adapters/` rather than assuming a single file.
 - **Triggered by §4's mechanical check** — a source-system change that surfaced a potentially stale KG page always goes through review; the whole point of §4 is that the author (the source-model changer) is often not the KG domain owner and may not have full context to self-certify.
+- **Changes a `Policy` statement** — every implementing Filter, BusinessRule and Measure must be re-checked; find them with `implement <- Policy: <Name>` in the edge index.
 
 Review-required changes follow: propose (draft the change, cite the trigger — §4 finding, new requirement, correction) → domain owner or steward confirms → apply with version comment → propagate per `versioning.md`'s breaking-change propagation steps.
 
@@ -78,7 +81,7 @@ Both lists in §3a are meant to grow. When a new node type, edge kind, or proper
 1. Is a bad value on this property something another page's correctness silently depends on (→ review-required), or is it purely descriptive/navigational (→ self-serve)?
 2. Does this property or edge ever cross a domain boundary or a node-type boundary (→ review-required), or is it always contained within one author's accountable scope (→ self-serve)?
 
-Record the classification in the CHANGELOG entry that introduces the property — e.g. `BusinessRule.rule_modality` changes which fields are required (`consequence_if_violated` becomes optional when `necessity`) but does not itself change SQL construction, so an edit to it alone is self-serve; but if it is edited *alongside* `consequence_if_violated` or `definition`, the combined change is judged by those fields' review-required status, not by `rule_modality` in isolation.
+Record the classification in the CHANGELOG entry that introduces the property — e.g. `Policy.rule_modality` changes which fields are required (`consequence_if_violated` becomes optional when `necessity`) but does not itself change SQL construction, so an edit to it alone is self-serve; but if it is edited *alongside* `consequence_if_violated` or `definition`, the combined change is judged by those fields' review-required status, not by `rule_modality` in isolation.
 
 ---
 

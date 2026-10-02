@@ -90,22 +90,22 @@
   ],
   "edges": [
     {
-      "source": "Subject: Revenue",
-      "target": "Measure: GROSS_REVENUE",
+      "source": "Measure: GROSS_REVENUE",
+      "target": "Subject: Revenue",
       "kind": "implement",
       "style": "hyperlink",
       "via": null
     },
     {
-      "source": "Subject: Revenue",
-      "target": "Filter: ACTIVE_ORDERS",
+      "source": "Filter: ACTIVE_ORDERS",
+      "target": "Subject: Revenue",
       "kind": "implement",
       "style": "hyperlink",
       "via": null
     },
     {
-      "source": "Subject: Revenue",
-      "target": "Disambiguation: order-status",
+      "source": "Disambiguation: order-status",
+      "target": "Subject: Revenue",
       "kind": "disambiguate",
       "style": "hyperlink",
       "via": null

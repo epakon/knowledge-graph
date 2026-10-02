@@ -64,20 +64,20 @@ CREATE CONSTRAINT FOR (n:Agent) REQUIRE n.name IS UNIQUE;
 
 ### 3.1 `uses` — the only edge kind in this layer
 
-`uses` (`USES`) is `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain, Disambiguation` — see `schema.yaml`'s `hyperlink_edge_kinds` section for the full definition. Owning side: `Agent` page. Plain hyperlink — not reified.
+`uses` (`USES`) is `Agent -> Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Policy, Domain, Disambiguation` — see `schema.yaml`'s `hyperlink_edge_kinds` section for the full definition. Owning side: `Agent` page. Plain hyperlink — not reified.
 
 **Why plain hyperlink, not reified.** `uses` is navigational/traceability, the same tier as `contain` or `calculate` — it answers "which agents depend on this node," not "what breaks if this dependency is violated." There is no reason/consequence story to tell for the fact that an agent reads a table, so promoting it to a Reification page would produce an empty page (see [logical-layer.md §3](logical-layer.md#why-this-list-is-closed-for-now) for the general rule).
 
 **Why a dedicated kind and not `relatedTo` or the existing `consumes`.** `conceptual-layer.md` §3.1 already defines `consumes` for `Process -> Subject` ("the process requires this Subject's data as an input to operate"). `uses` is semantically similar but deliberately a separate kind: it needs to be free to grow its own properties (e.g. a future `usage_frequency` or `criticality` field scoped to agent traceability) without those properties leaking onto the unrelated `Process -> Subject` relationship, and without forcing every future `Agent -> Table` edge through the generic, property-less `relatedTo`.
 
-**Back-reference.** Every node an `Agent` uses carries the back-reference in its own `## Links`:
+**Back-reference.** Every logical node an `Agent` uses carries the back-reference in its own `## Links`:
 
 ```
 Owning (on Agent page):    [Agent: SALES_ASSISTANT uses -> Table: ORDERS]
 Back-ref (on Table page):  [Agent: SALES_ASSISTANT uses <- Table: ORDERS]
 ```
 
-This is what makes the layer's core promise real: from any `Table`, `Measure`, `Filter`, or `Subject` page, a human or agent can see every `Agent` that depends on it, with no separate registry to query.
+This is what makes the layer's core promise real: from any `Table`, `Measure` or `Filter` page, a human or agent can see every `Agent` that depends on it, with no separate registry to query. Conceptual pages (`Subject`, `Policy`) are the exception: they carry no back-references from other layers (`conceptual-layer.md` §1), so the agents using them are found through the edge index.
 
 ---
 

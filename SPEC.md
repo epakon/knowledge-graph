@@ -34,7 +34,7 @@
 | Term | Definition |
 |---|---|
 | **Node** | A single-topic page representing one business entity. Each node has a type, a unique name, and structured header fields. |
-| **Node type** | The category of a node. Conceptual layer: `Concept`, `Subject`, `Process`. Logical layer: `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. Consumption layer: `Agent`. |
+| **Node type** | The category of a node. Conceptual layer: `Concept`, `Subject`, `Process`, `Policy`. Logical layer: `Domain`, `Table`, `Measure`, `Attribute`, `Filter`, `VerifiedQuery`, `BusinessRule`, `Disambiguation`. Consumption layer: `Agent`. |
 | **Edge** | A typed, directed link between two nodes. Encoded as a readable label embedded in the source page body. |
 | **Edge kind** | The semantic verb describing the relationship: `implement`, `relatedTo`, `attribute`, `joinedTo`, `disambiguate`, `apply`, `contain`, `uses`. |
 | **Owning side** | The page that declares the edge (source → target direction). |
@@ -43,6 +43,7 @@
 | **Reified edge kind** | An edge kind that requires a Reification page: `mandatory`, `requires`, `overrides`, `demonstrates`. |
 | **Domain** | A scoped collection of nodes tied to specific data tables and SQL expressions. |
 | **Subject** | A global node (shared across all domains) that holds the business definition of a concept. |
+| **Policy** | A global node that states a business rule in business language, without SQL. "Policy" means a business rule — not a data-governance or access policy. Logical Filter, BusinessRule and Measure nodes implement it in SQL. |
 | **Identity key** | The field whose value uniquely identifies a node within its type (always `name`). |
 
 ---
@@ -66,6 +67,7 @@ graph LR
         Concept["Concept"]
         Subject["Subject"]
         Process["Process"]
+        Policy["Policy"]
     end
 
     subgraph logical["Logical layer (domain/)"]
@@ -87,11 +89,15 @@ graph LR
     Process -->|produces| Subject
     Process -->|consumes| Subject
     Process -->|governs| Subject
+    Policy -->|relatedTo| Subject
 
-    Subject -->|implement| Filter
-    Subject -->|implement| Measure
-    Subject -->|implement| BusinessRule
-    Subject -->|disambiguate| Disambiguation
+    Filter -->|implement| Subject
+    Measure -->|implement| Subject
+    BusinessRule -->|implement| Subject
+    Filter -->|implement| Policy
+    Measure -->|implement| Policy
+    BusinessRule -->|implement| Policy
+    Disambiguation -->|disambiguate| Subject
 
     Domain -->|contain| Table
     Domain -->|contain| Measure
@@ -114,7 +120,6 @@ graph LR
     BusinessRule --- overrides{overrides}
     Attribute --- overrides
 
-    VerifiedQuery -->|implement| Measure
     VerifiedQuery -->|relatedTo| Filter
     VerifiedQuery -->|relatedTo| BusinessRule
 
@@ -134,11 +139,12 @@ graph LR
     Agent -->|uses| BusinessRule
     Agent -->|uses| VerifiedQuery
     Agent -->|uses| Subject
+    Agent -->|uses| Policy
     Agent -->|uses| Domain
     Agent -->|uses| Disambiguation
 ```
 
-> Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`.
+> Rectangles = node types. Diamonds = reified edge kinds (Reification pages). Labelled arrows = hyperlink edge kinds. Only the owning direction is shown — back-references use the same verb with `←`. Edges between layers are owned by the logical or consumption side and point up into the conceptual layer; conceptual pages link only to each other.
 
 ---
 
@@ -227,7 +233,7 @@ Agents must query the knowledge base **before writing any SQL** and **before ans
 
 1. **Start at the Measure.** Read its SQL definition — this is the aggregate expression.
 2. **Collect the Filters to apply:** the `mandatory` Filters of every Table the Measure is calculated from, plus the Measure's own `requires` Filters. Every one of them must appear in the `WHERE` clause.
-3. **Follow `relatedTo`** to find BusinessRule pages. Each rule specifies additional `WHERE` conditions or computation patterns.
+3. **Follow `relatedTo`** to find BusinessRule pages. Each rule specifies additional `WHERE` conditions or computation patterns. Follow `implement ->` from a Filter, BusinessRule or Measure to its `Policy` to read the business statement and the consequence of violating it.
 4. **Check for Disambiguation** if the question contains an ambiguous term. Present the clarifying question to the user before generating SQL.
 5. **Use VerifiedQuery pages** as reference implementations. If an exact match exists, return or adapt the verified SQL rather than generating from scratch.
 6. **Check Attribute pages** for columns with derived expressions — use the expression from the Attribute page, not a raw column reference.
@@ -241,7 +247,7 @@ Agents must query the knowledge base **before writing any SQL** and **before ans
 | User asks what a term means | `Subject: <term>` or `Disambiguation: <term>` |
 | User asks about filters for a table | Reified edges where kind = `mandatory` and target = `<table>` |
 | User asks for a known query pattern | `VerifiedQuery: <topic>` |
-| User asks about a business rule | `Rule: <name>` |
+| User asks about a business rule | `Policy: <name>` for the business statement, then `implement <- Policy: <name>` for the Filters/Rules that apply it to a table |
 | Ambiguous term in the question | `Disambiguation: <term>` — ask the clarifying question first |
 | User asks about a column or derived field | `Attribute: <name>` |
 | User asks what an existing agent/skill can answer, or which agent to use | `Agent: <name>` — or `uses <-` back-references on the node in question to find agents that already read it |

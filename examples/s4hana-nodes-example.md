@@ -31,8 +31,6 @@ A party that has a commercial relationship with the organization in the role of 
 
 ## Links
 
-- [Subject: Customer implement -> Domain: FI-AR]
-- [Subject: Customer disambiguate -> Disambiguation: Customer vs. Sold-to Party]
 - [Subject: Customer relatedTo -> Subject: Business Partner]
 
 ---
@@ -187,7 +185,7 @@ Currency: `CompanyCodeCurrency` (local currency of the company code).
 ## Links
 
 - [Table: Customer Open Item calculate -> Measure: Open Receivables Amount]
-- [Subject: Customer implement -> Measure: Open Receivables Amount]
+- [Measure: Open Receivables Amount implement -> Subject: Customer]
 
 ---
 
@@ -271,7 +269,7 @@ WHERE CompanyCode = '<P_CompanyCode>'
 
 ## Links
 
-- [Subject: Company Code implement -> Filter: Company Code]
+- [Filter: Company Code implement -> Subject: Company Code]
 
 ---
 
@@ -293,11 +291,9 @@ StatisticalIndicator = ' '
 AND PostingKey NOT IN ('09', '19')
 ```
 
-`StatisticalIndicator = 'X'` marks a posting as statistical only (used for reporting, does not affect balance). Posting keys 09 and 19 are internal SAP statistical entries.
+`StatisticalIndicator = 'X'` marks a posting as statistical only (used for reporting, does not affect balance). Posting keys 09 and 19 are internal SAP statistical entries. Including them inflates the Open Receivables Amount by non-cash items, overstating AR balance by up to 15% in environments that use cross-company intercompany netting.
 
-## Consequence if Violated
-
-Including statistical postings inflates the Open Receivables Amount by non-cash items, overstating AR balance by up to 15% in environments that use cross-company intercompany netting.
+> This rule implements no `Policy`: it is a structural fact about how S/4HANA stores postings, so its modality is necessity and it has no separate consequence field.
 
 ## Links
 
@@ -323,7 +319,7 @@ Including statistical postings inflates the Open Receivables Amount by non-cash 
 
 ## Links
 
-- [Subject: Customer disambiguate -> Disambiguation: Customer vs. Sold-to Party]
+- [Disambiguation: Customer vs. Sold-to Party disambiguate -> Subject: Customer]
 
 ---
 

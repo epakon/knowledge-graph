@@ -30,6 +30,7 @@ Reification page link (same label on both From and To pages):
 - Use ASCII `->` and `<-`. Do not use unicode `→`/`←` or HTML entities `&rarr;`/`&larr;`.
 - The link navigates to the **other** page — never the current page.
 - `->` = owning side (I point to the target). `<-` = back-reference (someone points to me).
+- **Conceptual pages carry no cross-layer links.** A Subject, Concept, Process or Policy page holds only edges to other conceptual pages (owning and back-reference). Every edge between a conceptual node and a logical or consumption node is owned by the logical or consumption page, and no back-reference is written on the conceptual page (audit rule `no_conceptual_down_links`).
 - Reification page links always show `->` regardless of which side they appear on.
 - All hyperlink edges live in a `## Links` section. On Table pages, owning `calculate` edges live in the `Calculated` column of `### Semantic annotations`, and `joinedTo` edges in `## Joins` as edge statements.
 - **Column-defined edge (heading-defined, exception 1 of 2).** A link in a Table page's `Calculated` column carries only the target label: `[Attribute: X](path)` or `[Measure: X](path)`. The column header defines the edge, so it reads as `Table: <this page> calculate -> <target>`. The back-reference on the target page is still a full edge statement: `[Table: T calculate <- Attribute: X](path)`.
@@ -96,11 +97,11 @@ This is the most important distinction in the data model. Two kinds of edges exi
 
 | Kind | Typical source → target | Notes |
 |---|---|---|
-| `implement` | Subject → Filter, Measure, BusinessRule, VerifiedQuery · Measure, BusinessRule, Filter → VerifiedQuery | Not valid between two Subjects. To a VerifiedQuery only when the query's SQL applies the source; otherwise `relatedTo` |
+| `implement` | Filter, Measure, BusinessRule → Subject, Policy · Measure, BusinessRule, Filter → VerifiedQuery | Bridge edges are owned by the logical page; no back-reference on the Subject/Policy page. To a VerifiedQuery only when the query's SQL applies the source; otherwise `relatedTo` |
 | `relatedTo` | any → any | Generic symmetric cross-link |
 | `calculate` | Table → Attribute, Measure | |
 | `joinedTo` | Table → Table | Symmetric |
-| `disambiguate` | Subject → Disambiguation | |
+| `disambiguate` | Disambiguation → Subject | No back-reference on the Subject page |
 | `apply` | BusinessRule → Table, Measure | |
 | `contain` | Domain → Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation | |
 
@@ -110,14 +111,15 @@ This is the most important distinction in the data model. Two kinds of edges exi
 
 ### Hyperlink edge — owning side
 
-Subject: Write-Off owns an edge to Filter: WRITE_OFF_INVOICES:
+Filter: WRITE_OFF_INVOICES owns a bridge edge to Subject: Write-Off and Policy: Write-off scope. The conceptual pages carry no back-reference:
 
 ```
-## Links                              ← on Subject: Write-Off
-[Subject: Write-Off implement -> Filter: WRITE_OFF_INVOICES]
-
 ## Links                              ← on Filter: WRITE_OFF_INVOICES
-[Subject: Write-Off implement <- Filter: WRITE_OFF_INVOICES]
+[Filter: WRITE_OFF_INVOICES implement -> Subject: Write-Off]
+[Filter: WRITE_OFF_INVOICES implement -> Policy: Write-off scope]
+
+## Links                              ← on Subject: Write-Off
+(nothing about the Filter — only links to other conceptual pages)
 ```
 
 ### Hyperlink edge — cross-link
@@ -181,18 +183,20 @@ Owning (on Measure page):    [Measure: REVENUE requires -> Filter: ACTIVE_CUSTOM
 Back-ref (on Filter page):   [Measure: REVENUE requires <- Filter: ACTIVE_CUSTOMERS]   ← correct
 ```
 
-### 3. `implement` is not valid between two Subjects
+### 3. `implement` never starts on a conceptual page
 
-Use `relatedTo` for Subject-to-Subject links.
+`implement` goes from a logical node up to a Subject or Policy. Use `relatedTo` between conceptual nodes.
 
 **Invalid:**
 ```
 [Subject: Write-Off implement -> Subject: Bad-Debt]
+[Subject: Write-Off implement -> Filter: WRITE_OFF_INVOICES]
 ```
 
 **Valid:**
 ```
 [Subject: Write-Off relatedTo -> Subject: Bad-Debt]
+[Filter: WRITE_OFF_INVOICES implement -> Subject: Write-Off]
 ```
 
 ---
@@ -201,7 +205,7 @@ Use `relatedTo` for Subject-to-Subject links.
 
 When drawing the graph (e.g. Mermaid diagram):
 
-- **Rectangles** (`[Label]`) — all node types except Reification: Subject, Table, Measure, Attribute, Filter, Rule, VerifiedQuery, Disambiguation, Domain.
+- **Rectangles** (`[Label]`) — all node types except Reification: Subject, Policy, Table, Measure, Attribute, Filter, Rule, VerifiedQuery, Disambiguation, Domain.
 - **Diamonds** (`{Label}`) — Reification pages only. A Reification page is a reified edge with its own page carrying Reason + Consequence.
 - **Labelled arrows** (`-->|kind|`) — hyperlink edges. No dedicated page.
 
@@ -210,7 +214,7 @@ When drawing the graph (e.g. Mermaid diagram):
 Filter: ACTIVE_CUSTOMERS --- {mandatory} --- Table: ORDERS
 
 # Hyperlink edge (no Reification page):
-Subject: Write-Off -->|implement| Filter: WRITE_OFF_INVOICES
+Filter: WRITE_OFF_INVOICES -->|implement| Subject: Write-Off
 ```
 
 The distinction matters: a diamond in the diagram means there is a dedicated page you can follow to read why the dependency exists and what breaks if it is ignored.
@@ -221,13 +225,14 @@ The distinction matters: a diamond in the diagram means there is a dedicated pag
 
 | Node type | Header fields | Typical `## Links` edges | `## Reifications`? |
 |---|---|---|---|
-| `Subject` | Type, Scope | `implement ->` Filter, Measure, Rule · `disambiguate ->` Disambiguation · `relatedTo ->/<-` Subject | No |
+| `Subject` | Type, Scope | `relatedTo ->/<-` Subject, Policy · conceptual edges (`comprises <-`, `produces/consumes/governs <-`) only | No |
+| `Policy` | Type, Rule modality | `relatedTo ->` Subject — no links to logical nodes | No |
 | `Domain` | Type | `contain ->` Table, Measure, Filter, VerifiedQuery, BusinessRule, Attribute, Disambiguation (in the type sections) | No |
 | `Table` | Type, TableKind, Domain, Source | `joinedTo ->/<-` Table (in `## Joins`) · `calculate ->` Attribute, Measure (in the `Calculated` column) | Yes |
-| `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
+| `Measure` | Type, Domain, Kind, Synonyms, Status | `calculate <-` Table · `implement ->` Subject, Policy, VerifiedQuery · `relatedTo ->/<-` Rule, Filter | Yes |
 | `Attribute` | Type, Domain, Kind, Synonyms, access_modifier | `calculate <-` Table · `relatedTo ->/<-` Rule, Filter, Subject | Yes (overrides) |
-| `Filter` | Type, Domain, Mandatory, Synonyms | `implement <-` Subject · `implement ->` VerifiedQuery · `relatedTo ->` Disambiguation (optional) | Yes |
-| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement <-` Measure, Filter, Rule, Subject | Yes (demonstrates) |
-| `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement <-` Subject · `implement ->` VerifiedQuery | Yes (overrides) |
-| `Disambiguation` | Type, Domain | `disambiguate <-` Subject · `relatedTo <-` Filter, BusinessRule · `uses <-` Agent | No |
+| `Filter` | Type, Domain, Mandatory, Synonyms | `implement ->` Subject, Policy, VerifiedQuery · `relatedTo ->` Disambiguation (optional) | Yes |
+| `VerifiedQuery` | Type, Domain, Onboarding question, Verified by/at, Status | `implement <-` Measure, Filter, Rule | Yes (demonstrates) |
+| `BusinessRule` | Type, Domain | `apply ->` Table, Measure · `relatedTo ->/<-` Filter, Disambiguation · `implement ->` Policy, Subject, VerifiedQuery | Yes (overrides) |
+| `Disambiguation` | Type, Domain | `disambiguate ->` Subject · `relatedTo <-` Filter, BusinessRule · `uses <-` Agent | No |
 | `Reification` | Type, Kind, From, To | *(no edge sections — is itself a reified edge)* | N/A |

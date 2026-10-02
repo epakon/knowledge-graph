@@ -1,6 +1,6 @@
 # Knowledge Graph Schema
 # Machine-readable specification of node types, edge kinds, and their valid combinations.
-# Version: 1.6.2
+# Version: 2.0.0
 # License: CC BY-NC 4.0 — https://creativecommons.org/licenses/by-nc/4.0/
 #
 # NORMATIVE SOURCE: this file is the single authoritative definition of node
@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "1.6.2"
+spec_version: "2.0.0"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)
@@ -67,6 +67,42 @@ node_types:
           that are not derivable from the Subjects it links to.
     page_title_prefix: "Process:"
     container_path: "vocabulary/processes/"
+
+  - name: Policy
+    label: Policy
+    layer: conceptual
+    scope: global
+    identity_key: name
+    description: >
+      A business rule stated in business language, owned by the business.
+      "Policy" here means a business rule — not a data-governance principle
+      and not an access or masking policy. Logical Filter, BusinessRule and
+      Measure nodes translate it into SQL for specific tables via
+      "implement ->" edges.
+    properties:
+      - name: statement
+        type: string
+        required: true
+        description: >
+          The rule in business language. No SQL, no table or column names.
+          Must pass the conceptual-layer stability test.
+      - name: rule_modality
+        type: enum
+        values: [necessity, obligation, prohibition]
+        required: false
+        description: >
+          SBVR-style modality. necessity = definitional, true by construction
+          (violating it means the query is wrong, not risky).
+          obligation/prohibition = a violable business policy. Defaults to
+          treating consequence_if_violated as required when unset.
+      - name: consequence_if_violated
+        type: string
+        required: true
+        description: >
+          One sentence — quantify if possible. Required unless
+          rule_modality is necessity, in which case it is optional.
+    page_title_prefix: "Policy:"
+    container_path: "vocabulary/policies/"
 
 # ---------------------------------------------------------------------------
 # Node Types — Consumption layer (ai/)
@@ -249,27 +285,17 @@ node_types:
     label: BusinessRule
     scope: per-domain
     identity_key: name
+    description: >
+      The SQL form of a rule for specific tables. A BusinessRule that
+      implements a Policy takes its modality and consequence from that
+      Policy. A BusinessRule that implements no Policy is a table-local,
+      structural fact (e.g. a sign convention or deduplication key) and is
+      treated as necessity.
     properties:
       - name: definition
         type: string
         required: true
         description: Exact column names, values, and filter expressions. No prose.
-      - name: rule_modality
-        type: enum
-        values: [necessity, obligation, prohibition]
-        required: false
-        description: >
-          SBVR-style modality. necessity = structural/definitional, true by
-          construction (violating it means the query is wrong, not risky).
-          obligation/prohibition = a violable business policy. Defaults to
-          treating consequence_if_violated as required when unset.
-      - name: consequence_if_violated
-        type: string
-        required: true
-        description: >
-          One sentence — quantify if possible. Required unless
-          rule_modality is necessity, in which case it is optional
-          (restating "the query is wrong" is often redundant with definition).
     page_title_prefix: "Rule:"
     container_path: "<domain>/rules/"
 
@@ -352,16 +378,18 @@ hyperlink_edge_kinds:
       The Process defines the rules that constrain this Subject.
       Use when the process shapes the rules around a value rather than creating the value itself.
 
-  # -- Bridge edge (conceptual → logical) -----------------------------------
+  # -- Bridge edge (logical → conceptual) -----------------------------------
 
   - kind: implement
     relationship_type: IMPLEMENTS
-    valid_sources: [Subject, Measure, BusinessRule, Filter]
-    valid_targets: [Filter, Measure, BusinessRule, VerifiedQuery]
+    valid_sources: [Measure, BusinessRule, Filter]
+    valid_targets: [Subject, Policy, VerifiedQuery]
     notes: >
-      Subject may implement any target type (bridge from conceptual to logical layer).
-      Measure, BusinessRule, Filter may only implement VerifiedQuery.
-      implement is NOT valid between two Subjects — use relatedTo.
+      Bridge: Measure, BusinessRule, Filter implement -> Subject or Policy — the
+      logical node is the concrete form of the business concept or rule. The
+      logical node is the owning side; the conceptual page carries no
+      back-reference (see audit rule no_conceptual_down_links), so adding or
+      renaming a table never edits a conceptual page.
       Measure/BusinessRule/Filter implement -> VerifiedQuery when the query's SQL
       applies the source (its definition, predicate or rule), so a breaking change
       to the source requires re-verifying the query. If the query is only about the
@@ -376,7 +404,11 @@ hyperlink_edge_kinds:
     valid_sources: [any]
     valid_targets: [any]
     symmetric: true
-    notes: Generic cross-link. Use when no more specific edge kind applies.
+    notes: >
+      Generic cross-link. Use when no more specific edge kind applies.
+      Policy relatedTo -> Subject names the concepts a Policy constrains.
+      A relatedTo edge that crosses from the conceptual layer to another layer
+      is owned by the non-conceptual side (see audit rule no_conceptual_down_links).
 
   - kind: calculate
     relationship_type: CALCULATES
@@ -399,8 +431,11 @@ hyperlink_edge_kinds:
 
   - kind: disambiguate
     relationship_type: DISAMBIGUATES
-    valid_sources: [Subject]
-    valid_targets: [Disambiguation]
+    valid_sources: [Disambiguation]
+    valid_targets: [Subject]
+    notes: >
+      Owning side: Disambiguation page (logical layer). The Subject page carries
+      no back-reference (see audit rule no_conceptual_down_links).
 
   - kind: apply
     relationship_type: APPLIES_TO
@@ -424,11 +459,13 @@ hyperlink_edge_kinds:
   - kind: uses
     relationship_type: USES
     valid_sources: [Agent]
-    valid_targets: [Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Domain, Disambiguation]
+    valid_targets: [Table, Measure, Attribute, Filter, BusinessRule, VerifiedQuery, Subject, Policy, Domain, Disambiguation]
     notes: >
       An Agent reads this node's content to answer questions or generate SQL
       correctly. Owning side: Agent page. Back-reference on the target page:
-      Agent: X uses <- Table: Y. Plain hyperlink, not reified — navigational/
+      Agent: X uses <- Table: Y — except on conceptual-layer pages (Subject,
+      Policy), which carry no back-references (see audit rule
+      no_conceptual_down_links). Plain hyperlink, not reified — navigational/
       traceability, not a query-correctness dependency.
 
 # ---------------------------------------------------------------------------
@@ -493,6 +530,22 @@ reified_edge_kinds:
 audit_rules:
   - id: no_duplicate_nodes
     description: name + label must be unique in the node index.
+
+  - id: no_conceptual_down_links
+    description: >
+      Conceptual-layer pages (Concept, Subject, Process, Policy) link only to
+      other conceptual-layer pages. They never own an edge to a logical- or
+      consumption-layer node and carry no back-references from those layers.
+      Edges that cross layers are owned by the lower, more volatile side.
+
+  - id: policy_coverage
+    description: >
+      Informational, not blocking. For every Policy P, take the Subjects P is
+      relatedTo. For every Table that calculates a Measure implementing one of
+      those Subjects, a Filter, BusinessRule or Measure implementing P must be
+      connected to that Table (Filter mandatory for it, BusinessRule apply ->
+      it or its Measure, or the Measure itself). Report every missing
+      (Policy, Table) pair for review.
 
   - id: no_duplicate_edges
     description: (source, target, relationship_type) must be unique in the edge index.

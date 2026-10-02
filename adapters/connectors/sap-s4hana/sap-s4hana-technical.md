@@ -198,7 +198,7 @@ SAP S/4HANA is an ERP suite that encodes business processes across Finance, Proc
 |---|---|---|
 | `name` | Rule name from behavior definition, CDS derivation, or Customizing key | Descriptive; no abbreviations |
 | `definition` | ABAP `DETERMINATION`/`VALIDATION` body; CDS `CASE`/`IIF`; Customizing value | Exact column names and filter expressions — no prose |
-| `consequence_if_violated` | Business impact from SAP Note, ABAP dump text, or domain expert | One sentence; quantify if possible — requires manual authoring for most rules |
+| `implement -> Policy` | Business rule behind the validation or Customizing value | Link to an existing `Policy` (its `consequence_if_violated` can be drafted from an SAP Note or ABAP dump text); omit for purely structural SAP rules |
 
 ### Disambiguation ← Ambiguous Field or Concept
 

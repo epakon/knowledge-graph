@@ -22,8 +22,10 @@ Knowledge Graph: <Domain>         (root container — one per domain)
 │   │   └── Concept: <Name>       abstract thematic grouping of Subjects
 │   ├── subjects/
 │   │   └── Subject: <Name>       business concept with data implementation
-│   └── processes/
-│       └── Process: <Name>       business activity with company-specific decisions
+│   ├── processes/
+│   │   └── Process: <Name>       business activity with company-specific decisions
+│   └── policies/
+│       └── Policy: <Name>        business rule in business language (not a governance/access policy)
 │
 ├── ai/                           consumption layer — global, not owned by any one domain
 │   └── Agent: <Name>             AI consumption surface (Cortex Agent, Claude/Cursor Skill, ...)
@@ -58,6 +60,7 @@ Page titles use a **type prefix + colon + name** pattern:
 | Concept | `Concept: <Name>` | `Concept: Liquidity` |
 | Subject | `Subject: <Name>` | `Subject: Write-Off` |
 | Process | `Process: <Name>` | `Process: Period-Close` |
+| Policy | `Policy: <Name>` | `Policy: Net revenue scope` |
 | Domain | `Domain: <Name>` | `Domain: Sales` |
 | Table | `Table: <Name>` | `Table: ORDERS` |
 | Measure | `Measure: <Name>` | `Measure: REVENUE` |
@@ -85,6 +88,7 @@ The following container pages must exist under each domain:
 | concepts root | `vocabulary/concepts/` |
 | subjects root | `vocabulary/subjects/` |
 | processes root | `vocabulary/processes/` |
+| policies root | `vocabulary/policies/` |
 | AI root | `ai/` |
 | domain index | `Domain: <Name>` |
 | tables | `<domain>/tables/` |
@@ -139,7 +143,7 @@ When the same concept appears in multiple domains, a single Subject page in `voc
 
 A node is owned by exactly one domain — the domain with the `contain ->` edge to it. Ownership means that domain is responsible for the node's correctness and verification. The page is stored in the owning domain's folder.
 
-When the same concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on the corresponding `Subject` page in the conceptual layer rather than being redefined per domain. Each domain's Attribute or Measure page links to the Subject via `relatedTo ->`, and the Subject links back. The business definition is written once on the Subject; domain pages carry only the domain-specific expression and access rules.
+When the same concept appears in multiple domains (e.g. `PAYMENT_METHOD` in Sales and in Finance), the shared meaning lives on the corresponding `Subject` page in the conceptual layer rather than being redefined per domain. Each domain's Attribute or Measure page links to the Subject (`relatedTo ->` or `implement ->`); the Subject page does not link back. The business definition is written once on the Subject; domain pages carry only the domain-specific expression and access rules. A rule that applies in several domains works the same way: it is stated once as a `Policy`, and each domain's Filter or BusinessRule implements it.
 
 Other domains that use the node do not add a `contain ->` edge. Their connection is visible in the graph through the existing edges from their own nodes (e.g. a Measure in Finance that links via `relatedTo ->` to a Rule owned by Sales).
 

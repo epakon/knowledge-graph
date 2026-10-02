@@ -44,7 +44,7 @@ Agent builds correct SQL / answers / instructions without hallucinating business
 - [CHANGELOG.md](CHANGELOG.md) — Version history (semantic versioning)
 - [LICENSE](LICENSE) — CC BY-NC 4.0
 - **spec/** — Normative specification
-  - [conceptual-layer.md](spec/conceptual-layer.md) — Conceptual layer: Concept, Subject, Process node types; stability test; bridge to logical layer
+  - [conceptual-layer.md](spec/conceptual-layer.md) — Conceptual layer: Concept, Subject, Process, Policy node types; stability test; bridge to logical layer
   - [logical-layer.md](spec/logical-layer.md) — Logical layer: node types, edge kinds, indexes, audit rules, graph-DB migration
   - [consumption-layer.md](spec/consumption-layer.md) — Consumption layer: `Agent` node type, `uses` edge kind, stability test, why it must never duplicate what it reads *(draft)*
   - [link-format.md](spec/link-format.md) — Edge-statement syntax, back-reference rules, visualization conventions

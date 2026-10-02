@@ -17,10 +17,12 @@ A company has two domains: **Sales** and **Finance**. Both domains share the bus
 Knowledge Graph (root)
 │
 ├── vocabulary/
-│   └── subjects/
-│       ├── Subject: Revenue          ← shared business definition
-│       ├── Subject: Write-Off        ← shared business definition
-│       └── Subject: Active Customer  ← shared business definition
+│   ├── subjects/
+│   │   ├── Subject: Revenue          ← shared business definition
+│   │   ├── Subject: Write-Off        ← shared business definition
+│   │   └── Subject: Active Customer  ← shared business definition
+│   └── policies/
+│       └── Policy: Revenue counts valid orders only  ← shared business rule
 │
 ├── Domain: Sales
 │   ├── tables/
@@ -60,30 +62,23 @@ Knowledge Graph (root)
 
 ## Cross-domain linking
 
-`Subject: Revenue` is defined once and linked from both domains:
+`Subject: Revenue` is defined once. Each domain's Measure page links up to it; the Subject page does not link down:
 
 ```
-Subject: Revenue
+Measure: GROSS_REVENUE                (Sales)
   ## Links
-  - [Subject: Revenue implement <- Measure: GROSS_REVENUE]   (back-ref from Sales domain)
-  - [Subject: Revenue implement <- Measure: NET_REVENUE]     (back-ref from Finance domain)
+  - [Measure: GROSS_REVENUE implement -> Subject: Revenue]
 ```
 
-Each Measure page links back to the Subject:
-
 ```
-Measure: GROSS_REVENUE
+Measure: NET_REVENUE                  (Finance)
   ## Links
-  - [Subject: Revenue implement <- Measure: GROSS_REVENUE]
+  - [Measure: NET_REVENUE implement -> Subject: Revenue]
 ```
 
-```
-Measure: NET_REVENUE
-  ## Links
-  - [Subject: Revenue implement <- Measure: NET_REVENUE]
-```
+The business definition of "Revenue" is written once on the Subject page and is accessible to agents working in both domains via semantic search. To list every implementation, search the edge index for `implement <- Subject: Revenue`.
 
-The business definition of "Revenue" is written once on the Subject page and is accessible to agents working in both domains via semantic search.
+A shared rule works the same way. `Policy: Revenue counts valid orders only` (`relatedTo -> Subject: Revenue`) states the rule once, and `Filter: ACTIVE_ORDERS` in Sales owns `implement -> Policy: Revenue counts valid orders only`. Finance has no Filter or Rule implementing it on `Table: LEDGER_ENTRIES`, even though `Measure: NET_REVENUE` implements `Subject: Revenue` — the `policy_coverage` audit reports exactly this gap.
 
 ---
 

@@ -16,12 +16,30 @@
 ## Business Definition
 Revenue is the total monetary value received from customers for goods or services delivered,
 before any deductions for returns, write-offs, or discounts.
+```
+
+> No `## Links`: Revenue has no related Subjects, and conceptual pages do not list their implementations. `Measure: GROSS_REVENUE`, `Measure: NET_REVENUE` and `Disambiguation: order-status` each own their edge to this page.
+
+---
+
+## Policy: Revenue counts valid orders only
+
+```markdown
+# Policy: Revenue counts valid orders only
+
+**Type:** Policy
+**Scope:** global
+**Rule modality:** obligation
+
+## Statement
+Revenue figures include only orders that were placed and not cancelled or returned.
+Cancelled and returned orders are reported separately, never netted into revenue.
+
+## Consequence if Violated
+Cancelled and returned orders inflate revenue by up to 12% in months with high return rates.
 
 ## Links
-- [Subject: Revenue implement -> Measure: GROSS_REVENUE](../Domain: Sales/measures/Measure: GROSS_REVENUE)
-- [Subject: Revenue implement -> Measure: NET_REVENUE](../Domain: Finance/measures/Measure: NET_REVENUE)
-- [Subject: Revenue implement -> Filter: EXCLUDE_RETURNS](path)
-- [Subject: Revenue disambiguate -> Disambiguation: order-status](path)
+- [Policy: Revenue counts valid orders only relatedTo -> Subject: Revenue](path)
 ```
 
 ---
@@ -126,7 +144,7 @@ SUM(ORDERS.TOTAL_AMOUNT)
 - [Table: ORDERS calculate <- Measure: GROSS_REVENUE](../tables/Table: ORDERS)
 - [Measure: GROSS_REVENUE relatedTo -> Rule: exclude-cancelled-orders](../rules/Rule: exclude-cancelled-orders)
 - [Measure: GROSS_REVENUE implement -> VerifiedQuery: REVENUE_BY_REGION_MONTHLY](../verified-queries/VerifiedQuery: REVENUE_BY_REGION_MONTHLY)
-- [Subject: Revenue implement <- Measure: GROSS_REVENUE](path)
+- [Measure: GROSS_REVENUE implement -> Subject: Revenue](path)
 ```
 
 ---
@@ -182,7 +200,7 @@ ORDER_STATUS IN ('confirmed', 'shipped', 'delivered')
 - [Reification: ACTIVE_ORDERS mandatory -> ORDERS](../../reifications/Reification: ACTIVE_ORDERS mandatory ORDERS)
 
 ## Links
-- [Subject: Revenue implement <- Filter: ACTIVE_ORDERS](path)
+- [Filter: ACTIVE_ORDERS implement -> Policy: Revenue counts valid orders only](path)
 - [Filter: ACTIVE_ORDERS implement -> VerifiedQuery: REVENUE_BY_REGION_MONTHLY](path)
 - [Filter: ACTIVE_ORDERS relatedTo -> Disambiguation: order-status](../disambiguations/Disambiguation: order-status)
 ```
@@ -238,13 +256,10 @@ ORDER BY 2, 1
 ## Definition
 ORDER_STATUS NOT IN ('cancelled', 'returned')
 
-## Consequence if Violated
-Cancelled and returned orders inflate revenue by up to 12% in months with high return rates.
-
 ## Links
 - [Rule: exclude-cancelled-orders apply -> Measure: GROSS_REVENUE](path)
 - [Rule: exclude-cancelled-orders apply -> Table: ORDERS](path)
-- [Subject: Revenue implement <- Rule: exclude-cancelled-orders](path)
+- [Rule: exclude-cancelled-orders implement -> Policy: Revenue counts valid orders only](path)
 - [Rule: exclude-cancelled-orders relatedTo -> Filter: ACTIVE_ORDERS](path)
 ```
 
@@ -268,7 +283,7 @@ Cancelled and returned orders inflate revenue by up to 12% in months with high r
 → [Rule: exclude-cancelled-orders](../rules/Rule: exclude-cancelled-orders) (do not apply)
 
 ## Links
-- [Subject: Revenue disambiguate <- Disambiguation: order-status](path)
+- [Disambiguation: order-status disambiguate -> Subject: Revenue](path)
 ```
 
 ---

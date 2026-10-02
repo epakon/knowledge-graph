@@ -135,7 +135,7 @@ Edge statements use standard Markdown links. The link text is the self-contained
 ```markdown
 ## Links
 - [Measure: REVENUE relatedTo -> Rule: exclude-reversals](../rules/rule-exclude-reversals.md)
-- [Subject: Revenue implement <- Measure: REVENUE](../../vocabulary/subjects/subject-revenue.md)
+- [Measure: REVENUE implement -> Subject: Revenue](../../vocabulary/subjects/subject-revenue.md)
 ```
 
 ```markdown

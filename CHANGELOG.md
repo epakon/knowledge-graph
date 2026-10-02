@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [2.0.0](#2.0.0) | 2026-10-01 | `Policy` node type (conceptual business rule); bridge edges `implement`/`disambiguate` owned by the logical side; conceptual pages carry no cross-layer links; `rule_modality`/`consequence_if_violated` moved from BusinessRule to Policy |
 | [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain`, carry node properties, and no longer copy reason/consequence prose |
 | [1.6.1](#1.6.1) | 2026-09-30 | `calculate` and `joinedTo` edges on Table pages readable by snapshot pipelines; missing template sections; `uses` may target `Disambiguation` |
 | [1.6.0](#1.6.0) | 2026-09-30 | `requires` limited to measure-specific filters; `implement -> VerifiedQuery` defined; two audit rules; stale-query check; source-system codes in Subjects; templates use edge-statement link text |
@@ -39,6 +40,22 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [2.0.0] — 2026-10-01
+
+### Added
+- **`Policy` node type** (`schema.yaml`, `conceptual-layer.md` §2.4, `page-templates.md`, `space-structure.md`) — a business rule in business language, with `statement`, `rule_modality` and `consequence_if_violated`; path `vocabulary/policies/`. "Policy" means a business rule, not a data-governance or access policy. A Policy links to Subjects with `relatedTo ->`.
+- **Audit rules** `no_conceptual_down_links` and `policy_coverage` (informational) in `schema.yaml`. `policy_coverage` reports a Table whose Measure implements one of a Policy's Subjects but which has no connected Filter, BusinessRule or Measure implementing the Policy.
+- **`governance.md` §3a** — a change to a `Policy` statement is review-required; adding an `implement -> Policy/Subject` edge on a logical page in the author's own domain is self-serve.
+
+### Changed
+- **Bridge edges reversed** — `implement` now runs `Measure/BusinessRule/Filter -> Subject/Policy/VerifiedQuery`, and `disambiguate` runs `Disambiguation -> Subject`. Conceptual pages link only to other conceptual pages and carry no back-references from the logical or consumption layer; "what implements this" is answered by the edge index (`link-format.md`, `conceptual-layer.md` §1 and §3.2, `logical-layer.md`, `consumption-layer.md`, `SPEC.md` diagram, engine adapters, examples).
+- **`BusinessRule`** keeps only `definition`. A rule that implements a Policy takes its modality and consequence from the Policy; a rule that implements none is a table-local structural fact (necessity). Connector field mappings replace `consequence_if_violated` with an `implement -> Policy` link.
+
+### Notes
+- Breaking. Live pages must move `implement ->` and `disambiguate ->` links from Subject pages to the logical pages as `implement -> Subject` / `disambiguate -> Subject`, and move each BusinessRule's `## Consequence if Violated` to a Policy it implements (or into the definition text if the rule is structural).
 
 ---
 

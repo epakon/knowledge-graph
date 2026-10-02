@@ -16,7 +16,7 @@ Four reasons make that unworkable:
 
 **Wrong link format.** KG edges are typed, self-describing link labels embedded in page bodies (`[Table: X joinedTo -> Table: Y]`). dbt `ref()` calls and `depends_on` entries are structural identifiers in a compiled JSON graph — they need to be translated into semantic edge statements following [`spec/link-format.md`](../../../spec/link-format.md).
 
-**Missing fields.** dbt descriptions are prose notes on a technical artifact. KG fields like `consequence_if_violated`, `predicate_sql`, `mandatory`, `definition_sql`, and `reason`/`consequence` on reified edges do not exist in dbt. They are either derived during import or authored by a domain expert afterward — neither of which happens in the dbt project itself.
+**Missing fields.** dbt descriptions are prose notes on a technical artifact. KG fields like `Policy` statements, `predicate_sql`, `mandatory`, `definition_sql`, and `reason`/`consequence` on reified edges do not exist in dbt. They are either derived during import or authored by a domain expert afterward — neither of which happens in the dbt project itself.
 
 **Wrong authoring surface.** The KG content storage is where domain experts enrich knowledge over time: completing a `consequence`, filling an `always_ask`, promoting a hyperlink edge to a Reification page. If dbt YAML were the source of truth, every enrichment would have to flow back into the dbt repository, coupling the knowledge lifecycle to the dbt deployment cycle and making the KG dependent on a code repo for its authoring surface.
 
@@ -197,7 +197,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 |---|---|---|---|
 | `name` | Derived: `<model_name> — <column_name> <test_name>` | Title-case | e.g. `Dim Customer — Status accepted values` |
 | `definition` | Test type + parameters rendered as SQL | `accepted_values`: `column IN ('a', 'b')`; `not_null`: `column IS NOT NULL`; `foreign_key`: `column IN (SELECT pk FROM ref_table)` | Custom SQL tests: use the `predicate` or `query` parameter directly |
-| `consequence_if_violated` | — | `REQUIRES MANUAL AUTHORING` | Tests document what is checked; business impact is not encoded |
+| `implement -> Policy` | — | `REQUIRES MANUAL AUTHORING` | Tests document what is checked; the business rule and its impact are not encoded |
 
 ### BusinessRule ← snapshot SCD2 definition
 
@@ -205,7 +205,7 @@ An entity is promoted to an Attribute page only when it appears in multiple sema
 |---|---|---|---|
 | `name` | Derived: `<snapshot_name> — SCD2 versioning` | Title-case | |
 | `definition` | `strategy`, `unique_key`, `updated_at` rendered as prose + SQL | e.g. `unique_key = entity_id; new version opened when updated_at changes` | |
-| `consequence_if_violated` | — | `REQUIRES MANUAL AUTHORING` | |
+| `implement -> Policy` | — | `REQUIRES MANUAL AUTHORING` | |
 
 ### VerifiedQuery ← exposure
 

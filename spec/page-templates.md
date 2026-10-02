@@ -8,7 +8,8 @@
 
 ## General rules
 
-- **Prose belongs only on Subject and Disambiguation pages.** All other pages use structured header fields and a predicate/definition block — no explanatory paragraphs.
+- **Prose belongs only on Subject and Disambiguation pages** (and the one-paragraph statement on Policy pages). All other pages use structured header fields and a predicate/definition block — no explanatory paragraphs.
+- **Conceptual pages carry no cross-layer links.** Subject, Concept, Process and Policy pages link only to other conceptual pages. Logical pages own the edges up to them (`implement ->`, `disambiguate ->`, `relatedTo ->`), with no back-reference on the conceptual page.
 - **Keep all template fields even if empty** — empty fields are valid; omitting fields breaks schema compliance.
 - **Do not add non-template sections** unless the node type explicitly allows it.
 - **Write each statement where it is true** (placement test). If it would be true of every node of a type, or of every agent reading the graph, it belongs in the spec (the node type's definition, or the reading protocol in [SPEC.md §8](../SPEC.md#8-agent-integration)), not on a page. If it is true of one node no matter which page or agent refers to it, it belongs on that node's page, and other pages link to it instead of restating it. Only what remains stays on the current page.
@@ -37,16 +38,12 @@ The only page type where substantive prose lives. Kept stable — business conce
 - [<Source name>](<URL>) — <one-line description of what this source contributes>
 
 ## Links
-- [Subject: <Name> implement -> Filter: <Name>](path)
-- [Subject: <Name> implement -> Measure: <Name>](path)
-- [Subject: <Name> implement -> Rule: <Name>](path)
 - [Subject: <Name> relatedTo -> Subject: <Name>](path)
-- [Subject: <Name> disambiguate -> Disambiguation: <Term>](path)
 ```
 
 > `## Citations` is optional. Use it to link authoritative external sources (glossaries, regulatory definitions, data dictionaries, ontologies) that inform the business definition. Do not duplicate the external definition — link to it.
 
-> `## Links` on a Subject page may also carry back-references from `Concept` (`Concept: <Name> comprises <- Subject: <Name>`) and from `Process` (`Process: <Name> produces/consumes/governs <- Subject: <Name>`).
+> `## Links` on a Subject page may also carry back-references from `Concept` (`Concept: <Name> comprises <- Subject: <Name>`), from `Process` (`Process: <Name> produces/consumes/governs <- Subject: <Name>`) and from `Policy` (`Policy: <Name> relatedTo <- Subject: <Name>`). It never lists the domain nodes that implement the Subject — those own the `implement ->` edge.
 
 ---
 
@@ -97,6 +94,34 @@ Named business activity that produces, consumes, or governs data concepts. Only 
 ```
 
 > Use `produces` when the process generates this Subject's data as an output, `consumes` when it needs the data as input, `governs` when it defines the rules that constrain the Subject. A single Process may use all three kinds. `## Citations` is optional.
+
+---
+
+## Policy
+
+A business rule in business language. "Policy" means a business rule here — not a data-governance principle or an access policy. Logical Filter, BusinessRule and Measure pages implement it in SQL.
+
+```markdown
+# Policy: <Name>
+
+**Type:** Policy
+**Scope:** global
+**Rule modality:** necessity | obligation | prohibition
+
+## Statement
+<The rule in business language. One paragraph. No SQL, no table or column names.>
+
+## Consequence if Violated
+<One sentence — quantify if possible. Optional when modality is necessity.>
+
+## Citations
+- [<Source name>](<URL>) — <one-line description of what this source contributes>
+
+## Links
+- [Policy: <Name> relatedTo -> Subject: <Name>](path)
+```
+
+> `## Citations` is optional. The page does not list its implementations: each implementing Filter, BusinessRule or Measure owns `implement -> Policy: <Name>`. To find them, use the edge index or search for `implement <- Policy: <Name>`.
 
 ---
 
@@ -214,7 +239,8 @@ Promoted computed field. For promotion criteria see [logical-layer.md §8](logic
 - [Measure: <Name> relatedTo -> Rule: <Name>](path)
 - [Measure: <Name> relatedTo -> Filter: <Name>](path)
 - [Measure: <Name> implement -> VerifiedQuery: <Name>](path)
-- [Subject: <Name> implement <- Measure: <Name>](path)
+- [Measure: <Name> implement -> Subject: <Name>](path)
+- [Measure: <Name> implement -> Policy: <Name>](path)
 ```
 
 ---
@@ -271,7 +297,8 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 - [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
-- [Subject: <Name> implement <- Filter: <Name>](path)
+- [Filter: <Name> implement -> Subject: <Name>](path)
+- [Filter: <Name> implement -> Policy: <Name>](path)
 - [Filter: <Name> implement -> VerifiedQuery: <Name>](path)
 - [Filter: <Name> relatedTo -> Disambiguation: <Term>](path)   (only when the filter's term needs clarification)
 ```
@@ -320,19 +347,19 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 ## Definition
 <Exact column names, values, filter expressions. One block. No prose introduction.>
 
-## Consequence if Violated
-<One sentence — quantify if possible.>
-
 ## Reifications
 - [Reification: <From> <kind> -> <To>](../../reifications/<Name>)
 
 ## Links
 - [Rule: <Name> apply -> Table: <Name>](path)
 - [Rule: <Name> apply -> Measure: <Name>](path)
-- [Subject: <Name> implement <- Rule: <Name>](path)
+- [Rule: <Name> implement -> Policy: <Name>](path)
+- [Rule: <Name> implement -> Subject: <Name>](path)
 - [Rule: <Name> relatedTo -> Filter: <Name>](path)
 - [Rule: <Name> implement -> VerifiedQuery: <Name>](path)
 ```
+
+> Modality and consequence live on the implemented Policy. A rule with no `implement -> Policy` is a table-local structural fact and is treated as `necessity`.
 
 ---
 
@@ -357,7 +384,7 @@ Promoted column with semantic payload. For promotion criteria see [logical-layer
 <Optional. How the interpretations differ and what mixing them does to the answer. Prose.>
 
 ## Links
-- [Subject: <Name> disambiguate <- Disambiguation: <Term>](path)
+- [Disambiguation: <Term> disambiguate -> Subject: <Name>](path)
 - [Filter: <Name> relatedTo <- Disambiguation: <Term>](path)
 ```
 

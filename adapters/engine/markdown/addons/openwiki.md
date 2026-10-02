@@ -50,7 +50,7 @@ All generated files open with `<!-- status: draft -->`.
 - `**Domain:**` link — requires knowing which KG domain this table belongs to
 - `## Reifications` — reified edges (`reason`, `consequence`) require domain judgment
 - `## Links` — Attribute and Measure links depend on what gets promoted
-- `business_definition`, `consequence_if_violated` on any Rule nodes
+- `business_definition` and the `implement -> Policy` link on any Rule nodes
 - `Verified by`, `Verified at` on any VerifiedQuery nodes
 
 See [openwiki-kg-example.md](../../../../examples/openwiki-kg-example.md) for a complete example of a generated draft Table node.
@@ -89,7 +89,7 @@ to understand the required output format.
 Write a Knowledge Graph draft node file to <output-path> following those templates
 exactly for a Table node. Use <!-- status: draft --> at the top.
 Leave fields that require domain expert knowledge (business_definition,
-consequence_if_violated, verified_by, edge reasons, reified relationships)
+Policy links, verified_by, edge reasons, reified relationships)
 as <!-- TODO --> placeholders.
 For table kind, columns, joins, and caveats extract everything you can from the SQL."
 ```
@@ -141,7 +141,7 @@ location and heading patterns:
 OpenWiki captures what code does, not what it means in business terms. The following KG
 fields are always outside its scope:
 
-- `business_definition`, `consequence_if_violated` — require domain expert knowledge
+- `business_definition` and `Policy` pages (`statement`, `consequence_if_violated`) — require domain expert knowledge
 - **Reified edges** (Reification pages) — `reason` and `consequence` can only be supplied by a domain expert
 - **VerifiedQuery nodes** — require human approval; OpenWiki may surface candidate SQL but cannot produce verified nodes
 - **Cross-domain linking** — `Subject` nodes and `implement ->` edges require deliberate authoring decisions

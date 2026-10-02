@@ -134,7 +134,8 @@ The three constraints from [spec/link-format.md](../../../spec/link-format.md#ba
 |---|---|---|
 | No symmetric duplicates | Same target appears in `## Links` twice — once with `->` and once with `<-` | Before injecting `<-`, scan existing labels for `-> TargetName` with the same kind |
 | Edge kind must match | The back-reference label uses a different verb than the owning page's label | Derive the `<-` label by replacing `->` with `<-` in the owning label — never infer the kind from node types |
-| No `implement` between Subjects | `Subject: X implement <- Subject: Y` in `## Links` | Replace the edge kind with `relatedTo` |
+| `implement` never starts on a conceptual page | `Subject: X implement -> …` or `Policy: X implement -> …` | Between conceptual nodes use `relatedTo`; toward a logical node, move the edge to the logical page as `implement -> Subject/Policy` |
+| No back-references on conceptual pages | A `<-` label from a logical or consumption node on a Subject/Policy page | Do not inject; the edge index answers "what implements this" |
 
 ---
 
