@@ -4,6 +4,21 @@
 
 This connector reads the work of agents that already use the Knowledge Graph and turns it into **proposals** for the graph. It evaluates existing pages against what happened in agent sessions and proposes new pages where sessions show a gap.
 
+## Why it is needed
+
+Every other connector reads a source system, and every other governance check starts from a change in one. Nothing tells the graph how well its pages actually answer questions. Agents are the graph's heaviest readers, and each session tests the pages it used against a real question. When a user corrects an answer, they often state the missing rule in plain words. Today that knowledge stays in the chat log and is lost.
+
+The feedback connector turns that signal into graph improvements:
+
+- **Finds wrong pages no source change flagged.** The stale `ABS()` rule in [`governance.md`](../../../spec/governance.md) §2 is caught by the §4 check only if the person changing the source model runs it. Here, the first user who corrects the inflated KPI produces a proposal against the rule.
+- **Prioritizes by real demand.** Gaps come from questions users actually ask, not from what authors expected to be asked.
+- **Captures expert knowledge as it is spoken.** Users' corrections are first drafts of Policies, Filters and Disambiguations, the knowledge [`connectors.md`](../connectors.md) says only domain experts can provide and no connector can extract automatically.
+- **Keeps impact analysis honest.** `uses` edges follow the pages agents actually read, so a change to a page reaches the agents that depend on it ([`consumption-layer.md`](../../../spec/consumption-layer.md)).
+
+The graph improves through use, and the domain owner's review keeps people as the source of truth.
+
+## How it differs from other connectors
+
 It differs from the other connectors in two ways:
 
 - **Its source is the graph's own consumers**, not a business system. A session is evidence, never a source of truth.
