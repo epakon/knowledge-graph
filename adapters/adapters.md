@@ -20,6 +20,8 @@ Connectors extract business knowledge from source systems — SAP S/4HANA, Sales
 
 Because knowledge extraction is outside the scope of the core specification, connectors need their own contract document. The contract (six mandatory sections every connector must implement) is defined in [`connectors/connectors.md`](connectors/connectors.md).
 
+One connector reads the graph's own consumers instead of a business system: [`connectors/feedback/feedback.md`](connectors/feedback/feedback.md) evaluates pages against agent sessions and proposes changes for review.
+
 ---
 
 ## Addons

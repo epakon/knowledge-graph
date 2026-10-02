@@ -12,7 +12,7 @@
 # governance.md §"Change procedure" for the review step that must catch a
 # change here before it ships without those documents being checked.
 
-spec_version: "2.0.0"
+spec_version: "2.1.0"
 
 # ---------------------------------------------------------------------------
 # Node Types — Conceptual layer (vocabulary/)

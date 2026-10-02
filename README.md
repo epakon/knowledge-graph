@@ -90,6 +90,8 @@ Agent builds correct SQL / answers / instructions without hallucinating business
     - **dbt/** — dbt connector
       - [dbt-technical.md](adapters/connectors/dbt/dbt-technical.md) — Technical layer: node/field/edge mapping for models, sources, seeds, snapshots, semantic models, metrics, exposures, and tests; extraction protocol based on `manifest.json`
       - [dbt-import.md](adapters/connectors/dbt/dbt-import.md) — Import procedure: manifest parsing, staging exclusion, table kind routing, test-to-BusinessRule conversion, incremental checksum detection, validation
+    - **feedback/** — Feedback connector *(draft)*
+      - [feedback.md](adapters/connectors/feedback/feedback.md) — Evaluates pages against agent sessions (confirm, contradict, gap) and opens review proposals; never writes directly
 - **extras/** — Non-normative supporting material (analysis notes, the animated diagram shown above)
 - **examples/** — Illustrative worked examples
   - [domain-layout-example.md](examples/domain-layout-example.md) — Multi-domain space hierarchy with cross-domain Subject linking

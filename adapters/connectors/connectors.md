@@ -65,6 +65,8 @@ Technical objects — CDS views, ABAP tables, OData services, Fiori applications
 
 ## Connector contract
 
+The [feedback connector](feedback/feedback.md) follows the same contract, with agent sessions as its source system and review proposals as its only output.
+
 Every connector document MUST specify all six sections below. A section may be marked `N/A` only if the source system structurally cannot provide that information; it may never be silently omitted.
 
 **Business layer (Section 1 — Vocabulary layer) is optional for database connectors.** A source system that is a pure database platform — with no built-in business process concepts, no standard annotation framework, and no lifecycle contracts — does not produce vocabulary nodes automatically. In this case the connector MUST document the omission explicitly: state that the Vocabulary layer requires manual authoring by a domain expert and is outside the connector's extraction scope. If a database functional area is later found to carry meaningful business process knowledge (e.g. a heavily annotated semantic layer that encodes stable business concepts), the business layer section can be added incrementally. The connector does not need to be restructured — the omission is an editorial decision, not a structural one.

@@ -13,6 +13,7 @@ Versioning follows [Semantic Versioning](https://semver.org):
 
 | Version | Date | Summary |
 |---|---|---|
+| [2.1.0](#2.1.0) | 2026-10-02 | Feedback connector: evaluates pages against agent sessions and opens review proposals |
 | [2.0.0](#2.0.0) | 2026-10-01 | `Policy` node type (conceptual business rule); bridge edges `implement`/`disambiguate` owned by the logical side; conceptual pages carry no cross-layer links; `rule_modality`/`consequence_if_violated` moved from BusinessRule to Policy |
 | [1.6.2](#1.6.2) | 2026-09-30 | Domain type sections define `contain` edges (no `contain <-` back-references); indexes always include `contain`, carry node properties, and no longer copy reason/consequence prose |
 | [1.6.1](#1.6.1) | 2026-09-30 | `calculate` and `joinedTo` edges on Table pages readable by snapshot pipelines; missing template sections; `uses` may target `Disambiguation` |
@@ -40,6 +41,16 @@ Versioning follows [Semantic Versioning](https://semver.org):
 | [1.2.0](#1.2.0) | 2026-06-17 | PK column in Table template; back-reference constraints; semantic annotations |
 | [1.1.0](#1.1.0) | 2026-06-16 | `vocabulary/` folder; `subjects/` relocated to `vocabulary/subjects/` |
 | [1.0.0](#1.0.0) | 2026-06-15 | Initial release |
+
+---
+
+## [2.1.0] — 2026-10-02
+
+### Added
+- **Feedback connector** (`adapters/connectors/feedback/feedback.md`) — evaluates pages against agent sessions (confirm, contradict, gap) and opens review proposals; never writes directly; adds no node types, edge kinds or properties. Listed in `adapters.md`, `connectors.md` and the README; `governance.md` §3a makes its proposals review-required.
+
+### Notes
+- Non-breaking.
 
 ---
 
